@@ -87,12 +87,11 @@ void MSAShape3D::glEnd() {
 	glVertexPointer(3, GL_FLOAT, 0, &vertexArray[0]);
 	
 	glDrawArrays(drawMode, 0, numVertices);
-	
-	colorChanged		= false;
-	normalChanged		= false;
-	texCoordChanged	= false;
-	doingShape			= false;	
-	numVertices		= 0;
+}
+
+
+void MSAShape3D::draw() {
+	glEnd();
 }
 
 

@@ -44,6 +44,10 @@ public:
 	// sends all data to server to be drawn
 	void glEnd();	
 	
+	// redraws currently cached shape
+	void draw();
+	
+	
 	// vertex position methods
 	void glVertex(float x, float y, float z = 0);	// x,y,z coordinates (if z is omitted, assumed 0)
 	void glVertex3v(float *v);						// pointer to x,y,z coordinates
