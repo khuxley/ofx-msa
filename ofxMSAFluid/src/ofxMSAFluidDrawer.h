@@ -33,12 +33,10 @@
 #define FLUID_DRAW_SPEED		2
 #define FLUID_DRAW_VECTORS		3
 
-#define FLUID_DEFAULT_SIZE		-1
-
-//#define FLUID_TEXTURE
+#define FLUID_TEXTURE
 
 
-class ofxMSAFluidDrawer {
+class ofxMSAFluidDrawer : public ofBaseUpdates, public ofBaseDraws {
 public:
 	float alpha;
 	
@@ -50,12 +48,22 @@ public:
 	ofxMSAFluidSolver* getFluidSolver();
 	
 	void update();
-	virtual void draw(float x = 0, float y = 0, float renderWidth = FLUID_DEFAULT_SIZE, float renderHeight = FLUID_DEFAULT_SIZE);	// this one does chooses one of the below based on drawmode
-	void drawColor(float x = 0, float y = 0, float renderWidth = FLUID_DEFAULT_SIZE, float renderHeight = FLUID_DEFAULT_SIZE);		// if width or height is less than 0, use actual size
-	void drawMotion(float x = 0, float y = 0, float renderWidth = FLUID_DEFAULT_SIZE, float renderHeight = FLUID_DEFAULT_SIZE);		// if width or height is less than 0, use actual size
-	void drawSpeed(float x = 0, float y = 0, float renderWidth = FLUID_DEFAULT_SIZE, float renderHeight = FLUID_DEFAULT_SIZE);		// if width or height is less than 0, use actual size
-	void drawVectors(float x = 0, float y = 0, float renderWidth = FLUID_DEFAULT_SIZE, float renderHeight = FLUID_DEFAULT_SIZE) {}	// TODO
+	
+	void draw(float x = 0, float y = 0);
+	void draw(float x, float y, float renderWidth, float renderHeight);				// this one does chooses one of the below based on drawmode
+	void drawColor(float x, float y, float renderWidth, float renderHeight);
+	void drawMotion(float x, float y, float renderWidth, float renderHeight);
+	void drawSpeed(float x, float y, float renderWidth, float renderHeight);
+	void drawVectors(float x, float y, float renderWidth, float renderHeight);
 	void reset();
+	
+	float getWidth() {
+		return tex.getWidth();
+	}
+	
+	float getHeight() {
+		return tex.getHeight();
+	}
 	
 	void setDrawMode(int newDrawMode);
 	

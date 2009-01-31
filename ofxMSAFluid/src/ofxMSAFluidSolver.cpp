@@ -36,8 +36,6 @@
 
 //#define __DO_vorticityConfinement	// I think the fluid looks better without this (at least for optical flow), so disable this to not do it
 
-#define SOLVER_ITERATIONS		10
-
 #ifdef FLUID_CONDENSED_LOOPS
 #define ADD_SOURCE_UV		addSourceUV();
 #define ADD_SOURCE_RGB		addSourceRGB();
@@ -77,8 +75,10 @@ ofxMSAFluidSolver::ofxMSAFluidSolver() {
 
 void ofxMSAFluidSolver::setup(int NX, int NY) {
 	printf("ofxMSAFluidSolver::init(%i, %i)\n", NX, NY);
+	
 	setDeltaT();
 	setFadeSpeed();
+	setSolverIterations();
 	
     _NX = NX;
 	_NY = NY;
@@ -88,7 +88,8 @@ void ofxMSAFluidSolver::setup(int NX, int NY) {
 	
 	_invNX = 1.0f / _NX;
 	_invNY = 1.0f / _NY;
-
+	
+	reset();
 	enableRGB(false);
 }
 
@@ -100,10 +101,14 @@ void ofxMSAFluidSolver::setFadeSpeed(float fadeSpeed) {
 	_fadeSpeed = fadeSpeed;
 }
 
+void ofxMSAFluidSolver::setSolverIterations(int solverIterations) {
+	_solverIterations = solverIterations;
+}
+
+
 // whether fluid is RGB or monochrome (if only pressure / velocity is needed no need to update 3 channels)
 void ofxMSAFluidSolver::enableRGB(bool isRGB) {
 	_isRGB = isRGB;
-	reset();
 }
 
 
@@ -274,19 +279,19 @@ void ofxMSAFluidSolver::update() {
 	project(_u, _v, _uOld, _vOld);
 	
 	if(_isRGB) {
-        	ADD_SOURCE_RGB
-        	swapRGB();
-        	
-        	DIFFUSE_RGB
-        	swapRGB();
-        	
-        	ADVECT_RGB
-	
+		ADD_SOURCE_RGB
+		swapRGB();
+		
+		DIFFUSE_RGB
+		swapRGB();
+		
+		ADVECT_RGB
+		
 		fadeRGB();
 	} else {
 		addSource(_r, _rOld);
 		swapR();
-	
+		
 		diffuse(0, _r, _rOld, 0);
 		swapRGB();
 		
@@ -304,23 +309,23 @@ void ofxMSAFluidSolver::fadeR() {
 	
 	float totalDeviations = 0;
 	float currentDeviation;
-//	float uniformityMult = _uniformity * 0.05f;
+	//	float uniformityMult = _uniformity * 0.05f;
 	
 	_avgSpeed = 0;
 	for (int i = 0; i < _numCells; i++) {
 		// clear old values
 		_uOld[i] = _vOld[i] = 0; 
 		_rOld[i] = 0;
-//		_gOld[i] = _bOld[i] = 0;
+		//		_gOld[i] = _bOld[i] = 0;
 		
 		// calc avg speed
 		_avgSpeed += _u[i] * _u[i] + _v[i] * _v[i];
 		
 		// calc avg density
 		_r[i] = MIN(1.0f, _r[i]);
-//		_g[i] = MIN(1.0f, _g[i]);
-//		_b[i] = MIN(1.0f, _b[i]);
-//		float density = MAX(_r[i], MAX(_g[i], _b[i]));
+		//		_g[i] = MIN(1.0f, _g[i]);
+		//		_b[i] = MIN(1.0f, _b[i]);
+		//		float density = MAX(_r[i], MAX(_g[i], _b[i]));
 		float density = _r[i];
 		_avgDensity += density;	// add it up
 		
@@ -329,12 +334,13 @@ void ofxMSAFluidSolver::fadeR() {
 		totalDeviations += currentDeviation * currentDeviation;
 		
 		// fade out old
-		_r[i] *= holdAmount;
+//		_r[i] *= holdAmount;
+		_r[i] *= _fadeSpeed;
 	}
 	_avgDensity *= _invNumCells;
-//	_avgSpeed *= _invNumCells;
+	//	_avgSpeed *= _invNumCells;
 	
-//	printf("%.3f\n", _avgSpeed);
+	//	printf("%.3f\n", _avgSpeed);
 	_uniformity = 1.0f / (1 + totalDeviations * _invNumCells);		// 0: very wide distribution, 1: very uniform
 }
 
@@ -525,7 +531,7 @@ void ofxMSAFluidSolver::project(float* x, float* y, float* p, float* div)  {
 
 
 void ofxMSAFluidSolver::linearSolver(int _b, float* x, float* x0, float a, float c) {
-	for (int k = 0; k < SOLVER_ITERATIONS; k++) {
+	for (int k = 0; k < _solverIterations; k++) {
 		for (int i = 1; i <= _NX; i++) {
 			for (int j = 1; j <= _NY; j++) {
 				x[FLUID_IX(i, j)] = (a * ( x[FLUID_IX(i-1, j)] + x[FLUID_IX(i+1, j)]  +   x[FLUID_IX(i, j-1)] + x[FLUID_IX(i, j+1)])  +  x0[FLUID_IX(i, j)]) / c;
@@ -539,7 +545,7 @@ void ofxMSAFluidSolver::linearSolver(int _b, float* x, float* x0, float a, float
 
 void ofxMSAFluidSolver::linearSolverRGB(int _bound, float a, float c) {
 	int index1, index2, index3, index4, index5;
-	for (int k = 0; k < SOLVER_ITERATIONS; k++) {		// MEMO
+	for (int k = 0; k < _solverIterations; k++) {		// MEMO
 		for (int i = 1; i <= _NX; i++) {
 			for (int j = 1; j <= _NY; j++) {
 				index5 = FLUID_IX(i, j);
@@ -560,7 +566,7 @@ void ofxMSAFluidSolver::linearSolverRGB(int _bound, float a, float c) {
 
 void ofxMSAFluidSolver::linearSolverUV(int _bound, float a, float c) {
 	int index1, index2, index3, index4, index5;
-	for (int k = 0; k < SOLVER_ITERATIONS; k++) {		// MEMO
+	for (int k = 0; k < _solverIterations; k++) {		// MEMO
 		for (int i = 1; i <= _NX; i++) {
 			for (int j = 1; j <= _NY; j++) {
 				index5 = FLUID_IX(i, j);
@@ -693,8 +699,11 @@ void ofxMSAFluidSolver::getInfoAtCell(int i, int j,  ofPoint *vel, ofPoint *colo
 
 void ofxMSAFluidSolver::getInfoAtCell(int i,  ofPoint *vel, ofPoint *color) {
 	//	if(safeToRun()){
-		if(vel) vel->set(_u[i] * _invNX, _v[i] * _invNY);
-	if(color) color->set(_r[i], _g[i], _b[i]);		// no bother with if(_isRGB) here for performance, just read _r if you're interested
+	if(vel) vel->set(_u[i] * _invNX, _v[i] * _invNY);
+	if(color) {
+		if(_isRGB) color->set(_r[i], _g[i], _b[i]);
+		else color->set(_r[i], _r[i], _r[i]);
+	}
 	//		unlock();
 	//	}
 }
@@ -710,9 +719,9 @@ void ofxMSAFluidSolver::addForceAtPos(float x, float y, float vx, float vy) {
 
 void ofxMSAFluidSolver::addForceAtCell(int i, int j, float vx, float vy) {
 	//	if(safeToRun()){
-		int index = FLUID_IX(i, j);
-		_uOld[index] += vx * _invNX;
-		_vOld[index] += vy * _invNX;
+	int index = FLUID_IX(i, j);
+	_uOld[index] += vx * _invNX;
+	_vOld[index] += vy * _invNX;
 	//		unlock();
 	//	}
 }
@@ -727,8 +736,8 @@ void ofxMSAFluidSolver::addColorAtPos(float x, float y, float r, float g, float 
 
 void ofxMSAFluidSolver::addColorAtCell(int i, int j, float r, float g, float b) {
 	//	if(safeToRun()){
-		int index = FLUID_IX(i, j);
-		_rOld[index] += r;
+	int index = FLUID_IX(i, j);
+	_rOld[index] += r;
 	if(_isRGB) {
 		_gOld[index] += g;
 		_bOld[index] += b;
@@ -744,11 +753,11 @@ void ofxMSAFluidSolver::randomizeColor() {
 			int index = FLUID_IX(i, j);
 			_r[index] = _rOld[index] = ofRandom(0, 1);
 			if(_isRGB) {
-			_g[index] = _gOld[index] = ofRandom(0, 1);
-			_b[index] = _bOld[index] = ofRandom(0, 1);
-		}
-	} 
-}
+				_g[index] = _gOld[index] = ofRandom(0, 1);
+				_b[index] = _bOld[index] = ofRandom(0, 1);
+			}
+		} 
+	}
 }
 
 /*

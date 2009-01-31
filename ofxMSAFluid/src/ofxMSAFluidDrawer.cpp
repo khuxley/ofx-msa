@@ -65,9 +65,13 @@ ofxMSAFluidSolver* ofxMSAFluidDrawer::getFluidSolver() {
 
 void ofxMSAFluidDrawer::createTexture() {
 	if(_pixels) delete _pixels;
-	_pixels = new unsigned char[_fluidSolver->getNumCells() * 3];
+	int texWidth = _fluidSolver->getWidth()-2;
+	int texHeight =_fluidSolver->getHeight()-2;
+	
+	_pixels = new unsigned char[texWidth * texHeight * 3];
+	
 #ifdef FLUID_TEXTURE
-	tex.allocate(_fluidSolver->getWidth(), _fluidSolver->getHeight(), GL_RGB);	
+	tex.allocate(texWidth, texHeight, GL_RGB);	
 #endif
 }
 
@@ -94,6 +98,11 @@ void ofxMSAFluidDrawer::setDrawMode(int newDrawMode) {
 }
 
 
+void ofxMSAFluidDrawer::draw(float x, float y) {
+	draw(x, y, ofGetWidth(), ofGetHeight());
+}
+
+
 void ofxMSAFluidDrawer::draw(float x, float y, float renderWidth, float renderHeight) {
 	switch(_drawMode) {
 		case FLUID_DRAW_COLOR:
@@ -117,105 +126,117 @@ void ofxMSAFluidDrawer::draw(float x, float y, float renderWidth, float renderHe
 
 
 void ofxMSAFluidDrawer::drawColor(float x, float y, float renderWidth, float renderHeight) {
-	if(alpha == 0) return;
-	
-	if(!isFluidReady()) {
-		printf("ofxMSAFluidDrawer::drawColor() - Fluid not ready\n");
-		return;
-	}
-	//	int index;
-	int numCells = _fluidSolver->getNumCells();
+	int fw = _fluidSolver->getWidth();
+	int fh = _fluidSolver->getHeight();
 	
 	ofPoint color;
-	for(int i=0, index=0; i<numCells; i++, index+=3) {
-		_fluidSolver->getInfoAtCell(i, NULL, &color);
-		_pixels[index]		= MIN(color.x * 255 * alpha, 255);
-		_pixels[index + 1]	= MIN(color.y * 255 * alpha, 255);		
-		_pixels[index + 2]	= MIN(color.z * 255 * alpha, 255);		
-		//		_pixels[index]		= ofRandom(0, 255);
-		//		_pixels[index + 1]	= ofRandom(0, 255);		
-		//		_pixels[index + 2]	= ofRandom(0, 255);		
+	int index = 0;
+	for(int j=1; j < fh-1; j++) {
+		for(int i=1; i < fw-1; i++) {
+			_fluidSolver->getInfoAtCell(i, j, NULL, &color);
+			_pixels[index++] = MIN(color.x * 255 * alpha, 255);
+			_pixels[index++] = MIN(color.y * 255 * alpha, 255);		
+			_pixels[index++] = MIN(color.z * 255 * alpha, 255);		
+		}
 	}  
 	
-	int w = _fluidSolver->getWidth();
-	int h = _fluidSolver->getHeight();
-	
-	if(renderWidth == FLUID_DEFAULT_SIZE) renderWidth = w;
-	if(renderHeight == FLUID_DEFAULT_SIZE) renderHeight = h;
-	
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	
 #ifdef FLUID_TEXTURE
-	tex.loadData(_pixels, w, h, GL_RGB);
+	tex.loadData(_pixels, tex.getWidth(), tex.getHeight(), GL_RGB);
 	tex.draw(x, y, renderWidth, renderHeight);
 #endif
-	
 }
+
+
 
 void ofxMSAFluidDrawer::drawMotion(float x, float y, float renderWidth, float renderHeight) {
-	if(alpha == 0) return;
-	
-	if(!isFluidReady()) {
-		printf("ofxMSAFluidDrawer::drawColor() - Fluid not ready\n");
-		return;
-	}
-	//	int index;
-	int numCells = _fluidSolver->getNumCells();
-	
-	int w = _fluidSolver->getWidth();
-	int h = _fluidSolver->getHeight();
+	int fw = _fluidSolver->getWidth();
+	int fh = _fluidSolver->getHeight();
 	
 	ofPoint vel;
-	for(int i=0, index=0; i<numCells; i++, index+=3) {
-		_fluidSolver->getInfoAtCell(i, &vel, NULL);
-		_pixels[index]		= MIN(fabs(vel.x) * w * 255 * alpha, 255);
-		_pixels[index + 1]	= MIN(fabs(vel.y) * h * 255 * alpha, 255);		
-		_pixels[index + 2]	= 0;		
+	int index = 0;
+	for(int j=1; j < fh-1; j++) {
+		for(int i=1; i < fw-1; i++) {
+			_fluidSolver->getInfoAtCell(i, j, &vel, NULL);
+			_pixels[index++] = MIN(fabs(vel.x) * fw * 255 * alpha, 255);
+			_pixels[index++] = MIN(fabs(vel.y) * fh * 255 * alpha, 255);		
+			_pixels[index++] = 0;
+		}
 	}  
-	if(renderWidth == FLUID_DEFAULT_SIZE) renderWidth = w;
-	if(renderHeight == FLUID_DEFAULT_SIZE) renderHeight = h;
-	
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
 #ifdef FLUID_TEXTURE
-	tex.loadData(_pixels, w, h, GL_RGB);
+	tex.loadData(_pixels, tex.getWidth(), tex.getHeight(), GL_RGB);
 	tex.draw(x, y, renderWidth, renderHeight);
 #endif
 }
 
+
 void ofxMSAFluidDrawer::drawSpeed(float x, float y, float renderWidth, float renderHeight) {
-	if(alpha == 0) return;
-	
-	if(!isFluidReady()) {
-		printf("ofxMSAFluidDrawer::drawColor() - Fluid not ready\n");
-		return;
-	}
-	//	int index;
-	int numCells = _fluidSolver->getNumCells();
-	
-	int w = _fluidSolver->getWidth();
-	int h = _fluidSolver->getHeight();
+	int fw = _fluidSolver->getWidth();
+	int fh = _fluidSolver->getHeight();
 	
 	ofPoint vel;
-	for(int i=0, index=0; i<numCells; i++, index+=3) {
-		_fluidSolver->getInfoAtCell(i, &vel, NULL);
-		float speed2 = fabs(vel.x) * w + fabs(vel.y) * h;
-		int speed = MIN(speed2 * 255 * alpha, 255);
-		_pixels[index]		= speed;
-		_pixels[index + 1]	= speed;
-		_pixels[index + 2]	= speed;		
+	int index = 0;
+	for(int j=1; j < fh-1; j++) {
+		for(int i=1; i < fw-1; i++) {
+			_fluidSolver->getInfoAtCell(i, j, &vel, NULL);
+			float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
+			int speed = MIN(speed2 * 255 * alpha, 255);
+			_pixels[index++] = speed;
+			_pixels[index++] = speed;
+			_pixels[index++] = speed;
+		}
 	}  
 	
-	if(renderWidth == FLUID_DEFAULT_SIZE) renderWidth = w;
-	if(renderHeight == FLUID_DEFAULT_SIZE) renderHeight = h;
-	
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	
 #ifdef FLUID_TEXTURE
-	tex.loadData(_pixels, w, h, GL_RGB);
+	tex.loadData(_pixels, tex.getWidth(), tex.getHeight(), GL_RGB);
 	tex.draw(x, y, renderWidth, renderHeight);
 #endif
 }
+
+
+void ofxMSAFluidDrawer::drawVectors(float x, float y, float renderWidth, float renderHeight) {
+	int fw = _fluidSolver->getWidth();
+	int fh = _fluidSolver->getHeight();
+	
+//	int xStep = renderWidth / 10;		// every 10 pixels
+//	int yStep = renderHeight / 10;		// every 10 pixels
+
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glScalef(renderWidth/(fw-2), renderHeight/(fh-2), 1.0);
+	
+	float velMult = 50000;
+	float maxVel = 5./20000;
+	
+	ofPoint vel;
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(1);
+	for (int j=0; j<fh-2; j++ ){
+		for (int i=0; i<fw-2; i++ ){
+			_fluidSolver->getInfoAtCell(i+1, j+1, &vel, NULL);
+			float d2 = vel.x * vel.x + vel.y * vel.y;
+			if(d2 > maxVel * maxVel) {
+				float mult = maxVel * maxVel/ d2;
+//				float mult = (d2 - maxVel * maxVel) / d2;
+				vel.x *= mult;
+				vel.y *= mult;
+			}
+			vel *= velMult;
+			
+//			if(dx*dx+dy*dy > velThreshold) {
+//				float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
+				glBegin(GL_LINES);
+				glColor3f(0, 0, 0); glVertex2f(i, j);
+				glColor3f(1, 1, 1); glVertex2f(i + vel.x, j + vel.y);
+				glEnd();
+//			printf("%.8f, %.8f\n", vel.x, vel.y);
+//			}
+		}
+	}
+	glPopMatrix();
+	
+}
+
 
 
 void ofxMSAFluidDrawer::deleteFluidSolver() {

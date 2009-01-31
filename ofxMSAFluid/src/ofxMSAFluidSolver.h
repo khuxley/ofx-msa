@@ -36,16 +36,19 @@
 #include "ofMain.h"
 
 
+// do not change these values, you can override them using the solver methods
+#define		FLUID_DEFAULT_NX					100
+#define		FLUID_DEFAULT_NY					100
+#define		FLUID_DEFAULT_DT					1.0f
+#define		FLUID_DEFAULT_VISC					0.0001f
+#define		FLUID_DEFAULT_FADESPEED				0
+#define		FLUID_DEFAULT_SOLVER_ITERATIONS		10
+
+
 #define		FLUID_IX(i, j)		((i) + (_NX + 2)  *(j))
 
 
-#define		FLUID_DEFAULT_NX			100
-#define		FLUID_DEFAULT_NY			100
-#define		FLUID_DEFAULT_DT			1.0f
-#define		FLUID_DEFAULT_VISC			0.0001f
-#define		FLUID_DEFAULT_FADESPEED		0.0001f
-
-class ofxMSAFluidSolver {
+class ofxMSAFluidSolver : public ofBaseUpdates {
 public:	
 	
 	ofxMSAFluidSolver();
@@ -109,8 +112,6 @@ public:
 	int getHeight();
 	
 	bool isInited();
-
-	
 	
 	// accessors for  viscocity, it will lerp to the target at lerpspeed
 	void setVisc(float newVisc, float lerpSpeed = 0.05); 
@@ -118,6 +119,7 @@ public:
 	
 	void setDeltaT(float dt = FLUID_DEFAULT_DT);
 	void setFadeSpeed(float fadeSpeed = FLUID_DEFAULT_FADESPEED);
+	void setSolverIterations(int solverIterations = FLUID_DEFAULT_SOLVER_ITERATIONS);
 	
 	// returns average density of fluid 
 	float getAvgDensity();
@@ -125,7 +127,10 @@ public:
 	// returns average uniformity
 	float getUniformity();
 	
+	// returns average speed of fluid
 	float getAvgSpeed();	
+	
+	
 	
 	
 	// allocate an array large enough to hold information for u, v, r, g, OR b
@@ -145,60 +150,61 @@ public:
 	
 protected:
 	
-	int _NX, _NY, _numCells;
-	float _invNX, _invNY, _invNumCells;
-	float _dt;
-	bool _isInited;
-	bool _isRGB;				// for monochrome, only update _r
+	int		_NX, _NY, _numCells;
+	float	_invNX, _invNY, _invNumCells;
+	float	_dt;
+	bool	_isInited;
+	bool	_isRGB;				// for monochrome, only update _r
+	int		_solverIterations;
 
-	float _visc, _viscLerpSpeed, _targetVisc;
-	float _fadeSpeed;
+	float	_visc, _viscLerpSpeed, _targetVisc;
+	float	_fadeSpeed;
 	
-	float *_tmp;
+	float	*_tmp;
 
-	float *_r, *_rOld;
-	float *_g, *_gOld;
-	float *_b, *_bOld;
+	float	*_r, *_rOld;
+	float	*_g, *_gOld;
+	float	*_b, *_bOld;
 
-	float *_u, *_uOld;
-	float *_v, *_vOld;
-	float *_curl;
+	float	*_u, *_uOld;
+	float	*_v, *_vOld;
+	float	*_curl;
 
-	float _avgDensity;			// this will hold the average color of the last frame (how full it is)
-	float _uniformity;			// this will hold the uniformity of the last frame (how uniform the color is);
-	float _avgSpeed;
+	float	_avgDensity;			// this will hold the average color of the last frame (how full it is)
+	float	_uniformity;			// this will hold the uniformity of the last frame (how uniform the color is);
+	float	_avgSpeed;
 
-	void destroy();
+	void	destroy();
 
-	float calcCurl(int i, int j);
-	void vorticityConfinement(float *Fvc_x, float *Fvc_y);
+	float	calcCurl(int i, int j);
+	void	vorticityConfinement(float *Fvc_x, float *Fvc_y);
 
-	void addSource(float *x, float *x0);
-	void addSourceUV();		// does both U and V in one go
-	void addSourceRGB();	// does R, G, and B in one go
+	void	addSource(float *x, float *x0);
+	void	addSourceUV();		// does both U and V in one go
+	void	addSourceRGB();	// does R, G, and B in one go
 	
-	void advect(int b, float *d, float *d0, float *du, float *dv);
-	void advectRGB(int b, float *du, float *dv);
+	void	advect(int b, float *d, float *d0, float *du, float *dv);
+	void	advectRGB(int b, float *du, float *dv);
 	
-	void diffuse(int b, float *c, float *c0, float diff);
-	void diffuseRGB(int b, float diff);
-	void diffuseUV(int b, float diff);
+	void	diffuse(int b, float *c, float *c0, float diff);
+	void	diffuseRGB(int b, float diff);
+	void	diffuseUV(int b, float diff);
 
-	void project(float *x, float *y, float *p, float *div);
-	void linearSolver(int b, float *x, float *x0, float a, float c);
-	void linearSolverRGB(int b, float a, float c);
-	void linearSolverUV(int b, float a, float c);
+	void	project(float *x, float *y, float *p, float *div);
+	void	linearSolver(int b, float *x, float *x0, float a, float c);
+	void	linearSolverRGB(int b, float a, float c);
+	void	linearSolverUV(int b, float a, float c);
 
-	void setBoundry(int b, float *x);
-	void setBoundryRGB(int b);
+	void	setBoundry(int b, float *x);
+	void	setBoundryRGB(int b);
 	
-	void swapU(); 
-	void swapV(); 
-	void swapR();
-	void swapRGB();
+	void	swapU(); 
+	void	swapV(); 
+	void	swapR();
+	void	swapRGB();
 	
-	void fadeR();
-	void fadeRGB();
+	void	fadeR();
+	void	fadeRGB();
 /*	
 	bool lock() {
 		return true;
