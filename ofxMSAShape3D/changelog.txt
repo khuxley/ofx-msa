@@ -1,0 +1,17 @@
+ofxMSAShape3D changelog
+
+
+v0.3
+--------------------
+- added draw() to redraw the cached shape
+
+
+v0.2	30/01/09
+--------------------
+- added glRect()
+
+
+
+v0.1	27/01/09
+--------------------
+- initial version
