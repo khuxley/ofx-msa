@@ -69,6 +69,6 @@ protected:
 private:
 	unsigned int	__useCountOfThisObject;
 	string			__myClassName;
-	string	__myInstanceName;
+	string			__myInstanceName;
 };
 

@@ -69,7 +69,7 @@ public:
 	int					windowMode;
 	ofBaseApp			*baseApp;
 	EAGLView			*glView;
-	NSObject			*appDelegate;
+	id					appDelegate;
 	
 	// cache these, they're not gonne change during duration of app
 	ofPoint				screenSize;

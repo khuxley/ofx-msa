@@ -1,0 +1,23 @@
+ofxiPhone changelog
+
+
+v0.5
+--------------------
+- fixed setFrameRate
+- included iphone accelerometer & iphone multitouch implementations into ofxiPhone
+- orgranized files
+- removed multitouch checking from core
+- added utility functions:
+	* ofxiPhoneSaveImage
+	* ofxiPhoneLoadImage
+
+
+
+v0.2
+--------------------
+- implemented all ofAppBaseWindow methods
+
+
+v0.1
+--------------------
+- initial version

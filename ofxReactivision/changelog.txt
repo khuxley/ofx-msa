@@ -1,0 +1,11 @@
+ofxReactivision changelog
+
+v1.01	16/11/08
+--------------------
+- added example
+
+
+
+v1.0	15/11/08
+--------------------
+- initial version

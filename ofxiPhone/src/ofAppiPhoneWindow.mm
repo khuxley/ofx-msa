@@ -19,6 +19,7 @@
 
 
 #include "ofAppiPhoneWindow.h"
+#include "iPhoneAppDelegate.h"
 #include "ofMain.h"
 
 
@@ -141,8 +142,8 @@ void ofAppiPhoneWindow::setWindowTitle(string title) {
 void ofAppiPhoneWindow::setFullscreen(bool fullscreen) {
 	[[UIApplication sharedApplication] setStatusBarHidden:fullscreen animated:YES];
 	
-	if(fullscreen) windowMode    = OF_FULLSCREEN;
-	else windowMode    = OF_WINDOW;
+	if(fullscreen) windowMode		= OF_FULLSCREEN;
+	else windowMode					= OF_WINDOW;
 }
 
 void ofAppiPhoneWindow::toggleFullscreen() {

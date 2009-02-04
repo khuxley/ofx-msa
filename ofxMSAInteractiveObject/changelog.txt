@@ -1,0 +1,11 @@
+ofxMSAInteractiveObject changelog
+
+v1.01	16/10/08
+--------------------
+- minor poco compatibility update
+
+
+
+v1.0	14/10/08
+--------------------
+- initial version

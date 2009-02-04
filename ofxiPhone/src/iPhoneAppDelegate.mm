@@ -71,18 +71,21 @@
 	[[UIApplication sharedApplication] setStatusBarHidden:(iPhoneWindow->windowMode == OF_FULLSCREEN) animated:YES];
 
 	// start timer
-//	[self setFrameRate:60];
-	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / 60.0f) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
+	[self setFrameRate:60];
+//	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / 60.0f) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
 	
 	
 	// call testApp::setup()
 	iPhoneWindow->baseApp->setup();
 }
 
+
 -(void) setFrameRate:(float)frameRate {
-//	[timer invalidate];
-//	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / frameRate) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
+//	NSLog(@"setFrameRate %.3f", frameRate);
+	[timer invalidate];
+	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / frameRate) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
 }
+
 
 
 -(void) dealloc {

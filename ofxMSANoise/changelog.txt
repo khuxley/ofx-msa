@@ -1,0 +1,6 @@
+ofxMSANoise changelog
+
+
+v1.0	
+--------------------
+- initial version

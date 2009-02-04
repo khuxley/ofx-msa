@@ -35,7 +35,7 @@ static ofxIPhoneAccelerometerDelegate* iPhoneAccelerometerDelegate;
 /************ Impementation of standard C++ accel interface tailored for iPhone ************/
 // call this to setup the accelerometer
 void ofxAccelerometerHandler::setup() {
-//	printf("ofxAccel::setup()\n");
+//	printf("ofxAccelerometer::setup()\n");
 	[iPhoneAccelerometerDelegate release];		// in case we've already called it for some reason
 	iPhoneAccelerometerDelegate = [[ofxIPhoneAccelerometerDelegate alloc] init];
 //	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; 
@@ -48,7 +48,7 @@ void ofxAccelerometerHandler::setup() {
 	
 // call this when accelerometer is no longer needed
 void ofxAccelerometerHandler::exit() {
-//	printf("ofxAccel::exit()\n");
+//	printf("ofxAccelerometer::exit()\n");
 	[iPhoneAccelerometerDelegate release];
 }
 

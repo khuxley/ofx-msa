@@ -1,0 +1,13 @@
+ofxAccelerometer changelog
+
+
+v0.2
+--------------------
+- renamed from ofxAccel to ofxAccelerometer
+- changed from static methods, to normal and extern initialized at startup
+- renamed getAccel() to getForce()
+
+
+v0.1
+--------------------
+- initial version

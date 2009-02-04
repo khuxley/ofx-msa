@@ -1,0 +1,25 @@
+ofxMSAPhysics changelog
+
+
+v1.5
+--------------------
+- attractor bug fixed
+- collision between nodes (particles)
+- more internal restructing and optimization
+
+
+
+v1.2	12/11/08
+--------------------
+- attractor constraints added
+- serialization (record and playback) added
+- debug draw options
+- callbacks for updaters and drawers
+- getters and setters for a bunch of internal vars
+- general internal restructing and optimization
+
+
+
+v1.0	03/10/08
+--------------------
+- initial version
