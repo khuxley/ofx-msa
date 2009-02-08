@@ -1,7 +1,7 @@
 ofxMSAShape3D changelog
 
 
-v0.3
+v0.3	04/02/09
 --------------------
 - added draw() to redraw the cached shape
 
