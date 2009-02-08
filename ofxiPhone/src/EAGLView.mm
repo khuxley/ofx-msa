@@ -23,6 +23,7 @@
 
 #import "EAGLView.h"
 
+#include "ofxMultiTouch.h"
 #include "ofMain.h"
 
 
@@ -73,7 +74,7 @@
 		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, _depthFormat, newSize.width, newSize.height);
 		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, _depthBuffer);
 	}
-
+	
 	_size = newSize;
 	if(!_hasBeenCurrent) {
 		glViewport(0, 0, newSize.width, newSize.height);
@@ -102,7 +103,7 @@
 	
 	glDeleteRenderbuffersOES(1, &_renderbuffer);
 	_renderbuffer = 0;
-
+	
 	glDeleteFramebuffersOES(1, &_framebuffer);
 	_framebuffer = 0;
 	
@@ -142,9 +143,9 @@
 			return nil;
 		}
 		
-//		self.multipleTouchEnabled = true;
+		self.multipleTouchEnabled = true;
 	}
-
+	
 	return self;
 }
 
@@ -161,7 +162,7 @@
 	
 	if(![_context presentRenderbuffer:GL_RENDERBUFFER_OES])
 		NSLog(@"Failed to swap renderbuffer in %s\n", __FUNCTION__);
-
+	
 	if(oldContext != _context)
 		[EAGLContext setCurrentContext:oldContext];
 }
@@ -187,36 +188,134 @@
 
 //------------------------------------------------------
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	CGPoint touchPoint = [[touches anyObject] locationInView:self];
-	baseApp->mouseX = touchPoint.x;
-	baseApp->mouseY = touchPoint.y;
-	baseApp->mousePressed(touchPoint.x, touchPoint.y, 1);
+	
+	NSArray *all = [touches allObjects];
+	int count = [all count];
+	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+	for(int i=0; i<count; i++){
+		
+		// find a new touch
+		UITouch *touch = [all objectAtIndex:i];
+		if([touch phase] != UITouchPhaseBegan)
+			continue;
+		
+		// place it in an empty space in the array
+		int index=0;
+		while( index<MAX_TOUCHES && touchesExist[index] )
+			index++;
+		if(index==MAX_TOUCHES)
+			index=0;
+		
+		touchesExist[index] = true;
+		activeTouches[index] = touch;
+		
+		CGPoint touchPoint = [touch locationInView:self];
+		
+		if( index==0 ){
+			baseApp->mouseX = touchPoint.x;
+			baseApp->mouseY = touchPoint.y;
+			baseApp->mousePressed(touchPoint.x, touchPoint.y, 1);
+		}
+		
+		if([touch tapCount] == 1) ofxMultiTouch.touchDown(touchPoint.x, touchPoint.y, index);
+		else {
+			ofxMultiTouch.touchDoubleTap(touchPoint.x, touchPoint.y, index);
+		}
+	}
+	[pool release];
 }
 
 //------------------------------------------------------
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-	CGPoint touchPoint = [[touches anyObject] locationInView:self];
-	baseApp->mouseX = touchPoint.x;
-	baseApp->mouseY = touchPoint.y;
-	baseApp->mouseDragged(touchPoint.x, touchPoint.y, 1);
+	
+	NSArray *all = [touches allObjects];
+	int count = [all count];
+	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+	for(int i=0; i<count; i++){
+		
+		// find a moved touch
+		UITouch *touch = [all objectAtIndex:i];
+		if([touch phase] != UITouchPhaseMoved)
+			continue;
+		
+		// find it in the list!
+		int index=0;
+		while( index<MAX_TOUCHES && (!touchesExist[index] || activeTouches[index]!=touch) )
+			index++;
+		if( index==MAX_TOUCHES )
+			continue;
+		
+		CGPoint touchPoint = [touch locationInView:self];
+		
+		if( index==0 ){
+			baseApp->mouseX = touchPoint.x;
+			baseApp->mouseY = touchPoint.y;
+			baseApp->mouseDragged(touchPoint.x, touchPoint.y, 1);
+		}
+		
+		//		baseApp->touchMove(touchPoint.x, touchPoint.y, index);
+		ofxMultiTouch.touchMoved(touchPoint.x, touchPoint.y, index);
+	}
+	[pool release];
 }
 
 //------------------------------------------------------
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	CGPoint touchPoint = [[touches anyObject] locationInView:self];
-	baseApp->mouseX = touchPoint.x;
-	baseApp->mouseY = touchPoint.y;
-	baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
-	baseApp->mouseReleased();
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	NSArray *all = [touches allObjects];
+	int count = [all count];
+	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+	for(int i=0; i<count; i++){
+		
+		// find a finished touch
+		UITouch *touch = [all objectAtIndex:i];
+		if([touch phase] != UITouchPhaseEnded)
+			continue;
+		
+		// find it in the list!
+		int index=0;
+		while( index<MAX_TOUCHES && (!touchesExist[index] || activeTouches[index]!=touch) )
+			index++;
+		if( index==MAX_TOUCHES )
+			continue;
+		
+		touchesExist[index] = false;
+		
+		CGPoint touchPoint = [touch locationInView:self];
+		
+		if( index==0 ){
+			baseApp->mouseX = touchPoint.x;
+			baseApp->mouseY = touchPoint.y;
+			baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
+			baseApp->mouseReleased();
+		}
+		
+		//		baseApp->touchUp(touchPoint.x, touchPoint.y, index);
+		ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, index);
+		
+	}
+	[pool release];
 }
 
 //------------------------------------------------------
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-	CGPoint touchPoint = [[touches anyObject] locationInView:self];
-	baseApp->mouseX = touchPoint.x;
-	baseApp->mouseY = touchPoint.y;
-	baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
-	baseApp->mouseReleased();
+	// end all active touches
+	for(int i=0; i<MAX_TOUCHES; i++){
+		if(touchesExist[i]){
+			touchesExist[i] = false;
+			
+			UITouch * touch = activeTouches[i];
+			
+			CGPoint touchPoint = [touch locationInView:self];
+			
+			if( i==0 ){
+				baseApp->mouseX = touchPoint.x;
+				baseApp->mouseY = touchPoint.y;
+				baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
+				baseApp->mouseReleased();
+			}
+		}
+	}
 }
 
 
