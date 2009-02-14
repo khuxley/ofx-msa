@@ -1,11 +1,16 @@
 ofxiPhone changelog
 
 
+v0.6
+--------------------
+- utility functions enable/disable idle timer
+- multitouch checking back in ofxiPhone core
+
 v0.5
 --------------------
 - fixed setFrameRate
 - included iphone accelerometer & iphone multitouch implementations into ofxiPhone
-- orgranized files
+- organized files
 - removed multitouch checking from core
 - added utility functions:
 	* ofxiPhoneSaveImage
