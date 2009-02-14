@@ -192,6 +192,10 @@
 	NSArray *all = [touches allObjects];
 	int count = [all count];
 	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+	
+	ofxMultiTouchCustomData data;
+	data.numTouches = count;
+	
 	for(int i=0; i<count; i++){
 		
 		// find a new touch
@@ -217,9 +221,9 @@
 			baseApp->mousePressed(touchPoint.x, touchPoint.y, 1);
 		}
 		
-		if([touch tapCount] == 1) ofxMultiTouch.touchDown(touchPoint.x, touchPoint.y, index);
+		if([touch tapCount] == 1) ofxMultiTouch.touchDown(touchPoint.x, touchPoint.y, index, &data);
 		else {
-			ofxMultiTouch.touchDoubleTap(touchPoint.x, touchPoint.y, index);
+			ofxMultiTouch.touchDoubleTap(touchPoint.x, touchPoint.y, index, &data);
 		}
 	}
 	[pool release];
@@ -231,6 +235,10 @@
 	NSArray *all = [touches allObjects];
 	int count = [all count];
 	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+	
+	ofxMultiTouchCustomData data;
+	data.numTouches = count;
+	
 	for(int i=0; i<count; i++){
 		
 		// find a moved touch
@@ -254,7 +262,7 @@
 		}
 		
 		//		baseApp->touchMove(touchPoint.x, touchPoint.y, index);
-		ofxMultiTouch.touchMoved(touchPoint.x, touchPoint.y, index);
+		ofxMultiTouch.touchMoved(touchPoint.x, touchPoint.y, index, &data);
 	}
 	[pool release];
 }
@@ -265,6 +273,10 @@
 	NSArray *all = [touches allObjects];
 	int count = [all count];
 	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+	
+	ofxMultiTouchCustomData data;
+	data.numTouches = count;
+	
 	for(int i=0; i<count; i++){
 		
 		// find a finished touch
@@ -290,9 +302,7 @@
 			baseApp->mouseReleased();
 		}
 		
-		//		baseApp->touchUp(touchPoint.x, touchPoint.y, index);
-		ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, index);
-		
+		ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, index, &data);
 	}
 	[pool release];
 }
@@ -300,6 +310,9 @@
 //------------------------------------------------------
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
 	// end all active touches
+	ofxMultiTouchCustomData data;
+	data.numTouches = [[touches allObjects] count];
+	
 	for(int i=0; i<MAX_TOUCHES; i++){
 		if(touchesExist[i]){
 			touchesExist[i] = false;
@@ -313,7 +326,9 @@
 				baseApp->mouseY = touchPoint.y;
 				baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
 				baseApp->mouseReleased();
+				
 			}
+			ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, i, &data);
 		}
 	}
 }

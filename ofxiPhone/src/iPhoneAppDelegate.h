@@ -25,7 +25,7 @@
 #import "ofAppiPhoneWindow.h"
 
 @interface iPhoneAppDelegate : NSObject <UIApplicationDelegate> {
-    UIWindow			*window;
+    IBOutlet UIWindow	*window;
 	EAGLView			*glView;
 	ofAppiPhoneWindow	*iPhoneWindow;
 

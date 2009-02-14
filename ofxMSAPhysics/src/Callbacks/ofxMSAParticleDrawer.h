@@ -19,9 +19,9 @@
 
 #pragma once
 
-#define OF_ADDON_USING_OFXOBJCPOINTER
 #include "ofMain.h"
-#include "ofAddons.h"
+#include "ofxObjCPointer.h"
+#include "ofxVectorMath.h"
 
 #include "ofxMSAParticle.h"
 

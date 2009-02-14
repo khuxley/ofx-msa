@@ -19,6 +19,16 @@
 
 #include "ofxiPhone.h"
 
+void iPhoneEnableIdleTimer() {
+	[UIApplication sharedApplication].idleTimerDisabled = true;
+}
+
+void iPhoneDisableIdleTimer() {
+	[UIApplication sharedApplication].idleTimerDisabled = false;
+}
+
+
+
 void iPhoneLoadImage(NSString *filename, GLuint *spriteTexture) {
 	CGImageRef spriteImage;
 	CGContextRef spriteContext;

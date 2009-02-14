@@ -25,14 +25,11 @@
 
 #pragma once
 
-#define OF_ADDON_USING_OFXVECTORMATH
-#define OF_ADDON_USING_OFXOBJCPOINTER
-#define OF_ADDON_USING_OFMSADATARECORDER
 #include "ofMain.h"
-#include "ofAddons.h"
+#include "ofxVectorMath.h"
+#include "ofxObjCPointer.h"
 
-#include <vector>
-
+#include "ofxMSADataRecorder.h"
 #include "ofxMSAParticle.h"
 #include "ofxMSAConstraint.h"
 #include "ofxMSASpring.h"

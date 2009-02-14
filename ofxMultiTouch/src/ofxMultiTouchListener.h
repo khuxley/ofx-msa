@@ -19,14 +19,19 @@
 
 #pragma once
 
-/****** protocol, delegate, interface, whatever you want to call it ******/
+// contains custom data which specific implementations can override and add to
+struct ofxMultiTouchCustomData {
+	int numTouches;
+};
 
+
+/****** protocol, delegate, interface, whatever you want to call it ******/
 class ofxMultiTouchListener {
 public:
 	virtual ~ofxMultiTouchListener() {}				
 	
-	virtual void touchDown(int x, int y, int touchId, void *data = NULL)			{}
-	virtual void touchMoved(int x, int y, int touchId, void *data = NULL)			{}
-	virtual void touchUp(int x, int y, int touchId, void *data = NULL)				{}
-	virtual void touchDoubleTap(int x, int y, int touchId, void *data = NULL)		{}
+	virtual void touchDown(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)			{}
+	virtual void touchMoved(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)		{}
+	virtual void touchUp(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)			{}
+	virtual void touchDoubleTap(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)	{}
 };

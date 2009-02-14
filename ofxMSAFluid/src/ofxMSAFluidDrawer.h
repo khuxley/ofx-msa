@@ -58,11 +58,15 @@ public:
 	void reset();
 	
 	float getWidth() {
+#ifdef FLUID_TEXTURE
 		return tex.getWidth();
+#endif
 	}
 	
 	float getHeight() {
+#ifdef FLUID_TEXTURE
 		return tex.getHeight();
+#endif
 	}
 	
 	void setDrawMode(int newDrawMode);

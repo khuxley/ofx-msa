@@ -19,12 +19,10 @@
 
 #pragma once
 
-#define OF_ADDON_USING_OFXOBJCPOINTER
+#include "ofxObjCPointer.h"
 #include "ofMain.h"
-#include "ofAddons.h"
 
 #include "ofxMSAParticle.h"
-#include <vector>
 
 
 /********************* Particle updater class *************************/

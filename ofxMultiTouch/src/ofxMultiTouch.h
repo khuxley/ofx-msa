@@ -34,8 +34,8 @@ public:
 	}
 	
 	// multitouch engine should call this when a 'down' is detected
-	// use void *data to send any platform specific data
-	void touchDown(int x, int y, int touchId, void *data = 0) {
+	// use ofxMultiTouchCustomData *data to send any platform specific data
+	void touchDown(int x, int y, int touchId, ofxMultiTouchCustomData *data = 0) {
 		for(std::list<ofxMultiTouchListener*>::iterator it=listeners.begin(); it!=listeners.end(); ++it) {
 			ofxMultiTouchListener* o = *it;
 			o->touchDown(x, y, touchId, data);
@@ -43,8 +43,8 @@ public:
 	}
 	
 	// multitouch engine should call this when a 'move' (drag) is detected
-	// use void *data to send any platform specific data
-	void touchMoved(int x, int y, int touchId, void *data = 0) {
+	// use ofxMultiTouchCustomData *data to send any platform specific data
+	void touchMoved(int x, int y, int touchId, ofxMultiTouchCustomData *data = 0) {
 		for(std::list<ofxMultiTouchListener*>::iterator it=listeners.begin(); it!=listeners.end(); ++it) {
 			ofxMultiTouchListener* o = *it;
 			o->touchMoved(x, y, touchId, data);
@@ -52,8 +52,8 @@ public:
 	}
 	
 	// multitouch engine should call this when an 'up' is detected
-	// use void *data to send any platform specific data
-	void touchUp(int x, int y, int touchId, void *data = 0) {
+	// use ofxMultiTouchCustomData *data to send any platform specific data
+	void touchUp(int x, int y, int touchId, ofxMultiTouchCustomData *data = 0) {
 		for(std::list<ofxMultiTouchListener*>::iterator it=listeners.begin(); it!=listeners.end(); ++it) {
 			ofxMultiTouchListener* o = *it;
 			o->touchUp(x, y, touchId, data);
@@ -61,8 +61,8 @@ public:
 	}
 	
 	// multitouch engine should call this when a 'double tap' is detected
-	// use void *data to send any platform specific data	
-	void touchDoubleTap(int x, int y, int touchId, void *data = 0) {
+	// use ofxMultiTouchCustomData *data to send any platform specific data	
+	void touchDoubleTap(int x, int y, int touchId, ofxMultiTouchCustomData *data = 0) {
 		for(std::list<ofxMultiTouchListener*>::iterator it=listeners.begin(); it!=listeners.end(); ++it) {
 			ofxMultiTouchListener* o = *it;
 			o->touchDoubleTap(x, y, touchId, data);

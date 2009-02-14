@@ -19,9 +19,8 @@
 
 #pragma once
 
-#define OF_ADDON_USING_OFXVECTORMATH
 #include "ofMain.h"
-#include "ofAddons.h"
+#include "ofxVectorMath.h"
 
 #include "ofxMSAConstraint.h"
 

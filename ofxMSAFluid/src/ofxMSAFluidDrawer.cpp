@@ -225,10 +225,12 @@ void ofxMSAFluidDrawer::drawVectors(float x, float y, float renderWidth, float r
 			
 //			if(dx*dx+dy*dy > velThreshold) {
 //				float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
+#ifndef TARGET_OPENGLES
 				glBegin(GL_LINES);
 				glColor3f(0, 0, 0); glVertex2f(i, j);
 				glColor3f(1, 1, 1); glVertex2f(i + vel.x, j + vel.y);
 				glEnd();
+#endif			
 //			printf("%.8f, %.8f\n", vel.x, vel.y);
 //			}
 		}
