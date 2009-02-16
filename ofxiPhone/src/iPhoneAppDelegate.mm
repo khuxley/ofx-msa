@@ -75,6 +75,21 @@
 //	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / 60.0f) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
 	
 	
+	//----- DAMIAN
+	// set data path root for ofToDataPath()
+	// path on iPhone will be ~/Applications/{application GUID}/openFrameworks.app/data
+	// get the resource path for the bundle (ie '~/Applications/{application GUID}/openFrameworks.app')
+	NSString *bundle_path_ns = [[NSBundle mainBundle] resourcePath];
+	// convert to UTF8 STL string
+	string path = [bundle_path_ns UTF8String];
+	// append data
+	//path.append( "/data/" ); // ZACH
+	path.append( "/" ); // ZACH
+	printf("setting data path root to '%s'\n", path.c_str() );
+	ofSetDataPathRoot( path );
+	//-----
+	
+	
 	// call testApp::setup()
 	iPhoneWindow->baseApp->setup();
 }
