@@ -35,10 +35,10 @@ void testApp::draw() {
 	glEnable(GL_BLEND);
 	
 	// choose semi-transparent black color
-	myObj.glColor(0, 0, 0, 0.05f);
+	myObj.setColor(0, 0, 0, 0.05f);
 	
 	// draw a black semi-transparent rectangle across whole screen to fade it out a bit
-	myObj.glRect(0, 0, ofGetWidth(), ofGetHeight());
+	myObj.drawRect(0, 0, ofGetWidth(), ofGetHeight());
 	
 	// disable blending
 	glDisable(GL_BLEND);
@@ -56,11 +56,11 @@ void testApp::draw() {
 	pos.set(ofGetWidth()/2 + cos(theta) * startOffset, ofGetHeight()/2 + sin(theta) * startOffset, 0);
 	
 	// begin a triangle strip
-	myObj.glBegin(GL_TRIANGLE_STRIP);
+	myObj.begin(GL_TRIANGLE_STRIP);
 	for(int i=0; i<5000; i++) {
 		// calculate and set colors
 		// RGB components modulate sinusoidally, frequency increases with iteration count
-		myObj.glColor(sin(curTime * 0.8f + i * 0.0011f) * 0.5f + 0.5f, sin(curTime * 0.7f + i * 0.0013f) * 0.5f + 0.5f, sin(curTime * 0.3f + i * 0.0017f) * 0.5f + 0.5f);
+		myObj.setColor(sin(curTime * 0.8f + i * 0.0011f) * 0.5f + 0.5f, sin(curTime * 0.7f + i * 0.0013f) * 0.5f + 0.5f, sin(curTime * 0.3f + i * 0.0017f) * 0.5f + 0.5f);
 		
 		// do some maths to calculate vertex positions
 		// modulate theta (offset rotation) sinusoidally, frequency increases with iteration count
@@ -74,7 +74,7 @@ void testApp::draw() {
 		pos += ofPoint(cos_t, sin_t, sin(curTime * 0.5f + i*0.002f) * 0.5);
 		
 		// send vertex data to myObj
-		myObj.glVertex(pos.x, pos.y, pos.z);
+		myObj.addVertex(pos.x, pos.y, pos.z);
 		
 		// do some math to calculate another vertex position
 		// perpendicular to rotation
@@ -83,9 +83,9 @@ void testApp::draw() {
 		ofPoint pos2 = pos + ofPoint(sin_t, -cos_t) * ofMap(sin(curTime * 0.4f * ( 1.0f + i * 0.001f) + i * 0.06f + sin(i*0.001f) * 0.2f), -1, 1, 5, 10 +  i * 0.01f);
 		
 		// place second vertex (can also pass pointer (array) to coordinates)
-		myObj.glVertex3v(pos2.v);
+		myObj.addVertex2v(pos2.v);
 	}
 	
 	// end vertices and draw to screen
-	myObj.glEnd();
+	myObj.end();
 }
