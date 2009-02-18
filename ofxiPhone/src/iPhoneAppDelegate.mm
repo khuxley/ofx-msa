@@ -49,15 +49,16 @@
 	// create fullscreen window
 	window = [[UIWindow alloc] initWithFrame:rect];
 	
+	// make window active
+	[window makeKeyAndVisible];
+	
+	
 	// create the OpenGL view and add it to the window
 	iPhoneGlobals.glView = [[EAGLView alloc] initWithFrame:rect pixelFormat:GL_RGB565_OES depthFormat:GL_DEPTH_COMPONENT16_OES preserveBackbuffer:NO];	
 	[window addSubview:iPhoneGlobals.glView];
 	
 	// release iPhoneGlobals.glView (window still has retain on it)
 	[iPhoneGlobals.glView release];
-	
-	// make window active
-	[window makeKeyAndVisible];
 	
 	// save reference to the delegate
 	iPhoneGlobals.appDelegate = self;
@@ -84,10 +85,13 @@
 
 	// show or hide status bar depending on OF_WINDOW or OF_FULLSCREEN
 	[[UIApplication sharedApplication] setStatusBarHidden:(iPhoneGlobals.iPhoneOFWindow->windowMode == OF_FULLSCREEN) animated:YES];
+	[[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+	
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 

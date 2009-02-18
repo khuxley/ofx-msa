@@ -40,9 +40,14 @@ void iPhoneEnableMultitouch();
 
 
 // load an image from the app bundle into a texture
-void iPhoneLoadImage(NSString *filename, GLuint *spriteTexture);
+void iPhoneLoadImageFromBundle(NSString *filename, GLuint *spriteTexture);
+
+// load an image from UIImage into a texture
+void iPhoneLoadImageFromUIImage(UIImage *image, GLuint *spriteTexture);
+
 
 
 // save current opengl screen to photos app
 // based on code from http://www.bit-101.com/blog/?p=1861
 void iPhoneScreenGrab(id delegate);
+

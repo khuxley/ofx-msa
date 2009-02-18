@@ -1,6 +1,11 @@
 ofxiPhone changelog
 
 
+v0.71
+--------------------
+- expanded image load functionality from bundle or UIImage*
+
+
 v0.7
 --------------------
 - added ofSoundStream replacement for audio input

@@ -32,7 +32,6 @@ static ofxIPhoneAccelerometerDelegate* iPhoneAccelerometerDelegate;
 
 
 
-
 /************ Impementation of standard C++ accel interface tailored for iPhone ************/
 // call this to setup the accelerometer
 void ofxAccelerometerHandler::setup() {
