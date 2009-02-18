@@ -41,7 +41,6 @@ void ofxAccelerometerHandler::setup() {
 //	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; 
 
 #if TARGET_IPHONE_SIMULATOR
-	ofxAccelerometer.setSmooth(0);
 	update(0, -1, 0);
 #endif
 }
