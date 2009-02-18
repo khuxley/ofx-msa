@@ -11,9 +11,10 @@
  Also use the getInfoAtCell() function to read velocity and density at any coordinates in the fluid so you can feed it to a particle system or something
  
  
- -----------------------------------
+ /***********************************************************************
  
  Copyright (c) 2009, Memo Akten, www.memo.tv
+ *** The Mega Super Awesome Visuals Company ***
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

@@ -21,9 +21,10 @@
  
  Never use 'delete myObj', only use 'myObj->release();
  
- -----------------------------------
+ /***********************************************************************
  
  Copyright (c) 2009, Memo Akten, www.memo.tv
+ *** The Mega Super Awesome Visuals Company ***
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

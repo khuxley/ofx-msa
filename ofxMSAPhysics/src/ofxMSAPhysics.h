@@ -1,6 +1,7 @@
 /***********************************************************************
  
  Copyright (c) 2009, Memo Akten, www.memo.tv
+ *** The Mega Super Awesome Visuals Company ***
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,7 +18,7 @@
  
  ***********************************************************************/
 
-/* based on
+/* verlet based on
  
  http://www.gamasutra.com/resource_guide/20030121/jacobson_01.shtml
  
