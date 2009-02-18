@@ -69,7 +69,8 @@
 	
 	// show or hide status bar depending on OF_WINDOW or OF_FULLSCREEN
 	[[UIApplication sharedApplication] setStatusBarHidden:(iPhoneWindow->windowMode == OF_FULLSCREEN) animated:YES];
-
+	[[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+	
 	// start timer
 	[self setFrameRate:60];
 //	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / 60.0f) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
@@ -92,6 +93,10 @@
 	
 	// call testApp::setup()
 	iPhoneWindow->baseApp->setup();
+	
+	// clear background
+	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 

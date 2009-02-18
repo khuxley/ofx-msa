@@ -11,7 +11,7 @@ class ofxPerlin {
 public:
 	
 	ofxPerlin(int octaves = 4, float freq = 2, float amp = 0.5f, int seed = 1);
-	void init(int octaves,float freq,float amp,int seed);
+	void setup(int octaves = 4, float freq = 2, float amp = 0.5f, int seed = 1);
 	
 	float get(float x, float y)	{
 		float vec[2];
@@ -54,6 +54,8 @@ protected:
 	bool  mStart;
 	
 };
+
+extern ofxPerlin perlin;
 
 #endif
 

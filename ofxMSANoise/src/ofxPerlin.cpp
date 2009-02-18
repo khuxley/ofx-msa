@@ -7,6 +7,8 @@
 
 #include "ofxPerlin.h"
 
+ofxPerlin perlin;
+
 #define B SAMPLE_SIZE
 #define BM (SAMPLE_SIZE-1)
 
@@ -18,7 +20,7 @@
 #define fade(t)			(t * t * t * (t * (t * 6 - 15) + 10))
 #define lerp(t, a, b) ( a + t * (b - a) )
 
-#define setup(i,b0,b1,r0,r1)\
+#define SETUP(i,b0,b1,r0,r1)\
 t = vec[i] + N;\
 b0 = ((int)t) & BM;\
 b1 = (b0+1) & BM;\
@@ -39,7 +41,7 @@ float ofxPerlin::noise1(float arg)
 		init();
 	}
 	
-	setup(0, bx0,bx1, rx0,rx1);
+	SETUP(0, bx0,bx1, rx0,rx1);
 	
 	sx = fade(rx0);
 	
@@ -62,8 +64,8 @@ float ofxPerlin::noise2(float vec[2])
 		init();
 	}
 	
-	setup(0,bx0,bx1,rx0,rx1);
-	setup(1,by0,by1,ry0,ry1);
+	SETUP(0,bx0,bx1,rx0,rx1);
+	SETUP(1,by0,by1,ry0,ry1);
 	
 	i = p[bx0];
 	j = p[bx1];
@@ -106,9 +108,9 @@ float ofxPerlin::noise3(float vec[3])
 		init();
 	}
 	
-	setup(0, bx0,bx1, rx0,rx1);
-	setup(1, by0,by1, ry0,ry1);
-	setup(2, bz0,bz1, rz0,rz1);
+	SETUP(0, bx0,bx1, rx0,rx1);
+	SETUP(1, by0,by1, ry0,ry1);
+	SETUP(2, bz0,bz1, rz0,rz1);
 	
 	i = p[ bx0 ];
 	j = p[ bx1 ];
@@ -252,11 +254,11 @@ float ofxPerlin::perlin_noise_3D(float vec[3])
 
 ofxPerlin::ofxPerlin(int octaves,float freq,float amp,int seed)
 {
-	init(octaves, freq, amp, seed);
+	setup(octaves, freq, amp, seed);
 }
 
 
-void ofxPerlin::init(int octaves,float freq,float amp,int seed) {
+void ofxPerlin::setup(int octaves,float freq,float amp,int seed) {
 	mOctaves = octaves;
 	mFrequency = freq;
 	mAmplitude = amp;

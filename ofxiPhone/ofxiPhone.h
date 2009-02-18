@@ -33,6 +33,10 @@ void iPhoneDisableIdleTimer();
 void iPhoneEnableIdleTimer();
 
 
+// returns normalized (0...1) Average and Peak audio levels on mic
+float iPhoneGetMicAverageLevel();
+float iPhoneGetMicPeakLevel();
+
 void iPhoneEnableMultitouch();
 
 

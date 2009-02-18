@@ -134,7 +134,7 @@ void iPhoneScreenGrab(id delegate) {
 	
 	SaveDelegate *saveDelegate = [SaveDelegate new];
 	saveDelegate.delegate = delegate;
-	UIImageWriteToSavedPhotosAlbum(image, saveDelegate, (SEL)@selector(image:didFinishSavingWithError:contextInfo:), nil);
+	UIImageWriteToSavedPhotosAlbum(image, saveDelegate, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
 
