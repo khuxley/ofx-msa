@@ -26,7 +26,6 @@
 
 
 
-
 // enable or disable the iPhone idle timer
 // (screen dims and goes off after x amount of inactivity)
 void iPhoneDisableIdleTimer();

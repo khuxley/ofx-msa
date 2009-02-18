@@ -73,8 +73,6 @@
 
 #define	MAX_TOUCHES			5		// iphone has max 5 finger support
 
-#include "ofAppRunner.h"			// for baseApp
-
 /*
  This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
  The view content is basically an EAGL surface you render your OpenGL scene into.
@@ -92,16 +90,13 @@
 	CGSize					_size;
 	BOOL					_hasBeenCurrent;
 	
-	// app stuff
-	ofBaseApp				*baseApp;
-	
 	// multitouch stuff
 	UITouch *activeTouches[MAX_TOUCHES];
 	bool touchesExist[MAX_TOUCHES];	
 }
 - (id) initWithFrame:(CGRect)frame; //These also set the current context
 - (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format;
-- (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format depthFormat:(GLuint)depth preserveBackbuffer:(BOOL)retained;
+- (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format depthFormat:(GLuint)depth preserveBackbuffer:(bool)retained;
 
 @property(readonly) GLuint framebuffer;
 @property(readonly) GLuint pixelFormat;
@@ -111,7 +106,6 @@
 
 -(void) swapBuffers; //This also checks the current OpenGL error and logs an error if needed
 
--(void) setApp:(ofBaseApp*)theApp;
 
 @end
 

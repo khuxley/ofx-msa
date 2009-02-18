@@ -19,6 +19,7 @@
 
 
 #import "iPhoneAppDelegate.h"
+#include "iPhoneGlobals.h"
 #include "ofMain.h"
 
 
@@ -30,7 +31,7 @@
 	// create autorelease pool in case anything needs it
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
-	iPhoneWindow->timerLoop();
+	iPhoneGlobals.iPhoneOFWindow->timerLoop();
 	
 	// release pool
 	[pool release];
@@ -39,6 +40,8 @@
 
 
 -(void) applicationDidFinishLaunching:(UIApplication *)application {    
+	printf("applicationDidFinishLaunching() start\n");
+	
 	// get screen bounds
 	CGRect	rect = [[UIScreen mainScreen] bounds];
 	
@@ -46,35 +49,20 @@
 	window = [[UIWindow alloc] initWithFrame:rect];
 	
 	// create the OpenGL view and add it to the window
-	glView = [[EAGLView alloc] initWithFrame:rect pixelFormat:GL_RGB565_OES depthFormat:GL_DEPTH_COMPONENT16_OES preserveBackbuffer:NO];	
-	[window addSubview:glView];
+	iPhoneGlobals.glView = [[EAGLView alloc] initWithFrame:rect pixelFormat:GL_RGB565_OES depthFormat:GL_DEPTH_COMPONENT16_OES preserveBackbuffer:NO];	
+	[window addSubview:iPhoneGlobals.glView];
 	
-	// release glView (window still has retain on it)
-	[glView release];
+	// release iPhoneGlobals.glView (window still has retain on it)
+	[iPhoneGlobals.glView release];
 	
 	// make window active
 	[window makeKeyAndVisible];
 	
-	// save reference to ofAppiPhoneWindow for quick access
-	iPhoneWindow = (ofAppiPhoneWindow*)ofAppWindow;
-	
-	// give baseApp reference to glView for touch callbacks
-	[glView setApp:iPhoneWindow->baseApp];
-	
-	// give glView reference to iPhoneWindow
-	iPhoneWindow->glView = glView;
-	
-	// gobe delegate reference to iPhoneWindow
-	iPhoneWindow->appDelegate = self;
-	
-	// show or hide status bar depending on OF_WINDOW or OF_FULLSCREEN
-	[[UIApplication sharedApplication] setStatusBarHidden:(iPhoneWindow->windowMode == OF_FULLSCREEN) animated:YES];
-	[[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+	// save reference to the delegate
+	iPhoneGlobals.appDelegate = self;
 	
 	// start timer
 	[self setFrameRate:60];
-//	timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / 60.0f) target:self selector:@selector(timerLoop) userInfo:nil repeats:YES];
-	
 	
 	//----- DAMIAN
 	// set data path root for ofToDataPath()
@@ -90,9 +78,11 @@
 	ofSetDataPathRoot( path );
 	//-----
 	
-	
 	// call testApp::setup()
-	iPhoneWindow->baseApp->setup();
+	iPhoneGlobals.baseApp->setup();
+
+	// show or hide status bar depending on OF_WINDOW or OF_FULLSCREEN
+	[[UIApplication sharedApplication] setStatusBarHidden:(iPhoneGlobals.iPhoneOFWindow->windowMode == OF_FULLSCREEN) animated:YES];
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
@@ -110,7 +100,6 @@
 
 -(void) dealloc {
     [window release];
-//	[glView release];		// we dont need to release this, window will
     [super dealloc];
 }
 
@@ -129,8 +118,6 @@
 
 -(void) applicationWillTerminate:(UIApplication *)application {
 	[timer invalidate];
-	iPhoneWindow->baseApp->exit();
-	delete iPhoneWindow->baseApp;
 }
 
 

@@ -20,9 +20,7 @@
 
 #pragma once
 
-#include "ofConstants.h"
 #include "ofAppBaseWindow.h"
-#include "EAGLView.h"
 
 
 class ofAppiPhoneWindow : public ofAppBaseWindow{
@@ -42,15 +40,16 @@ public:
 	virtual void		setWindowShape(int w, int h) {};
 	
 	virtual int			getFrameNum();
+	virtual float		getFrameRate();
 	
 	virtual ofPoint		getWindowPosition();
 	virtual ofPoint		getWindowSize();
 	virtual ofPoint		getScreenSize();
-	virtual int			getWindowMode();
-	virtual float		getFrameRate();
 	
 	virtual void		setFrameRate(float targetRate);
 	virtual void		setWindowTitle(string title);
+	
+	virtual int			getWindowMode();
 	
 	virtual void		setFullscreen(bool fullscreen);
 	virtual void		toggleFullscreen();
@@ -58,18 +57,9 @@ public:
 	virtual void		enableSetupScreen();
 	virtual void		disableSetupScreen();
 	
-	virtual void		setVerticalSync(bool bSync) {};
-	
-	virtual void		exit() {};
-	
 	void timerLoop();
 
-
-	
 	int					windowMode;
-	ofBaseApp			*baseApp;
-	EAGLView			*glView;
-	id					appDelegate;
 	
 	// cache these, they're not gonne change during duration of app
 	ofPoint				screenSize;

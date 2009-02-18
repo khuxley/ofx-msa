@@ -17,20 +17,27 @@
  
  ***********************************************************************/
 
-#pragma once
+#include "ofAppRunner.h"
+#include "ofAppiPhoneWindow.h"
+#include "iPhoneAppDelegate.h"
+#include "EAGLView.h"
 
-#import <UIKit/UIKit.h>
 
-#import "EAGLView.h"
-#import "ofAppiPhoneWindow.h"
+class iPhoneGlobalsStruct {
+public:
+	
+	ofBaseApp			*baseApp;
+	ofAppiPhoneWindow	*iPhoneOFWindow;
+	EAGLView			*glView;
+	id					appDelegate;
+	
+	iPhoneGlobalsStruct() {
+		baseApp = 0;
+		iPhoneOFWindow = 0;
+		glView = 0;
+		appDelegate = 0;
+	}
+};
 
-@interface iPhoneAppDelegate : NSObject <UIApplicationDelegate> {
-    IBOutlet UIWindow	*window;
 
-	NSTimer				*timer;
-}
-
--(void) setFrameRate:(float)frameRate;
-
-@end
-
+extern iPhoneGlobalsStruct iPhoneGlobals;

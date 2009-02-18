@@ -17,20 +17,6 @@
  
  ***********************************************************************/
 
-#pragma once
+#include "iPhoneGlobals.h"
 
-#import <UIKit/UIKit.h>
-
-#import "EAGLView.h"
-#import "ofAppiPhoneWindow.h"
-
-@interface iPhoneAppDelegate : NSObject <UIApplicationDelegate> {
-    IBOutlet UIWindow	*window;
-
-	NSTimer				*timer;
-}
-
--(void) setFrameRate:(float)frameRate;
-
-@end
-
+iPhoneGlobalsStruct iPhoneGlobals;

@@ -36,7 +36,7 @@
 #define FLUID_TEXTURE
 
 
-class ofxMSAFluidDrawer : public ofBaseUpdates, public ofBaseDraws {
+class ofxMSAFluidDrawer {
 public:
 	float alpha;
 	

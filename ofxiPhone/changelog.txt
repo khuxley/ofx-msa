@@ -4,7 +4,10 @@ ofxiPhone changelog
 v0.7
 --------------------
 - added ofSoundStream replacement for audio input
+- added shell ofSoundPlayer replacement (no functionality)
 - clear glView after calling setup
+- updated window creation for oF 006
+
 
 v0.61
 --------------------

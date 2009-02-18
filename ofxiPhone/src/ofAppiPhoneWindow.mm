@@ -18,16 +18,11 @@
  ***********************************************************************/
 
 
-#include "ofAppiPhoneWindow.h"
-#include "iPhoneAppDelegate.h"
 #include "ofMain.h"
 
+#include "ofAppiPhoneWindow.h"
+#include "iPhoneGlobals.h"
 
-#import <UIKit/UIKit.h>
-
-
-ofAppiPhoneWindow *ofiPhoneWindow = new ofAppiPhoneWindow;
-ofAppBaseWindow *ofAppWindow  = ofiPhoneWindow;
 
 
 // use for checking if stuff has been initialized
@@ -38,7 +33,7 @@ ofAppBaseWindow *ofAppWindow  = ofiPhoneWindow;
 /******** Constructor ************/
 
 ofAppiPhoneWindow::ofAppiPhoneWindow() {
-	baseApp = 0;
+	printf("ofAppiPhoneWindow::ofAppiPhoneWindow()\n");
 	nFrameCount = 0;
 	bEnableSetupScreen = true;
 	
@@ -52,7 +47,10 @@ ofAppiPhoneWindow::ofAppiPhoneWindow() {
 /******** Initialization methods ************/
 
 void ofAppiPhoneWindow::setupOpenGL(int w, int h, int screenMode) {
+	printf("ofAppiPhoneWindow::setupOpenGL()\n");
+	
 	windowMode = screenMode;	// use this as flag for displaying status bar or not
+	iPhoneGlobals.iPhoneOFWindow = this;
 
 	// w & h are ignored, currently Apple don't allow windows which aren't fullscreen
 	// DO NOTHING ELSE, opengl will be setup by the app which creates an opengl view
@@ -65,7 +63,8 @@ void ofAppiPhoneWindow::initializeWindow() {
 
 
 void  ofAppiPhoneWindow::runAppViaInfiniteLoop(ofBaseApp * appPtr) {
-	baseApp = appPtr;		// save reference to our testApp
+	printf("ofAppiPhoneWindow::runAppViaInfiniteLoop()\n");
+	iPhoneGlobals.baseApp = appPtr;		// save reference to our testApp
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	UIApplicationMain(nil, nil, nil, @"iPhoneAppDelegate");		// this will run the infinite loop checking all events
@@ -128,7 +127,7 @@ float ofAppiPhoneWindow::getFrameRate() {
 
 /******** Other stuff ************/
 void ofAppiPhoneWindow::setFrameRate(float targetRate) {
-	[appDelegate setFrameRate:targetRate];
+	[iPhoneGlobals.appDelegate setFrameRate:targetRate];
 }
 
 int	ofAppiPhoneWindow::getFrameNum() {
@@ -162,7 +161,7 @@ void ofAppiPhoneWindow::disableSetupScreen(){
 
 
 void ofAppiPhoneWindow::timerLoop() {
-	baseApp->update();
+	iPhoneGlobals.baseApp->update();
 	
 	// this could be taken out and included in ofAppBaseWIndow
 	glViewport( 0, 0, ofGetWidth(), ofGetHeight() );
@@ -174,8 +173,8 @@ void ofAppiPhoneWindow::timerLoop() {
 	}
 	if(bEnableSetupScreen ) ofSetupScreen();		
 	
-	baseApp->draw();
-	[glView swapBuffers];
+	iPhoneGlobals.baseApp->draw();
+	[iPhoneGlobals.glView swapBuffers];
 	
 	
 	

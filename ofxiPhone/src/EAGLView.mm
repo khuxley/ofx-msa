@@ -25,6 +25,7 @@
 
 #include "ofxMultiTouch.h"
 #include "ofMain.h"
+#include "iPhoneGlobals.h"
 
 
 //CLASS IMPLEMENTATIONS:
@@ -121,7 +122,7 @@
 	return [self initWithFrame:frame pixelFormat:format depthFormat:0 preserveBackbuffer:NO];
 }
 
-- (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format depthFormat:(GLuint)depth preserveBackbuffer:(BOOL)retained
+- (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format depthFormat:(GLuint)depth preserveBackbuffer:(bool)retained
 {
 	if((self = [super initWithFrame:frame])) {
 		CAEAGLLayer*			eaglLayer = (CAEAGLLayer*)[self layer];
@@ -177,10 +178,10 @@
 	[super dealloc];
 }
 
-
--(void) setApp:(ofBaseApp*)theApp {
-	baseApp = theApp;
-}
+//
+//-(void) setApp:(ofBaseApp*)theApp {
+//	baseApp = theApp;
+//}
 
 
 /******************* TOUCH EVENTS ********************/
@@ -216,9 +217,9 @@
 		CGPoint touchPoint = [touch locationInView:self];
 		
 		if( index==0 ){
-			baseApp->mouseX = touchPoint.x;
-			baseApp->mouseY = touchPoint.y;
-			baseApp->mousePressed(touchPoint.x, touchPoint.y, 1);
+			iPhoneGlobals.baseApp->mouseX = touchPoint.x;
+			iPhoneGlobals.baseApp->mouseY = touchPoint.y;
+			iPhoneGlobals.baseApp->mousePressed(touchPoint.x, touchPoint.y, 1);
 		}
 		
 		if([touch tapCount] == 1) ofxMultiTouch.touchDown(touchPoint.x, touchPoint.y, index, &data);
@@ -256,12 +257,12 @@
 		CGPoint touchPoint = [touch locationInView:self];
 		
 		if( index==0 ){
-			baseApp->mouseX = touchPoint.x;
-			baseApp->mouseY = touchPoint.y;
-			baseApp->mouseDragged(touchPoint.x, touchPoint.y, 1);
+			iPhoneGlobals.baseApp->mouseX = touchPoint.x;
+			iPhoneGlobals.baseApp->mouseY = touchPoint.y;
+			iPhoneGlobals.baseApp->mouseDragged(touchPoint.x, touchPoint.y, 1);
 		}
 		
-		//		baseApp->touchMove(touchPoint.x, touchPoint.y, index);
+		//		iPhoneGlobals.baseApp->touchMove(touchPoint.x, touchPoint.y, index);
 		ofxMultiTouch.touchMoved(touchPoint.x, touchPoint.y, index, &data);
 	}
 	[pool release];
@@ -296,10 +297,10 @@
 		CGPoint touchPoint = [touch locationInView:self];
 		
 		if( index==0 ){
-			baseApp->mouseX = touchPoint.x;
-			baseApp->mouseY = touchPoint.y;
-			baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
-			baseApp->mouseReleased();
+			iPhoneGlobals.baseApp->mouseX = touchPoint.x;
+			iPhoneGlobals.baseApp->mouseY = touchPoint.y;
+			iPhoneGlobals.baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
+			iPhoneGlobals.baseApp->mouseReleased();
 		}
 		
 		ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, index, &data);
@@ -322,10 +323,10 @@
 			CGPoint touchPoint = [touch locationInView:self];
 			
 			if( i==0 ){
-				baseApp->mouseX = touchPoint.x;
-				baseApp->mouseY = touchPoint.y;
-				baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
-				baseApp->mouseReleased();
+				iPhoneGlobals.baseApp->mouseX = touchPoint.x;
+				iPhoneGlobals.baseApp->mouseY = touchPoint.y;
+				iPhoneGlobals.baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
+				iPhoneGlobals.baseApp->mouseReleased();
 				
 			}
 			ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, i, &data);

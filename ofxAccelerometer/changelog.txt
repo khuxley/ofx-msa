@@ -1,6 +1,13 @@
 ofxAccelerometer changelog
 
 
+v0.3
+--------------------
+- added orientation matrix
+- separate smoothing values for force & orientation
+- you can also read the raw unsmoothed data too
+
+
 v0.2
 --------------------
 - renamed from ofxAccel to ofxAccelerometer
