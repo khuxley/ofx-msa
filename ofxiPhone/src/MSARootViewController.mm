@@ -24,7 +24,7 @@
 
 @implementation MSARootViewController
 
-
+@synthesize optionsViewController;
 
 -(void) saveButtonReset {
 	[saveButton setTitle:@"Save to Photos"];	
@@ -43,6 +43,16 @@ CGRect scrollFrame;
 	view.frame = scrollFrame;
 	view.backgroundColor = [UIColor clearColor];
 	[scrollView addSubview:view];	
+}
+
+-(IBAction)nextPage:(id)sender {
+	pageControl.currentPage++;
+	[self pageChanged:nil];
+}
+
+-(IBAction)prevPage:(id)sender {
+	pageControl.currentPage--;
+	[self pageChanged:nil];
 }
 
 -(void)updatePages {

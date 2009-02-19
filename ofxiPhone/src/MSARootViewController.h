@@ -34,10 +34,13 @@
 	
 	bool _isOn;
 	bool pageControlUsed;
-	
 }
 
+@property (readonly) UIViewController *optionsViewController;
+
 -(void)addPage:(UIView*)view;
+-(IBAction)nextPage:(id)sender;
+-(IBAction)prevPage:(id)sender;
 
 -(void) openView:(bool)animate;
 -(IBAction) closeView:(id)sender;
