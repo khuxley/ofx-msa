@@ -1,10 +1,23 @@
-//
-//  MSARootViewController.m
-//  Meshmerizer
-//
-//  Created by Mehmet Akten on 18/02/2009.
-//  Copyright 2009 MSA Visuals Ltd.. All rights reserved.
-//
+/***********************************************************************
+ 
+ Copyright (c) 2009, Memo Akten, www.memo.tv
+ *** The Mega Super Awesome Visuals Company ***
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ ***********************************************************************/
+
 
 #import "MSARootViewController.h"
 #import "ofxiPhone.h"
@@ -18,7 +31,7 @@
 }
 
 
--(BOOL) isOn {
+-(bool) isOn {
 	return _isOn;
 }
 
@@ -45,7 +58,7 @@ CGRect scrollFrame;
 	
     [super viewDidLoad];
 	
-	window = [[UIApplication sharedApplication] keyWindow];
+	self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5f];
 	
 	scrollFrame = scrollView.frame;
     scrollView.contentSize = CGSizeMake(scrollFrame.size.width * 3, scrollFrame.size.height);
@@ -97,19 +110,24 @@ CGRect scrollFrame;
 #define ANIMATION_CURVE		UIViewAnimationCurveEaseIn
 
 
--(IBAction) openView {
+-(void)openView:(bool)animate {
+//	if(iPhoneGlobals.rootViewController.view.superview == nil) [iPhoneGlobals.window addSubview:iPhoneGlobals.rootViewController.view];
+		
 	if(self.view.superview == nil) {
 		[self saveButtonReset];
-		
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:ANIMATION_TIME];
-		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:window cache:YES];
-		[UIView setAnimationCurve: ANIMATION_CURVE];
-		[self viewWillAppear:YES];
-		[window addSubview:self.view];
-		[self viewDidAppear:YES];
-		[UIView commitAnimations];
-		
+		if(animate) {
+			[UIView beginAnimations:nil context:NULL];
+			[UIView setAnimationDuration:ANIMATION_TIME];
+			[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:iPhoneGlobals.window cache:YES];
+			[UIView setAnimationCurve: ANIMATION_CURVE];
+			[self viewWillAppear:YES];
+			[iPhoneGlobals.window addSubview:self.view];
+			[self viewDidAppear:YES];
+			[UIView commitAnimations];
+		} else {
+			[iPhoneGlobals.window addSubview:self.view];
+		}
+
 		activityIndicator.hidesWhenStopped = YES;
 		[activityIndicator stopAnimating];
 	}
@@ -120,8 +138,7 @@ CGRect scrollFrame;
 -(IBAction) closeView:(id)sender {
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:ANIMATION_TIME];
-	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:window cache:YES];
-	//		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:window cache:YES];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:iPhoneGlobals.window cache:YES];
 	[UIView setAnimationCurve: ANIMATION_CURVE];
 	[self viewWillDisappear:YES];
 	[self.view removeFromSuperview];

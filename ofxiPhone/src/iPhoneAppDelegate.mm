@@ -43,22 +43,17 @@
 -(void) applicationDidFinishLaunching:(UIApplication *)application {    
 	printf("applicationDidFinishLaunching() start\n");
 	
-	// get screen bounds
-	CGRect	rect = [[UIScreen mainScreen] bounds];
-	
 	// create fullscreen window
-	window = [[UIWindow alloc] initWithFrame:rect];
-	
-	// make window active
-	[window makeKeyAndVisible];
-	
-	
+	iPhoneGlobals.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
 	// create the OpenGL view and add it to the window
-	iPhoneGlobals.glView = [[EAGLView alloc] initWithFrame:rect pixelFormat:GL_RGB565_OES depthFormat:GL_DEPTH_COMPONENT16_OES preserveBackbuffer:NO];	
-	[window addSubview:iPhoneGlobals.glView];
-	
-	// release iPhoneGlobals.glView (window still has retain on it)
+	iPhoneGlobals.glView = [[EAGLView alloc] initWithFrame:[[UIScreen mainScreen] bounds] pixelFormat:GL_RGB565_OES depthFormat:GL_DEPTH_COMPONENT16_OES preserveBackbuffer:NO];
+	[iPhoneGlobals.window addSubview:iPhoneGlobals.glView];
 	[iPhoneGlobals.glView release];
+
+	// create view controller but don't add it. user can add if need be
+//	iPhoneGlobals.rootViewController = [[ofRootViewController alloc] initWithNibName:nil bundle:nil];
+//	[iPhoneGlobals.window addSubview:iPhoneGlobals.rootViewController.view];
 	
 	// save reference to the delegate
 	iPhoneGlobals.appDelegate = self;
@@ -92,6 +87,8 @@
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// make window active
+	[iPhoneGlobals.window makeKeyAndVisible];
 }
 
 
@@ -104,7 +101,7 @@
 
 
 -(void) dealloc {
-    [window release];
+    [iPhoneGlobals.window release];
     [super dealloc];
 }
 

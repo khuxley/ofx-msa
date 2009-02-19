@@ -27,12 +27,14 @@
 class iPhoneGlobalsStruct {
 public:
 	
-	ofBaseApp			*baseApp;
-	ofAppiPhoneWindow	*iPhoneOFWindow;
-	EAGLView			*glView;
-	id					appDelegate;
+	ofBaseApp				*baseApp;
+	UIWindow				*window;
+	ofAppiPhoneWindow		*iPhoneOFWindow;
+	EAGLView				*glView;
+	id						appDelegate;
 	
 	iPhoneGlobalsStruct() {
+		window = 0;
 		baseApp = 0;
 		iPhoneOFWindow = 0;
 		glView = 0;

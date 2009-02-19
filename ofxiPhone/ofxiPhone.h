@@ -24,6 +24,8 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+#import "iPhoneGlobals.h"
+
 
 
 // enable or disable the iPhone idle timer

@@ -26,8 +26,6 @@
 #import "ofAppiPhoneWindow.h"
 
 @interface iPhoneAppDelegate : NSObject <UIApplicationDelegate> {
-    IBOutlet UIWindow	*window;
-
 	NSTimer				*timer;
 }
 

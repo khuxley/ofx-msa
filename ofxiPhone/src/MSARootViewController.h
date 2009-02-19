@@ -1,17 +1,28 @@
-//
-//  MSARootViewController.h
-//  Meshmerizer
-//
-//  Created by Mehmet Akten on 18/02/2009.
-//  Copyright 2009 MSA Visuals Ltd.. All rights reserved.
-//
+/***********************************************************************
+ 
+ Copyright (c) 2009, Memo Akten, www.memo.tv
+ *** The Mega Super Awesome Visuals Company ***
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ ***********************************************************************/
+
 
 #import <UIKit/UIKit.h>
 
 
 @interface MSARootViewController : UIViewController <UIActionSheetDelegate, UIScrollViewDelegate> {
-	UIView *window;
-	
 	IBOutlet UIBarButtonItem			*saveButton;
 	IBOutlet UIActivityIndicatorView	*activityIndicator;
 	
@@ -21,16 +32,16 @@
 	IBOutlet UIPageControl				*pageControl;
 	IBOutlet UIViewController			*optionsViewController;
 	
-	BOOL _isOn;
-	BOOL pageControlUsed;
+	bool _isOn;
+	bool pageControlUsed;
 	
 }
 
 -(void)addPage:(UIView*)view;
 
--(void) openView;
+-(void) openView:(bool)animate;
 -(IBAction) closeView:(id)sender;
--(BOOL) isOn;
+-(bool) isOn;
 
 
 -(IBAction) savePhoto:(id)sender;
