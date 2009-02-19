@@ -31,8 +31,8 @@ class ofxMultiTouchListener {
 public:
 	virtual ~ofxMultiTouchListener() {}				
 	
-	virtual void touchDown(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)			{}
-	virtual void touchMoved(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)		{}
-	virtual void touchUp(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)			{}
-	virtual void touchDoubleTap(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)	{}
+	virtual void touchDown(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)			= 0;
+	virtual void touchMoved(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)		= 0;
+	virtual void touchUp(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)			= 0;
+	virtual void touchDoubleTap(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL)	= 0;
 };
