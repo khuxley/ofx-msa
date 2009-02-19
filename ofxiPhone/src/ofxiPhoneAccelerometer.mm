@@ -40,9 +40,9 @@ void ofxAccelerometerHandler::setup() {
 	iPhoneAccelerometerDelegate = [[ofxIPhoneAccelerometerDelegate alloc] init];
 //	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications]; 
 
-#if TARGET_IPHONE_SIMULATOR
-	update(0, -1, 0);
-#endif
+//#if TARGET_IPHONE_SIMULATOR
+//	update(0, -1, 0);
+//#endif
 }
 	
 // call this when accelerometer is no longer needed

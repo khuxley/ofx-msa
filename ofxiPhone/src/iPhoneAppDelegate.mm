@@ -50,6 +50,10 @@
 	iPhoneGlobals.glView = [[EAGLView alloc] initWithFrame:[[UIScreen mainScreen] bounds] pixelFormat:GL_RGB565_OES depthFormat:GL_DEPTH_COMPONENT16_OES preserveBackbuffer:NO];
 	[iPhoneGlobals.window addSubview:iPhoneGlobals.glView];
 	[iPhoneGlobals.glView release];
+	
+	// make window active
+	[iPhoneGlobals.window makeKeyAndVisible];
+	
 
 	// create view controller but don't add it. user can add if need be
 //	iPhoneGlobals.rootViewController = [[ofRootViewController alloc] initWithNibName:nil bundle:nil];
@@ -80,15 +84,12 @@
 
 	// show or hide status bar depending on OF_WINDOW or OF_FULLSCREEN
 	[[UIApplication sharedApplication] setStatusBarHidden:(iPhoneGlobals.iPhoneOFWindow->windowMode == OF_FULLSCREEN) animated:YES];
-	[[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
-	
+//	[[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// make window active
-	[iPhoneGlobals.window makeKeyAndVisible];
 }
 
 
