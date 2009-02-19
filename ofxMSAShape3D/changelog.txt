@@ -1,7 +1,7 @@
 ofxMSAShape3D changelog
 
 
-v0.5
+v0.5	 19/02/09
 --------------------
 - renamed methods to avoid confusion with opengl functions:
    - glVertex is now addVertex
@@ -19,6 +19,7 @@ v0.5
 - lots of other optimizations and restructuring
 - all methods now inline
 - using normal arrays instead of vectors
+
 
 v0.3	04/02/09
 --------------------
