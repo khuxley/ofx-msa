@@ -17,7 +17,11 @@
  
  ***********************************************************************/
 
-#include "ofTypes.h"
+#pragma once
+
+#include "ofMain.h"
+
+void ofClear();
 
 class ofAdvColor : public ofColor{
 public:
@@ -87,4 +91,3 @@ public:
 		outHSV.set(h, s, v);
 	}
 };
-
