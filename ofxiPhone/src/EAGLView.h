@@ -68,6 +68,7 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
+#include "ofxMultiTouch.h"
 
 //CLASSES:
 
@@ -91,7 +92,8 @@
 	BOOL					_hasBeenCurrent;
 	
 	// multitouch stuff
-	UITouch *activeTouches[OF_MAX_TOUCHES];
+	UITouch					*activeTouches[OF_MAX_TOUCHES];
+	ofxMultiTouchCustomData multitouchData;
 }
 - (id) initWithFrame:(CGRect)frame; //These also set the current context
 - (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format;
