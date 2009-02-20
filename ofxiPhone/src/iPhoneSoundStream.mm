@@ -25,6 +25,8 @@
 #import <UIKit/UIKit.h>
 #include <AudioToolbox/AudioToolbox.h>
 
+#include "ofxiPhone.h"
+
 //static int							nInputChannels	= 0;
 //static int							nOutputChannels = 0;
 //static int							nBuffers		= 0;
@@ -37,6 +39,7 @@ static UInt32						levelMeterSize	= 0;
 
 static bool							isSetup			= false;
 static bool							isRunning		= false;
+static bool							hasAudioIn		= false;
 
 
 static struct AQRecorderState {
@@ -71,6 +74,8 @@ static inline void checkSoundStreamIsRunning() {
 
 
 float iPhoneGetMicAverageLevel() {
+//	if(!hasAudioIn) return 0;
+	
 	checkSoundStreamIsRunning();
 #if TARGET_IPHONE_SIMULATOR
 	levelMeters[0].mAveragePower = sin(ofGetElapsedTimef() * 1.5f) * 0.5f + 0.5f;
@@ -79,12 +84,19 @@ float iPhoneGetMicAverageLevel() {
 }
 
 float iPhoneGetMicPeakLevel() {
+//	if(!hasAudioIn) return 0;
+
 	checkSoundStreamIsRunning();
 #if TARGET_IPHONE_SIMULATOR
 	levelMeters[0].mPeakPower = cos(ofGetElapsedTimef() * 1.5f) * 0.5f + 0.5f;
 #endif	
 	return levelMeters[0].mPeakPower;
 }
+
+bool iPhoneHasAudioIn() {
+	return hasAudioIn;
+}
+
 
 
 
@@ -101,10 +113,16 @@ void ofSoundStreamSetup(int nOutputs, int nInputs, int sampleRate, int bufferSiz
 //---------------------------------------------------------
 void ofSoundStreamSetup(int nOutputs, int nInputs, ofBaseApp * OFSA, int sampleRate, int bufferSize, int nBuffers) {
 	printf("ofSoundStreamSetup nOutputs: %i,  nInputs: %i, OFSA: %p, sampleRate: %i, bufferSize: %i, nBuffers: %i\n", nOutputs, nInputs, OFSA, sampleRate, bufferSize, nBuffers);
+	
+	// check to see if the device is an iPhone or not
+	hasAudioIn = iPhoneGetDeviceType() == OF_DEVICE_IPHONE;
+//	if(!hasAudioIn) return;
+	
 #if TARGET_IPHONE_SIMULATOR
 	levelMeterSize = 8;
 	levelMeters = (AudioQueueLevelMeterState*) malloc(levelMeterSize);
 #else
+	
 	ofSoundStreamClose();	// cleanup and close if currently already stream setup
 	
 	OFSAptr 			= OFSA;

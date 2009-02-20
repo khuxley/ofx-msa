@@ -24,6 +24,7 @@
 #include "EAGLView.h"
 
 
+
 class iPhoneGlobalsStruct {
 public:
 	
@@ -31,6 +32,7 @@ public:
 	UIWindow				*window;
 	ofAppiPhoneWindow		*iPhoneOFWindow;
 	EAGLView				*glView;
+	int						deviceType;
 	id						appDelegate;
 	
 	iPhoneGlobalsStruct() {

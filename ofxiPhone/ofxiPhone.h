@@ -26,7 +26,16 @@
 
 #import "iPhoneGlobals.h"
 
+#define		OF_DEVICE_IPHONE				0
+#define		OF_DEVICE_IPODTOUCH				1
 
+
+
+// return device type
+int iPhoneGetDeviceType();
+
+// whether device has audio in
+bool iPhoneHasAudioIn();
 
 // enable or disable the iPhone idle timer
 // (screen dims and goes off after x amount of inactivity)

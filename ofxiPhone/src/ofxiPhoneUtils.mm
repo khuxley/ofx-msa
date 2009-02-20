@@ -21,6 +21,12 @@
 
 #include "ofxiPhone.h"
 
+
+int iPhoneGetDeviceType() {
+	return iPhoneGlobals.deviceType;
+}
+
+
 void iPhoneEnableIdleTimer() {
 	[UIApplication sharedApplication].idleTimerDisabled = true;
 }

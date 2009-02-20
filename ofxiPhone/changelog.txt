@@ -1,6 +1,13 @@
 ofxiPhone changelog
 
 
+v0.72
+--------------------
+- optimized multitouch handling (finger persistence etc.)
+- added device types
+
+
+
 v0.71
 --------------------
 - expanded image load functionality from bundle or UIImage*

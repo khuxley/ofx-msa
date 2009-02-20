@@ -20,7 +20,7 @@
 
 
 #import "iPhoneAppDelegate.h"
-#include "iPhoneGlobals.h"
+#include "ofxiPhone.h"
 #include "ofMain.h"
 
 
@@ -53,6 +53,9 @@
 	
 	// make window active
 	[iPhoneGlobals.window makeKeyAndVisible];
+	
+	// check what device we are running on
+	iPhoneGlobals.deviceType = [[[UIDevice currentDevice] model] caseInsensitiveCompare:@"iPhone"] == NSOrderedSame ? OF_DEVICE_IPHONE : OF_DEVICE_IPODTOUCH;
 	
 
 	// create view controller but don't add it. user can add if need be

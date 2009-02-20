@@ -146,6 +146,7 @@
 		}
 		
 		self.multipleTouchEnabled = true;
+		bzero(activeTouches, sizeof(activeTouches));
 	}
 	
 	return self;
@@ -187,32 +188,18 @@
 
 /******************* TOUCH EVENTS ********************/
 
-
 //------------------------------------------------------
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	
-	NSArray *all = [touches allObjects];
-	int count = [all count];
-	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
-	
 	ofxMultiTouchCustomData data;
-	data.numTouches = count;
-	
-	for(int i=0; i<count; i++){
+	data.numTouches = [touches count];
+
+	for(UITouch *touch in touches) {
+		if([touch phase] != UITouchPhaseBegan) continue;
 		
-		// find a new touch
-		UITouch *touch = [all objectAtIndex:i];
-		if([touch phase] != UITouchPhaseBegan)
-			continue;
-		
-		// place it in an empty space in the array
 		int index=0;
-		while( index<MAX_TOUCHES && touchesExist[index] )
-			index++;
-		if(index==MAX_TOUCHES)
-			index=0;
+		while(index < OF_MAX_TOUCHES && activeTouches[index]) index++;
+		if(index==OF_MAX_TOUCHES) index=0;
 		
-		touchesExist[index] = true;
 		activeTouches[index] = touch;
 		
 		CGPoint touchPoint = [touch locationInView:self];
@@ -224,36 +211,21 @@
 		}
 		
 		if([touch tapCount] == 1) ofxMultiTouch.touchDown(touchPoint.x, touchPoint.y, index, &data);
-		else {
-			ofxMultiTouch.touchDoubleTap(touchPoint.x, touchPoint.y, index, &data);
-		}
+		else ofxMultiTouch.touchDoubleTap(touchPoint.x, touchPoint.y, index, &data);
 	}
-	[pool release];
 }
 
 //------------------------------------------------------
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-	
-	NSArray *all = [touches allObjects];
-	int count = [all count];
-	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
-	
 	ofxMultiTouchCustomData data;
-	data.numTouches = count;
-	
-	for(int i=0; i<count; i++){
+	data.numTouches = [touches count];
+
+	for(UITouch *touch in touches) {
+		if([touch phase] != UITouchPhaseMoved)	continue;
 		
-		// find a moved touch
-		UITouch *touch = [all objectAtIndex:i];
-		if([touch phase] != UITouchPhaseMoved)
-			continue;
-		
-		// find it in the list!
 		int index=0;
-		while( index<MAX_TOUCHES && (!touchesExist[index] || activeTouches[index]!=touch) )
-			index++;
-		if( index==MAX_TOUCHES )
-			continue;
+		while(index<OF_MAX_TOUCHES && (activeTouches[index] == 0 || activeTouches[index] != touch)) index++;
+		if(index==OF_MAX_TOUCHES) continue;
 		
 		CGPoint touchPoint = [touch locationInView:self];
 		
@@ -263,37 +235,23 @@
 			iPhoneGlobals.baseApp->mouseDragged(touchPoint.x, touchPoint.y, 1);
 		}
 		
-		//		iPhoneGlobals.baseApp->touchMove(touchPoint.x, touchPoint.y, index);
 		ofxMultiTouch.touchMoved(touchPoint.x, touchPoint.y, index, &data);
 	}
-	[pool release];
 }
 
 //------------------------------------------------------
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-	NSArray *all = [touches allObjects];
-	int count = [all count];
-	NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
-	
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	ofxMultiTouchCustomData data;
-	data.numTouches = count;
+	data.numTouches = [touches count];
 	
-	for(int i=0; i<count; i++){
+	for(UITouch *touch in touches) {
+		if([touch phase] != UITouchPhaseEnded) continue;
 		
-		// find a finished touch
-		UITouch *touch = [all objectAtIndex:i];
-		if([touch phase] != UITouchPhaseEnded)
-			continue;
-		
-		// find it in the list!
 		int index=0;
-		while( index<MAX_TOUCHES && (!touchesExist[index] || activeTouches[index]!=touch) )
-			index++;
-		if( index==MAX_TOUCHES )
-			continue;
+		while( index<OF_MAX_TOUCHES && (activeTouches[index] == 0 || activeTouches[index] != touch)) index++;
+		if( index==OF_MAX_TOUCHES ) continue;
 		
-		touchesExist[index] = false;
+		activeTouches[index] = 0;
 		
 		CGPoint touchPoint = [touch locationInView:self];
 		
@@ -306,34 +264,28 @@
 		
 		ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, index, &data);
 	}
-	[pool release];
 }
 
 //------------------------------------------------------
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-	// end all active touches
 	ofxMultiTouchCustomData data;
 	data.numTouches = [[touches allObjects] count];
 	
-	for(int i=0; i<MAX_TOUCHES; i++){
-		if(touchesExist[i]){
-			touchesExist[i] = false;
-			
-			UITouch * touch = activeTouches[i];
-			
-			CGPoint touchPoint = [touch locationInView:self];
-			
+	for(int i=0; i<OF_MAX_TOUCHES; i++){
+		if(activeTouches[i]){
+	
+			CGPoint touchPoint = [activeTouches[i] locationInView:self];
+			activeTouches[i] = 0;
+
 			if( i==0 ){
 				iPhoneGlobals.baseApp->mouseX = touchPoint.x;
 				iPhoneGlobals.baseApp->mouseY = touchPoint.y;
 				iPhoneGlobals.baseApp->mouseReleased(touchPoint.x, touchPoint.y, 1);
 				iPhoneGlobals.baseApp->mouseReleased();
-				
 			}
 			ofxMultiTouch.touchUp(touchPoint.x, touchPoint.y, i, &data);
 		}
 	}
 }
-
 
 @end

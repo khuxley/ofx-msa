@@ -71,7 +71,7 @@
 
 //CLASSES:
 
-#define	MAX_TOUCHES			5		// iphone has max 5 finger support
+#define	OF_MAX_TOUCHES			5		// iphone has max 5 finger support
 
 /*
  This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
@@ -91,8 +91,7 @@
 	BOOL					_hasBeenCurrent;
 	
 	// multitouch stuff
-	UITouch *activeTouches[MAX_TOUCHES];
-	bool touchesExist[MAX_TOUCHES];	
+	UITouch *activeTouches[OF_MAX_TOUCHES];
 }
 - (id) initWithFrame:(CGRect)frame; //These also set the current context
 - (id) initWithFrame:(CGRect)frame pixelFormat:(GLuint)format;
