@@ -68,7 +68,7 @@ CGRect scrollFrame;
 	
     [super viewDidLoad];
 	
-	self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5f];
+	self.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7f];
 	
 	scrollFrame = scrollView.frame;
     scrollView.contentSize = CGSizeMake(scrollFrame.size.width * 3, scrollFrame.size.height);
