@@ -29,17 +29,30 @@ ofxMSAInteractiveObject::ofxMSAInteractiveObject() {
 	verbose		= false;
 	
 	enableAppEvents();
+	disableMouseEvents();
+	disableKeyEvents();
 }
 
 ofxMSAInteractiveObject::~ofxMSAInteractiveObject() {
-	disableMouseEvents();
-	disableKeyEvents();
-	disableAppEvents();
+	disableAllEvents();
 }
 
 void ofxMSAInteractiveObject::killMe() {
 	delete this;
 }
+
+void ofxMSAInteractiveObject::enableAllEvents() {
+	enableMouseEvents();
+	enableKeyEvents();
+	enableAppEvents();
+}
+
+void ofxMSAInteractiveObject::disableAllEvents() {
+	disableMouseEvents();
+	disableKeyEvents();
+	disableAppEvents();
+}
+
 
 void ofxMSAInteractiveObject::enableMouseEvents() {
 	ofAddListener(ofEvents.mousePressed, this, &ofxMSAInteractiveObject::_mousePressed);

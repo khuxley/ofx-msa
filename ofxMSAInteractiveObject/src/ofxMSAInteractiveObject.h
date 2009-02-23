@@ -32,6 +32,9 @@ public:
 	ofxMSAInteractiveObject();			// constructor
 	virtual ~ofxMSAInteractiveObject();	// destructor
 	
+	void enableAllEvents();				// enable all event callbacks
+	void disableAllEvents();			// disable all event callbacks
+	
 	void enableMouseEvents();			// call this if object should receive mouse events
 	void disableMouseEvents();			// call this if object doesn't need to receive mouse events (default)
 	
