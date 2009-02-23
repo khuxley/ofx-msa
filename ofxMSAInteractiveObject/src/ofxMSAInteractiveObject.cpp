@@ -20,6 +20,7 @@
 
 
 #include "ofxMSAInteractiveObject.h"
+#include "ofMain.h"
 
 ofxMSAInteractiveObject::ofxMSAInteractiveObject() {
 	_mouseOver	= false;
@@ -27,9 +28,7 @@ ofxMSAInteractiveObject::ofxMSAInteractiveObject() {
 	enabled		= true;
 	verbose		= false;
 	
-//	ofAddUpdateListener(this, ofxMSAInteractiveObject, _preUpdate);		// need poco update for this, call checkForMotion() manually in the meantime
 	enableAppEvents();
-//	setObjectName(string("ofxMSAInteractiveObject"));
 }
 
 ofxMSAInteractiveObject::~ofxMSAInteractiveObject() {
@@ -43,27 +42,41 @@ void ofxMSAInteractiveObject::killMe() {
 }
 
 void ofxMSAInteractiveObject::enableMouseEvents() {
-	ofMouseEvents.addListener(this);
+	ofAddListener(ofEvents.mousePressed, this, &ofxMSAInteractiveObject::_mousePressed);
+	ofAddListener(ofEvents.mouseMoved, this, &ofxMSAInteractiveObject::_mouseMoved);
+	ofAddListener(ofEvents.mouseDragged, this, &ofxMSAInteractiveObject::_mouseDragged);
+	ofAddListener(ofEvents.mouseReleased, this, &ofxMSAInteractiveObject::_mouseReleased);
 }
 
 void ofxMSAInteractiveObject::disableMouseEvents() {
-	ofMouseEvents.removeListener(this);
+	ofRemoveListener(ofEvents.mousePressed, this, &ofxMSAInteractiveObject::_mousePressed);
+	ofRemoveListener(ofEvents.mouseMoved, this, &ofxMSAInteractiveObject::_mouseMoved);
+	ofRemoveListener(ofEvents.mouseDragged, this, &ofxMSAInteractiveObject::_mouseDragged);
+	ofRemoveListener(ofEvents.mouseReleased, this, &ofxMSAInteractiveObject::_mouseReleased);
 }
 
 void ofxMSAInteractiveObject::enableKeyEvents() {
-	ofKeyEvents.addListener(this);
+	ofAddListener(ofEvents.keyPressed, this, &ofxMSAInteractiveObject::_keyPressed);
+	ofAddListener(ofEvents.keyReleased, this, &ofxMSAInteractiveObject::_keyReleased);
 }
 
 void ofxMSAInteractiveObject::disableKeyEvents() {
-	ofKeyEvents.removeListener(this);
+	ofRemoveListener(ofEvents.keyPressed, this, &ofxMSAInteractiveObject::_keyPressed);
+	ofRemoveListener(ofEvents.keyReleased, this, &ofxMSAInteractiveObject::_keyReleased);
 }
 
 void ofxMSAInteractiveObject::enableAppEvents() {
-	ofAppEvents.addListener(this);
+	ofAddListener(ofEvents.setup, this, &ofxMSAInteractiveObject::_setup);
+	ofAddListener(ofEvents.update, this, &ofxMSAInteractiveObject::_update);
+	ofAddListener(ofEvents.draw, this, &ofxMSAInteractiveObject::_draw);
+	ofAddListener(ofEvents.exit, this, &ofxMSAInteractiveObject::_exit);
 }
 
 void ofxMSAInteractiveObject::disableAppEvents() {
-	ofAppEvents.removeListener(this);
+	ofRemoveListener(ofEvents.setup, this, &ofxMSAInteractiveObject::_setup);
+	ofRemoveListener(ofEvents.update, this, &ofxMSAInteractiveObject::_update);
+	ofRemoveListener(ofEvents.draw, this, &ofxMSAInteractiveObject::_draw);
+	ofRemoveListener(ofEvents.exit, this, &ofxMSAInteractiveObject::_exit);
 }
 
 
@@ -107,24 +120,45 @@ bool ofxMSAInteractiveObject::hitTest(int tx, int ty) {
 }
 
 
-void ofxMSAInteractiveObject::checkForMotion() {
+
+void ofxMSAInteractiveObject::_setup(ofEventArgs &e) {
+	if(!enabled) return;
+	setup();
+}
+
+void ofxMSAInteractiveObject::_update(ofEventArgs &e) {
+	if(!enabled) return;
+	
+	// check to see if object has moved, and if so update mouse events
 	if(oldRect.x != this->x || oldRect.y != this->y || oldRect.width != this->width ||oldRect.height != this->height) {
-		if(_mouseDown) mouseDragged(_mouseX, _mouseY, _mouseButton);
-		else mouseMoved(_mouseX, _mouseY);
+		ofMouseEventArgs e;
+		e.button = _mouseButton;
+		e.x = _mouseX;
+		e.y = _mouseY;
+		if(_mouseDown) _mouseDragged(e);	
+		else _mouseMoved(e);
+		
 		oldRect =  (ofRectangle) (*this);
 	}
+	update();
 }
 
-/*
-// need poco update for this, call checkForMotion() manually in the meantime
-void ofxMSAInteractiveObject::_preUpdate(const void* sender, ofEventArgs& eventArgs) {
+void ofxMSAInteractiveObject::_draw(ofEventArgs &e) {
 	if(!enabled) return;
-
-	checkForMotion();
+	draw();
 }
-*/
-void ofxMSAInteractiveObject::mouseMoved(int x, int y) {
-	if(verbose) printf("ofxMSAInteractiveObject::mouseMoved(x: %i, y: %i)\n", x, y);
+
+void ofxMSAInteractiveObject::_exit(ofEventArgs &e) {
+	if(!enabled) return;
+	exit();
+}
+
+
+void ofxMSAInteractiveObject::_mouseMoved(ofMouseEventArgs &e) {
+	int x = e.x;
+	int y = e.y;
+	int button = e.button;
+	if(verbose) printf("ofxMSAInteractiveObject::_mouseMoved(x: %i, y: %i)\n", x, y);
 	if(!enabled) return;
 	
 	_mouseX = x;
@@ -143,8 +177,12 @@ void ofxMSAInteractiveObject::mouseMoved(int x, int y) {
 }
 
 
-void ofxMSAInteractiveObject::mousePressed(int x, int y, int button) {
-	if(verbose) printf("ofxMSAInteractiveObject::mousePressed(x: %i, y: %i, button: %i)\n", x, y, button);
+void ofxMSAInteractiveObject::_mousePressed(ofMouseEventArgs &e) {
+	int x = e.x;
+	int y = e.y;
+	int button = e.button;
+	
+	if(verbose) printf("ofxMSAInteractiveObject::_mousePressed(x: %i, y: %i, button: %i)\n", x, y, button);
 	if(!enabled) return;
 
 	_mouseX = x;
@@ -161,8 +199,12 @@ void ofxMSAInteractiveObject::mousePressed(int x, int y, int button) {
 	}
 }
 
-void ofxMSAInteractiveObject::mouseDragged(int x, int y, int button) {
-	if(verbose) printf("ofxMSAInteractiveObject::mouseDragged(x: %i, y: %i, button: %i)\n", x, y, button);
+void ofxMSAInteractiveObject::_mouseDragged(ofMouseEventArgs &e) {
+	int x = e.x;
+	int y = e.y;
+	int button = e.button;
+	
+	if(verbose) printf("ofxMSAInteractiveObject::_mouseDragged(x: %i, y: %i, button: %i)\n", x, y, button);
 	if(!enabled) return;
 
 	_mouseX = x;
@@ -181,8 +223,12 @@ void ofxMSAInteractiveObject::mouseDragged(int x, int y, int button) {
 	}
 }
 
-void ofxMSAInteractiveObject::mouseReleased(int x, int y, int button) {
-	if(verbose) printf("ofxMSAInteractiveObject::mouseReleased(x: %i, y: %i, button: %i)\n", x, y, button);
+void ofxMSAInteractiveObject::_mouseReleased(ofMouseEventArgs &e) {
+	int x = e.x;
+	int y = e.y;
+	int button = e.button;
+	
+	if(verbose) printf("ofxMSAInteractiveObject::_mouseReleased(x: %i, y: %i, button: %i)\n", x, y, button);
 	if(!enabled) return;
 
 	_mouseX = x;
@@ -195,4 +241,20 @@ void ofxMSAInteractiveObject::mouseReleased(int x, int y, int button) {
 		onReleaseOutside(x, y, button);
 	}
 	_mouseDown = false;
+}
+
+
+void ofxMSAInteractiveObject::_keyPressed(ofKeyEventArgs &e) {
+	int key = e.key;
+	if(verbose) printf("ofxMSAInteractiveObject::_keyPressed(key: %i)\n", key);
+	if(!enabled) return;
+	keyPressed(key);
+}
+
+
+void ofxMSAInteractiveObject::_keyReleased(ofKeyEventArgs &e) {
+	int key = e.key;	
+	if(verbose) printf("ofxMSAInteractiveObject::_keyReleased(key: %i)\n", key);
+	if(!enabled) return;
+	keyReleased(key);
 }

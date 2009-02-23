@@ -1,5 +1,10 @@
 ofxMSAInteractiveObject changelog
 
+v2.0	23/02/08
+--------------------
+- updated to work with the oF 006 event system (thanks to arturo)
+
+
 v1.01	16/10/08
 --------------------
 - minor poco compatibility update

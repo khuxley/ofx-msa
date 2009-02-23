@@ -24,13 +24,13 @@
 #include "ofMain.h"
 
 
-class ofxMSAInteractiveObject : public ofMouseListener, public ofKeyListener, public ofAppListener, public ofRectangle {
+class ofxMSAInteractiveObject : public ofRectangle {
 public:
-	bool		enabled;
+	bool		enabled;				// set this to false to temporarily disable all events
 	bool		verbose;
 	
-	ofxMSAInteractiveObject();					// constructor
-	virtual ~ofxMSAInteractiveObject();			// destructor
+	ofxMSAInteractiveObject();			// constructor
+	virtual ~ofxMSAInteractiveObject();	// destructor
 	
 	void enableMouseEvents();			// call this if object should receive mouse events
 	void disableMouseEvents();			// call this if object doesn't need to receive mouse events (default)
@@ -54,24 +54,26 @@ public:
 	
 	bool hitTest(int tx, int ty);		// returns true if given (x, y) coordinates (in screen space) are over the object (based on position and size)
 	
-	void checkForMotion();				// if your object is moving, this needs to be called in the update function for onRollOver, onRollOut callbacks to operate correctly
-	
 	void killMe();						// if your object is a pointer, and you are done with it, call this
 
 
-	// extend ofxMSAInteractiveObject and override any of the following methods
-	virtual void setup(){}
-	virtual void update(){}
-    virtual void draw(){}
-	virtual void exit(){}
+	// extend ofxMSAInteractiveObject and override all of any of the following methods
+	virtual void setup()	{}	// called when app starts
+	virtual void update()	{}	// called every frame to update object
+    virtual void draw()		{}	// called every frame to draw object
+	virtual void exit()		{}	// called when app quites
 	
-	virtual void onRollOver(int x, int y)					{}
-	virtual void onRollOut()								{}
-	virtual void onMouseMove(int x, int y)					{}
-	virtual void onDragOver(int x, int y, int button)		{}
-	virtual void onPress(int x, int y, int button)			{}
-	virtual void onRelease(int x, int y, int button)		{}
-	virtual void onReleaseOutside(int x, int y, int button)	{}
+	// these behave very similar to those in flash
+	virtual void onRollOver(int x, int y)					{}		// called when mouse enters object x, y, width, height
+	virtual void onRollOut()								{}		// called when mouse leaves object x, y, width, height
+	virtual void onMouseMove(int x, int y)					{}		// called when mouse moves while over object x, y, width, height
+	virtual void onDragOver(int x, int y, int button)		{}		// called when mouse moves while over object and button is down
+	virtual void onPress(int x, int y, int button)			{}		// called when mouse presses while over object
+	virtual void onRelease(int x, int y, int button)		{}		// called when mouse releases while over object
+	virtual void onReleaseOutside(int x, int y, int button)	{}		// called when mouse releases outside of object after being pressed on object
+	
+	virtual void keyPressed( int key ){}
+	virtual void keyReleased( int key ){}
 	
 	
 	// you shouldn't need access to any of these
@@ -81,12 +83,16 @@ private:
 	bool		_mouseDown;
 	ofRectangle	oldRect;
 	
-	void update(const void* sender, ofEventArgs& eventArgs);
-	void mouseMoved(int x, int y);
-	void mousePressed(int x, int y, int button);	
-	void mouseDragged(int x, int y, int button);	
-	void mouseReleased(int x, int y, int button);
+	void _setup(ofEventArgs &e);
+	void _update(ofEventArgs &e);
+    void _draw(ofEventArgs &e);
+	void _exit(ofEventArgs &e);
 	
-//	void _preUpdate(const void* sender, ofEventArgs& eventArgs);		// need poco update for this, call checkForMotion() manually in the meantime
-
+	void _mouseMoved(ofMouseEventArgs &e);
+	void _mousePressed(ofMouseEventArgs &e);	
+	void _mouseDragged(ofMouseEventArgs &e);	
+	void _mouseReleased(ofMouseEventArgs &e);
+	
+	void _keyPressed(ofKeyEventArgs &e);
+	void _keyReleased(ofKeyEventArgs &e);
 };

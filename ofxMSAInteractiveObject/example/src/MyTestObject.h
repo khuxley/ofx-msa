@@ -25,6 +25,7 @@ public:
 	void setup() {
 		printf("MyTestObject::setup() - hello!\n");
 		enableMouseEvents();
+		enableKeyEvents();
 	}
 	
 	
@@ -34,17 +35,16 @@ public:
 	
 	
 	void update() {
-		checkForMotion();
 		x = ofGetWidth()/2 + cos(ofGetElapsedTimef() * 0.2) * ofGetWidth()/4;
 		y = ofGetHeight()/2 + sin(ofGetElapsedTimef() * 0.2) * ofGetHeight()/4;
 	}
 	
-		
+	
 	void draw() {
 		if(isMouseDown()) ofSetColor(DOWN_COLOR);
 		else if(isMouseOver()) ofSetColor(OVER_COLOR);
 		else ofSetColor(IDLE_COLOR);
-	
+		
 		ofRect(x, y, width, height);
 	}
 	
@@ -75,4 +75,13 @@ public:
 	virtual void onReleaseOutside(int x, int y, int button) {
 		printf("MyTestObject::onReleaseOutside(x: %i, y: %i, button: %i)\n", x, y, button);
 	}
+	
+	virtual void keyPressed(int key) {
+		printf("MyTestObject::keyPressed(key: %i)\n", key);
+	}
+	
+	virtual void keyReleased(int key) {
+		printf("MyTestObject::keyReleased(key: %i)\n", key);
+	}
+	
 };
