@@ -1,0 +1,14 @@
+ofxSimpleGuiToo changelog
+
+v1.0
+--------------------
+- initial version
+- changes from original ofxSimpleGui
+	- added pages (tabs), controls are added to pages
+	- when controls reach bottom of page (customizable using page.height property) controls flow to the right
+	- ability to customize spacing / sizes / colors etc. using a configuration class
+	- addFrame has been renamed to addContent and manages any class type which extends ofBaseDraws
+	- saved in xml using 'keys', so you can add/remove/rename/reorder controls and still load values correctly
+	- option to backup save
+	- all controls inherit from ofxMSAInteractiveObject (for simpler event management)
+	
