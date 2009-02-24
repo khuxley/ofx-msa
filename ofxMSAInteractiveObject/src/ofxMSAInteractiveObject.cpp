@@ -230,9 +230,14 @@ void ofxMSAInteractiveObject::_mouseDragged(ofMouseEventArgs &e) {
 			_mouseOver = true;						// update flag
 		}
 		onDragOver(x, y, button);				// and trigger onDragOver
-	} else if(_mouseOver) {					// if mouse is not over the object, but the flag is true (From previous frame)
-		onRollOut();							// call onRollOut
-		_mouseOver = false;						// update flag
+	} else {
+		if(_mouseOver) {					// if mouse is not over the object, but the flag is true (From previous frame)
+			onRollOut();							// call onRollOut
+			_mouseOver = false;						// update flag
+		}
+		if(_mouseDown) {
+			onDragOutside(x, y, button);
+		}
 	}
 }
 
@@ -251,7 +256,7 @@ void ofxMSAInteractiveObject::_mouseReleased(ofMouseEventArgs &e) {
 	if(hitTest(x, y)) {
 		onRelease(x, y, button);
 	} else {
-		onReleaseOutside(x, y, button);
+		if(_mouseDown) onReleaseOutside(x, y, button);
 	}
 	_mouseDown = false;
 }

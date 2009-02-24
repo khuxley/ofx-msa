@@ -71,6 +71,7 @@ public:
 	virtual void onRollOut()								{}		// called when mouse leaves object x, y, width, height
 	virtual void onMouseMove(int x, int y)					{}		// called when mouse moves while over object x, y, width, height
 	virtual void onDragOver(int x, int y, int button)		{}		// called when mouse moves while over object and button is down
+	virtual void onDragOutside(int x, int y, int button)	{}		// called when mouse moves while outside the object after being clicked on it
 	virtual void onPress(int x, int y, int button)			{}		// called when mouse presses while over object
 	virtual void onRelease(int x, int y, int button)		{}		// called when mouse releases while over object
 	virtual void onReleaseOutside(int x, int y, int button)	{}		// called when mouse releases outside of object after being pressed on object
@@ -79,13 +80,8 @@ public:
 	virtual void keyReleased( int key ){}
 	
 	
-	// you shouldn't need access to any of these
-private:
-	int			_mouseX, _mouseY, _mouseButton;
-	bool		_mouseOver;
-	bool		_mouseDown;
-	ofRectangle	oldRect;
-	
+	// you shouldn't need access to any of these unless you know what you are doing
+	// (i.e. disable auto updates and call these manually)
 	void _setup(ofEventArgs &e);
 	void _update(ofEventArgs &e);
     void _draw(ofEventArgs &e);
@@ -98,4 +94,11 @@ private:
 	
 	void _keyPressed(ofKeyEventArgs &e);
 	void _keyReleased(ofKeyEventArgs &e);
+	
+	
+protected:
+	int			_mouseX, _mouseY, _mouseButton;
+	bool		_mouseOver;
+	bool		_mouseDown;
+	ofRectangle	oldRect;
 };

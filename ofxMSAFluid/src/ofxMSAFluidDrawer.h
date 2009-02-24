@@ -37,7 +37,7 @@
 #define FLUID_TEXTURE
 
 
-class ofxMSAFluidDrawer {
+class ofxMSAFluidDrawer : public ofBaseDraws {
 public:
 	float alpha;
 	
@@ -45,7 +45,7 @@ public:
 	virtual ~ofxMSAFluidDrawer();
 	
 	ofxMSAFluidSolver* setup(int NX = FLUID_DEFAULT_NX, int NY = FLUID_DEFAULT_NY);
-	ofxMSAFluidSolver* setFluidSolver(ofxMSAFluidSolver* f);
+	ofxMSAFluidSolver* setup(ofxMSAFluidSolver* f);
 	ofxMSAFluidSolver* getFluidSolver();
 	
 	void update();

@@ -30,3 +30,38 @@ void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float 
 	msaConstrain(pos.y, vel.y, min.y, max.y, bounce);
 	msaConstrain(pos.z, vel.z, min.z, max.z, bounce);
 }
+
+
+void msaDrawFPS() {
+	ofSetRectMode(OF_RECTMODE_CORNER);
+	ofSetColor(0x000000);
+	ofFill();
+	ofDisableAlphaBlending();
+	ofRect(ofGetWidth() - (120+5), (ofGetHeight()-35), 90, 50);
+	ofSetColor(0, 255, 0);
+	string fpsStr = "FPS: "+ofToString(ofGetFrameRate(), 2);
+	ofDrawBitmapString(fpsStr, ofGetWidth() - 120, ofGetHeight()-20);
+}
+
+void msaDrawFPS(int x, int y) {
+	ofSetRectMode(OF_RECTMODE_CORNER);
+	ofFill();
+	ofSetColor(0x000000);
+	ofSetColor(0, 255, 0);
+	string fpsStr = "FPS: "+ofToString(ofGetFrameRate(), 2);
+	ofDrawBitmapString(fpsStr, x, y);
+}
+
+void msaDrawFPS(int color) {
+	ofSetRectMode(OF_RECTMODE_CORNER);
+	ofFill();
+	ofSetColor(color);
+	string fpsStr = "FPS: "+ofToString(ofGetFrameRate(), 2);
+	ofDrawBitmapString(fpsStr, 20, ofGetHeight()-20);
+}
+
+
+void msaSetCursor(bool forceOn) {
+	if(forceOn || ofGetWindowMode() == OF_WINDOW) ofShowCursor();
+	else ofHideCursor();
+}

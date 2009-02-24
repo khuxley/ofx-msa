@@ -35,8 +35,8 @@ public:
 	
 	
 	void update() {
-		x = ofGetWidth()/2 + cos(ofGetElapsedTimef() * 0.2) * ofGetWidth()/4;
-		y = ofGetHeight()/2 + sin(ofGetElapsedTimef() * 0.2) * ofGetHeight()/4;
+		//		x = ofGetWidth()/2 + cos(ofGetElapsedTimef() * 0.2) * ofGetWidth()/4;
+		//		y = ofGetHeight()/2 + sin(ofGetElapsedTimef() * 0.2) * ofGetHeight()/4;
 	}
 	
 	
@@ -62,6 +62,10 @@ public:
 	
 	virtual void onDragOver(int x, int y, int button) {
 		printf("MyTestObject::onDragOver(x: %i, y: %i, button: %i)\n", x, y, button);
+	}
+	
+	virtual void onDragOutside(int x, int y, int button) {
+		printf("MyTestObject::onDragOutside(x: %i, y: %i, button: %i)\n", x, y, button);
 	}
 	
 	virtual void onPress(int x, int y, int button) {

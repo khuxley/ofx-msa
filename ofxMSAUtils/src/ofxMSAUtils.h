@@ -24,8 +24,14 @@
 void msaClear();
 
 void msaConstrain(float &pos, float &vel, float min, float max, float bounce = 1);
-
 void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float bounce = 1);
+
+void msaDrawFPS();
+void msaDrawFPS(int x, int y);	
+void msaDrawFPS(int color);	
+
+void msaSetCursor(bool forceOn = false);
+
 
 class msaColor : public ofColor{
 public:

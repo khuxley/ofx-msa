@@ -52,7 +52,7 @@ ofxMSAFluidSolver* ofxMSAFluidDrawer::setup(int NX, int NY) {
 	return _fluidSolver;
 }
 
-ofxMSAFluidSolver* ofxMSAFluidDrawer::setFluidSolver(ofxMSAFluidSolver* f) {
+ofxMSAFluidSolver* ofxMSAFluidDrawer::setup(ofxMSAFluidSolver* f) {
 	deleteFluidSolver();
 	_fluidSolver = f;
 	createTexture();
@@ -65,7 +65,7 @@ ofxMSAFluidSolver* ofxMSAFluidDrawer::getFluidSolver() {
 }
 
 void ofxMSAFluidDrawer::createTexture() {
-	if(_pixels) delete _pixels;
+	if(_pixels) delete []_pixels;
 	int texWidth = _fluidSolver->getWidth()-2;
 	int texHeight =_fluidSolver->getHeight()-2;
 	
@@ -248,7 +248,7 @@ void ofxMSAFluidDrawer::deleteFluidSolver() {
 		delete _fluidSolver;
 		_fluidSolver = NULL;
 		
-		if(_pixels) delete _pixels;
+		if(_pixels) delete []_pixels;
 		_pixels = NULL;
 		
 #ifdef FLUID_TEXTURE		

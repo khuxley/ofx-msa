@@ -38,14 +38,14 @@ public:
 	}
 	
 	virtual ~ofxMSADataRecorder() {
-		delete _buffer;
+		delete []_buffer;
 	}
 	
 	
 	void setSize(int n) {
 		if(n<1) return;
 		
-		if(_buffer) delete _buffer;
+		if(_buffer) delete []_buffer;
 		_numItems = n;
 		_buffer = new Type[_numItems];
 		_curItem = 0;

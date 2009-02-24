@@ -126,20 +126,20 @@ void ofxMSAFluidSolver::destroy() {
 	printf("ofxMSAFluidSolver::destroy()\n");
 	_isInited = false;
 	
-	if(_r)		delete _r;
-	if(_rOld)	delete _rOld;
+	if(_r)		delete []_r;
+	if(_rOld)	delete []_rOld;
 	
-	if(_g)		delete _g;
-	if(_gOld)	delete _gOld;
+	if(_g)		delete []_g;
+	if(_gOld)	delete []_gOld;
 	
-	if(_b)		delete _b;
-	if(_bOld)	delete _bOld;
+	if(_b)		delete []_b;
+	if(_bOld)	delete []_bOld;
 	
-	if(_u)		delete _u;
-	if(_uOld)	delete _uOld;
-	if(_v)		delete _v;
-	if(_vOld)	delete _vOld;
-	if(_curl)	delete _curl;
+	if(_u)		delete []_u;
+	if(_uOld)	delete []_uOld;
+	if(_v)		delete []_v;
+	if(_vOld)	delete []_vOld;
+	if(_curl)	delete []_curl;
 }
 
 
