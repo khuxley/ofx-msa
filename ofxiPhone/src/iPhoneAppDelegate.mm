@@ -30,12 +30,12 @@
 
 -(void) timerLoop {
 	// create autorelease pool in case anything needs it
-//	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];	// not needed, runloop takes care of it
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	
 	iPhoneGlobals.iPhoneOFWindow->timerLoop();
 	
 	// release pool
-//	[pool release];
+	[pool release];
 }
 
 
