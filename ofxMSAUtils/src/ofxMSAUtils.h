@@ -32,6 +32,11 @@ void msaDrawFPS(int color);
 
 void msaSetCursor(bool forceOn = false);
 
+void msaDrawQuadAtCorner();
+void msaDrawQuadAtCenter();
+
+void msaDrawTexture(GLuint texId, GLenum textureTarget = GL_TEXTURE_2D);
+
 
 class msaColor : public ofColor{
 public:

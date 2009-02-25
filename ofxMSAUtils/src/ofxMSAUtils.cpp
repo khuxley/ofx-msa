@@ -65,3 +65,45 @@ void msaSetCursor(bool forceOn) {
 	if(forceOn || ofGetWindowMode() == OF_WINDOW) ofShowCursor();
 	else ofHideCursor();
 }
+
+
+static GLfloat tex_coords[] = {
+0, 0,
+1, 0,
+1, 1,
+0, 1
+};
+
+static GLfloat verts[] = {
+-0.5f, -0.5f,
+0.5f, -0.5f,
+0.5f, 0.5f,
+-0.5f, 0.5f
+};
+
+
+void msaDrawQuadAtCorner() {
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+}
+
+void msaDrawQuadAtCenter() {
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, verts );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+}
+
+
+void msaDrawTexture(GLuint texId, GLenum textureTarget ) {
+	glEnable(textureTarget);
+	glBindTexture(textureTarget, texId);
+	msaDrawQuadAtCenter();
+	glDisable(textureTarget);
+}
