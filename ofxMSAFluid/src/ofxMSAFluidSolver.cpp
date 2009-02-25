@@ -74,7 +74,7 @@ ofxMSAFluidSolver::ofxMSAFluidSolver() {
 }
 
 
-void ofxMSAFluidSolver::setup(int NX, int NY) {
+ofxMSAFluidSolver& ofxMSAFluidSolver::setup(int NX, int NY) {
 	printf("ofxMSAFluidSolver::init(%i, %i)\n", NX, NY);
 	
 	setDeltaT();
@@ -92,24 +92,29 @@ void ofxMSAFluidSolver::setup(int NX, int NY) {
 	
 	reset();
 	enableRGB(false);
+	return *this;
 }
 
-void ofxMSAFluidSolver::setDeltaT(float dt) {
+ofxMSAFluidSolver&  ofxMSAFluidSolver::setDeltaT(float dt) {
 	_dt = dt;
+	return *this;	
 }
 
-void ofxMSAFluidSolver::setFadeSpeed(float fadeSpeed) {
+ofxMSAFluidSolver&  ofxMSAFluidSolver::setFadeSpeed(float fadeSpeed) {
 	_fadeSpeed = fadeSpeed;
+	return *this;	
 }
 
-void ofxMSAFluidSolver::setSolverIterations(int solverIterations) {
+ofxMSAFluidSolver&  ofxMSAFluidSolver::setSolverIterations(int solverIterations) {
 	_solverIterations = solverIterations;
+	return *this;	
 }
 
 
 // whether fluid is RGB or monochrome (if only pressure / velocity is needed no need to update 3 channels)
-void ofxMSAFluidSolver::enableRGB(bool isRGB) {
+ofxMSAFluidSolver&  ofxMSAFluidSolver::enableRGB(bool isRGB) {
 	_isRGB = isRGB;
+	return *this;
 }
 
 
@@ -184,9 +189,10 @@ int ofxMSAFluidSolver::getHeight() {
 }
 
 
-void ofxMSAFluidSolver::setVisc(float newVisc, float lerpSpeed) {
+ofxMSAFluidSolver& ofxMSAFluidSolver::setVisc(float newVisc, float lerpSpeed) {
 	_targetVisc = newVisc;
 	_viscLerpSpeed = lerpSpeed;
+	return *this;
 }
 
 // returns current viscocity
@@ -335,8 +341,8 @@ void ofxMSAFluidSolver::fadeR() {
 		totalDeviations += currentDeviation * currentDeviation;
 		
 		// fade out old
-//		_r[i] *= holdAmount;
-		_r[i] *= _fadeSpeed;
+		_r[i] *= holdAmount;
+//		_r[i] *= _fadeSpeed;
 	}
 	_avgDensity *= _invNumCells;
 	//	_avgSpeed *= _invNumCells;
@@ -381,6 +387,9 @@ void ofxMSAFluidSolver::fadeRGB() {
 		
 		// fade out old
 		_r[i] *= holdAmount;
+		_g[i] *= holdAmount;
+		_b[i] *= holdAmount;
+
 	}
 	_avgDensity *= _invNumCells;
 	_avgSpeed *= _invNumCells;

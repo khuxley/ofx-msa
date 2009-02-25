@@ -55,10 +55,7 @@ public:
 	ofxMSAFluidSolver();
 	virtual ~ofxMSAFluidSolver();
 	
-	void setup(int NX = FLUID_DEFAULT_NX, int NY = FLUID_DEFAULT_NY);
-	
-	// whether fluid is RGB or monochrome (if only pressure / velocity is needed no need to update 3 channels)
-	void enableRGB(bool isRGB);
+	ofxMSAFluidSolver& setup(int NX = FLUID_DEFAULT_NX, int NY = FLUID_DEFAULT_NY);
 	
 	// solve one step of the fluid solver
 	void update();
@@ -115,12 +112,13 @@ public:
 	bool isInited();
 	
 	// accessors for  viscocity, it will lerp to the target at lerpspeed
-	void setVisc(float newVisc, float lerpSpeed = 0.05); 
+	ofxMSAFluidSolver& setVisc(float newVisc, float lerpSpeed = 0.05); 
 	float getVisc();
-	
-	void setDeltaT(float dt = FLUID_DEFAULT_DT);
-	void setFadeSpeed(float fadeSpeed = FLUID_DEFAULT_FADESPEED);
-	void setSolverIterations(int solverIterations = FLUID_DEFAULT_SOLVER_ITERATIONS);
+
+	ofxMSAFluidSolver& enableRGB(bool isRGB);
+	ofxMSAFluidSolver& setDeltaT(float dt = FLUID_DEFAULT_DT);
+	ofxMSAFluidSolver& setFadeSpeed(float fadeSpeed = FLUID_DEFAULT_FADESPEED);
+	ofxMSAFluidSolver& setSolverIterations(int solverIterations = FLUID_DEFAULT_SOLVER_ITERATIONS);
 	
 	// returns average density of fluid 
 	float getAvgDensity();

@@ -50,8 +50,8 @@ public:
 	
 	void update();
 	
-	void draw(float x = 0, float y = 0);
-	void draw(float x, float y, float renderWidth, float renderHeight);				// this one does chooses one of the below based on drawmode
+	virtual void draw(float x = 0, float y = 0);
+	virtual void draw(float x, float y, float renderWidth, float renderHeight);				// this one does chooses one of the below based on drawmode
 	void drawColor(float x, float y, float renderWidth, float renderHeight);
 	void drawMotion(float x, float y, float renderWidth, float renderHeight);
 	void drawSpeed(float x, float y, float renderWidth, float renderHeight);
