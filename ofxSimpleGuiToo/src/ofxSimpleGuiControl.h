@@ -26,6 +26,11 @@ public:
 	void setKey(string newKey);
 	void setConfig(ofxSimpleGuiConfig *config);
 	
+	void setTextColor();
+	void setTextBGColor();
+	void setFullColor(bool forceActive = false);
+	void setEmptyColor();
+	
 	virtual void loadFromXML(ofxXmlSettings &XML) {}
 	virtual void saveToXML(ofxXmlSettings &XML) {}	
 	

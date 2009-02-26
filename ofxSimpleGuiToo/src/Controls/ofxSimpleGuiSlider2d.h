@@ -102,22 +102,20 @@ public:
 		glTranslatef(x, y, 0);		
 		
 		ofFill();
-		ofSetColor(config->sliderFullColor.r, config->sliderFullColor.g, config->sliderFullColor.b, 200);
-		if(isMouseOver() || lock)	ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
-		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
-		
+		setFullColor();
 		ofRect(0, 0, width, height - config->slider2DTextHeight);
 		
 		ofFill();
-		ofSetColor(105, 105, 105, 200);
+		setTextBGColor();
 		ofRect(0, height-config->slider2DTextHeight, width, config->slider2DTextHeight);
-		ofSetColor(0xffffff);
+
+		setTextColor();
 		ofDrawBitmapString(name+"\nx:"+ofToString(value->x, 2)+"\ny:"+ofToString(value->y, 2), 3, height+15-config->slider2DTextHeight);
 		
-		ofSetColor(config->sliderFullColor.r/10, config->sliderFullColor.g/10, config->sliderFullColor.b/10, 200);
+		setTextColor();
 		ofCircle(pointv.x-x, pointv.y-y, 2);
-		ofSetColor(config->sliderFullColor.r/10, config->sliderFullColor.g/10, config->sliderFullColor.b/10, 100);
-		
+
+		setTextColor();
 		ofLine(pointv.x-x, 0, pointv.x-x, height-config->slider2DTextHeight);
 		ofLine(0, pointv.y-y,width, pointv.y-y);
 		

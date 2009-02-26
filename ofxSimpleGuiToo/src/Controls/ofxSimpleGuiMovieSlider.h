@@ -25,7 +25,7 @@ public:
 	
 	//--------------------------------------------------------------------- movie slider
 	ofxSimpleGuiMovieSlider(string name, ofVideoPlayer* input) : ofxSimpleGuiControl(name) {
-		setSize(config->columnWidth, config->sliderHeight);
+		setSize(config->gridSize.x - config->padding.x, config->sliderHeight);
 		
 		barwidth  = 0;
 		this->input	= input;
@@ -130,30 +130,30 @@ public:
 		ofEnableAlphaBlending();
 		ofFill();
 		ofSetColor(255, 255, 255, 200);
-		if(isMouseOver()) ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
-		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
+//		if(isMouseOver()) ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
+//		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
 		ofRect(0, 0, width, height);
 		
-		ofSetColor(config->sliderFullColor.r, config->sliderFullColor.g, config->sliderFullColor.b, 200);
+		setFullColor();
 		ofRect(0, 0, barwidth, height);
 		
-		ofSetColor(config->frameBG.r, config->frameBG.g, config->frameBG.b, 200);
+		ofSetColor(config->textBGColor);
 		ofRect(0, height, width, 20);
-		ofSetColor(config->textColor.r, config->textColor.g, config->textColor.b);
+		ofSetColor(config->textColor);
 		float inputpos = ofMap(input->getPosition(), 0.0, 1.0, 0.0, videoLength);
 		ostringstream info;
 		info << name << ":" << ofToString(inputpos, 3.0) << "/" << ofToString(videoLength, 3.0) << endl;
 		ofDrawBitmapString(info.str(), 3, height+15);
 		
 		// cues
-		if(cuePoint1 > 0.0) {
-			ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
-			ofRect(ofMap(cuePoint1, 0.0, 1.0, 0.0, width), 0, 1, height);
-		}
-		if(cuePoint2 < 1.0) {
-			ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
-			ofRect(ofMap(cuePoint2, 0.0, 1.0, 0.0, width), 0, 1, height);
-		}
+//		if(cuePoint1 > 0.0) {
+//			ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
+//			ofRect(ofMap(cuePoint1, 0.0, 1.0, 0.0, width), 0, 1, height);
+//		}
+//		if(cuePoint2 < 1.0) {
+//			ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
+//			ofRect(ofMap(cuePoint2, 0.0, 1.0, 0.0, width), 0, 1, height);
+//		}
 		
 		ofDisableAlphaBlending();
 		glPopMatrix();

@@ -25,17 +25,19 @@ public:
 	
 	void draw(float x, float y) {
 		setPos(x, y);
+		setup();
 		
 		glPushMatrix();
 		glTranslatef(x, y, 0);
 		ofEnableAlphaBlending();
 		ofSetColor(0xffffff);
-		content->draw(0, 0, width,fixheight); 
+		content->draw(0, 0, width, fixheight); 
 		
 		ofFill();
-		ofSetColor(config->frameBG.r, config->frameBG.g, config->frameBG.b, 200);
+		setTextBGColor();
 		ofRect(0, fixheight, width, config->sliderTextHeight);
-		ofSetColor(config->textColor.r, config->textColor.g, config->textColor.b);	
+
+		setTextColor();
 		ofDrawBitmapString(name, 3, fixheight + 15);
 		ofDisableAlphaBlending();
 		glPopMatrix();

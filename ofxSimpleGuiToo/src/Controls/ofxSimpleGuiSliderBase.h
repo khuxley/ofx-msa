@@ -31,7 +31,7 @@ public:
 	}
 	
 	void setup() {
-		setSize(config->columnWidth, config->sliderHeight + config->sliderTextHeight);
+		setSize(config->gridSize.x - config->padding.x, config->sliderHeight + config->sliderTextHeight);
 		pct		 = ofMap((*value), min, max, 0.0, width);
 		barwidth = pct;
 	}
@@ -164,19 +164,18 @@ public:
 		glTranslatef(x, y, 0);
 		ofFill();
 		
-		ofSetColor(config->sliderEmptyColor.r, config->sliderEmptyColor.g, config->sliderEmptyColor.b, config->sliderEmptyColor.a);
-		if(isMouseOver()) ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
-		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
+		setEmptyColor();
 		ofRect(0, 0, width, config->sliderHeight);
 		
-		ofSetColor(config->sliderFullColor.r, config->sliderFullColor.g, config->sliderFullColor.b, 200);
-		if(isMouseDown()) ofSetColor(255, 90, 25, 200);
+
+		setFullColor();
 		ofRect(0, 0, barwidth, config->sliderHeight);
 		
-		ofSetColor(config->frameBG.r, config->frameBG.g, config->frameBG.b, 200);
+		setTextBGColor();
 		ofRect(0, config->sliderHeight, width, config->sliderTextHeight);
-		ofSetColor(config->textColor.r, config->textColor.g, config->textColor.b);
-		ofDrawBitmapString(name+":"+ofToString((*value), 6.0), 3, height - 5);
+
+		setTextColor();
+		ofDrawBitmapString(name+":"+ofToString((*value), 6.0), 3, height - 4);
 		ofDisableAlphaBlending();
 		glPopMatrix();
 	}

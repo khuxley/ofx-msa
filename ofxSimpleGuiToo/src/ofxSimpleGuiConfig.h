@@ -13,7 +13,7 @@
 
 class ofxSimpleGuiConfig {
 public:	
-	float	columnWidth;
+	ofPoint	gridSize;
 
 	float	buttonHeight;
 	float	toggleHeight;
@@ -26,57 +26,45 @@ public:
 	ofPoint offset;
 	ofPoint	slider2DSize;
 	
-	ofColor frameBG;
-	ofColor frameFG;
-	ofColor textColor;
-	ofColor sliderFullColor;
-	ofColor sliderEmptyColor;
-	ofColor overColor;
-	ofColor focusColor;
+	int	textColor;
+	int textOverColor;
+	int textBGColor;
+	int textBGOverColor;
+	
+	int fullColor;
+	int	fullOverColor;
+	int fullActiveColor;
+	int emptyColor;
+	int borderColor;
 	
 	ofxSimpleGuiConfig() {
-		columnWidth			= 230;
 
-		buttonHeight		= 20;
-		toggleHeight		= 20;
-		sliderHeight		= 15;
-		sliderTextHeight	= 20;
-		slider2DTextHeight	= 50;
-		titleHeight			= 20;
+		sliderHeight		= 12;
+		sliderTextHeight	= 18;
+		titleHeight			= sliderHeight + sliderTextHeight;
+		toggleHeight		= titleHeight;
+		buttonHeight		= titleHeight;
+		slider2DTextHeight	= titleHeight * 1.5;
+
 		
-		padding.set			(30, 15);
-		offset.set			(10, 10);
-		slider2DSize.set	(100, 100);
+		padding.set			(titleHeight/2, titleHeight/2);
+		offset.set			(titleHeight/2, titleHeight/2);
+		slider2DSize.set	(titleHeight * 4, titleHeight * 4);
 		
-		frameBG.r			= 80;
-		frameBG.g			= 80;
-		frameBG.b			= 80;
+		gridSize.x			= titleHeight * 8 + padding.x;		
+		gridSize.y			= toggleHeight + padding.y;
 		
-		frameFG.r			= 150;
-		frameFG.g			= 150;
-		frameFG.b			= 150;
+		textColor			= 0xAAAAAA;
+		textOverColor		= 0xFFFFFF;
+		textBGColor			= 0x303030;
+		textBGOverColor		= 0x707070;
 		
-		textColor.r			= 230;
-		textColor.g			= 230;
-		textColor.b			= 230;
+		fullColor			= 0x37a9a9;
+		fullOverColor		= 0x64b4b4;
+		fullActiveColor		= 0xb41818;
+		emptyColor			= 0xDCDCDC;		
 		
-		sliderFullColor.r	= 82;
-		sliderFullColor.g	= 183;
-		sliderFullColor.b	= 200;
-		sliderFullColor.a	= 255;
-		
-		sliderEmptyColor.r	= 220;
-		sliderEmptyColor.g	= 220;
-		sliderEmptyColor.b	= 220;
-		sliderEmptyColor.a	= 255;		
-		
-		overColor.r			= 255;
-		overColor.g			= 10;
-		overColor.b			= 255;
-		
-		focusColor.r		= 181;
-		focusColor.g		= 215;
-		focusColor.b		= 45;	
+		borderColor			= 0xCCCCCC;
 	}
 };
 

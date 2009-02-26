@@ -45,5 +45,27 @@ void ofxSimpleGuiControl::setKey(string newKey) {
 	for(int i=0; i<key.size(); i++) {
 		if(key[i] == ' ') key[i] = '_';
 	}
+}
+
+void ofxSimpleGuiControl::setTextColor() {
+	if(isMouseOver()) ofSetColor(config->textOverColor);
+	else ofSetColor(config->textColor);
+}
+
+void ofxSimpleGuiControl::setTextBGColor() {
+	if(isMouseOver()) ofSetColor(config->textBGOverColor);
+	else ofSetColor(config->textBGColor);
+}
+
+void ofxSimpleGuiControl::setFullColor(bool forceActive) {
+	if(isMouseDown() || forceActive) ofSetColor(config->fullActiveColor);
+	else if(isMouseOver()) ofSetColor(config->fullOverColor);
+	else ofSetColor(config->fullColor);
+}
+
+void ofxSimpleGuiControl::setEmptyColor() {
+	ofSetColor(config->emptyColor);
+	//		if(isMouseOver()) ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
+	//		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
 	
 }

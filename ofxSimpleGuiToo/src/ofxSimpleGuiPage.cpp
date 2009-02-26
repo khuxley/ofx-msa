@@ -32,23 +32,34 @@ void ofxSimpleGuiPage::saveToXML(ofxXmlSettings &XML) {
 	}
 }
 
+float ofxSimpleGuiPage::getNextY(float y) {
+	int iy = ceil(y/config->gridSize.y);
+//	return y;
+	return (iy) * config->gridSize.y;
+}
 
 void ofxSimpleGuiPage::draw(float x, float y) {
-	setPos(x, y);
-	float posX		= config->offset.x + x;
-	float posY		= config->offset.y + y;
-	float offsetX	= config->columnWidth + config->padding.x;		// take the widest control, and add some spacing 
+	setPos(x += config->offset.x, y += config->offset.y);
+	float posX		= 0;
+	float posY		= 0;
 	
 	ofSetRectMode(OF_RECTMODE_CORNER);
 	
 	for(int i=0; i<controls.size(); i++) {
-		if(posY >= height - controls[i]->height) {
-			posY = config->offset.y + y;
-			posX += offsetX;
-		}
-		controls[i]->draw(posX, posY);
-		posY += controls[i]->height + config->padding.y;
+		float controlX = posX + x;
+		float controlY = posY + y;
 		
+		controls[i]->draw(controlX, controlY);
+		ofNoFill();
+		ofSetColor(config->borderColor);
+		glLineWidth(0.5f);
+		ofRect(controlX, controlY, controls[i]->width, controls[i]->height);
+		posY = getNextY(posY + controls[i]->height + config->padding.y);
+		
+		if(posY + y >= height - controls[i]->height - config->padding.y) {
+			posX += config->gridSize.x;
+			posY = 0;
+		}
 		//		if(guiFocus == controls[i]->guiID) controls[i]->focused = true;		// MEMO
 		//		else							   controls[i]->focused = false;	
 	}	
@@ -88,13 +99,13 @@ ofxSimpleGuiToggle *ofxSimpleGuiPage::addToggle(string name, bool *value) {
 	return (ofxSimpleGuiToggle *)addControl(new ofxSimpleGuiToggle(name, value));
 }
 
-ofxSimpleGuiTitle *ofxSimpleGuiPage::addTitle(string name) {
-	return (ofxSimpleGuiTitle *)addControl(new ofxSimpleGuiTitle(name));
+ofxSimpleGuiTitle *ofxSimpleGuiPage::addTitle(string name, bool *value) {
+	return (ofxSimpleGuiTitle *)addControl(new ofxSimpleGuiTitle(name, value));
 }
 
 
 ofxSimpleGuiContent *ofxSimpleGuiPage::addContent(string name, ofBaseDraws *content, float fixwidth) {
-	if(fixwidth == -1) fixwidth = config->columnWidth;
+	if(fixwidth == -1) fixwidth = config->gridSize.x - config->padding.x;
 	return (ofxSimpleGuiContent *)addControl(new ofxSimpleGuiContent(name, content, fixwidth));
 }
 

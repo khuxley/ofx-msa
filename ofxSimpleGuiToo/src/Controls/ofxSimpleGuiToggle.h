@@ -18,7 +18,7 @@ public:
 	
 	
 	virtual void setup() {
-		setSize(config->columnWidth, config->toggleHeight);
+		setSize(config->gridSize.x - config->padding.x, config->toggleHeight);
 	}
 	
 	void loadFromXML(ofxXmlSettings &XML) {
@@ -66,22 +66,20 @@ public:
 		glTranslatef(x, y, 0);
 		
 		ofEnableAlphaBlending();
-		ofSetColor(config->sliderFullColor.r, config->sliderFullColor.g, config->sliderFullColor.b, config->sliderFullColor.a);
-		if(isMouseOver())				ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
-		if(focused && !isMouseOver())	ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
-		
+		ofFill();
+		setFullColor(*value);
 		ofRect(0, 0, height, height);
 		
 		if((*value)) {
-			ofSetColor(255, 255, 255, 200);
+			setTextColor();
 			ofLine(0, 0, height, height);
 			ofLine(height, 0, 0, height);
 		}
 		
-		ofSetColor(105, 105, 105, 200);
-		if(isMouseOver()) ofSetColor(105, 105, 105, 100);
+		setTextBGColor();
 		ofRect(height, 0, width - height, height);
-		ofSetColor(config->textColor.r, config->textColor.g, config->textColor.b);
+
+		setTextColor();
 		ofDrawBitmapString(name, height + 15, 15);
 		ofDisableAlphaBlending();
 		

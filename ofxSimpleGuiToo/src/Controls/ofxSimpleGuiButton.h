@@ -23,7 +23,7 @@ public:
 	}
 	
 	void setup() {
-		setSize(config->columnWidth, config->buttonHeight);
+		setSize(config->gridSize.x - config->padding.x, config->buttonHeight);
 	}
 	
 	void loadFromXML(ofxXmlSettings &XML) {
@@ -70,21 +70,18 @@ public:
 		glTranslatef(x, y, 0);
 		
 		ofEnableAlphaBlending();
-		ofSetColor(config->frameFG.r, config->frameFG.g, config->frameFG.b, 200);
-		if(isMouseOver())				ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
-		if(focused && !isMouseOver())	ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
-		
 		ofFill();
+		setTextBGColor();
 		ofRect(0, 0, width, height);
 		
 		// if a toggle
 		if((*value) && beToggle) {
-			ofSetColor(255, 255, 255, 200);
+			setTextColor();
 			//ofLine(0, 0, box.width, box.height);
 			//ofLine(box.width, 0, 0, box.height);
 		}
 		
-		ofSetColor(0xffffff);
+		setTextColor();
 		ofDrawBitmapString(name, 3, 15);
 
 		ofDisableAlphaBlending();

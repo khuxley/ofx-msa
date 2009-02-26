@@ -45,13 +45,13 @@ public:
 	ofxSimpleGuiPage		*addPage(string name = "");
 	ofxSimpleGuiControl		*addControl(ofxSimpleGuiControl* control);
 	ofxSimpleGuiButton		*addButton(string name, bool *value);
+	ofxSimpleGuiTitle		*addTitle(string name, bool *value = NULL);
 	ofxSimpleGuiSliderInt	*addSlider(string name, int *value, int min, int max);
 	ofxSimpleGuiSliderFloat	*addSlider(string name, float *value, float min, float max, float smoothing = 0);
 	ofxSimpleGuiSlider2d	*addSlider2d(string name, ofPoint* value, float xmin, float xmax, float ymin, float ymax);
 	ofxSimpleGuiQuadWarp	*addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts);
 	ofxSimpleGuiMovieSlider	*addMovieSlider(string name, ofVideoPlayer* input);
 	ofxSimpleGuiToggle		*addToggle(string name, bool *value);
-	ofxSimpleGuiTitle		*addTitle(string name);
 	ofxSimpleGuiContent		*addContent(string name, ofBaseDraws *content, float fixwidth = -1);
 	
 protected:

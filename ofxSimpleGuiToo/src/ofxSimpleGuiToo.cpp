@@ -171,7 +171,7 @@ void ofxSimpleGuiToo::drawFocus(float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	ofFill();
-	ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b, 200);
+//	ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b, 200);
 	ofRect(0, 0, 10, 10);
 	glPopMatrix();
 }
@@ -184,7 +184,7 @@ void ofxSimpleGuiToo::draw() {
 	glDisableClientState(GL_COLOR_ARRAY);
 	
 	headerPage->draw();		// this is the header
-	ofSetColor(config->frameFG.r, config->frameFG.g, config->frameFG.b, 255);
+	ofSetColor(config->borderColor);
 	ofLine(0, headerPage->height, ofGetWidth(), headerPage->height); 
 	pages[currentPage]->draw(0.0f, headerPage->height);
 }
@@ -233,7 +233,7 @@ ofxSimpleGuiPage *ofxSimpleGuiToo::addPage(string name) {
 	if(name == "") newPage->setName("Page " + ofToString(pages.size()-1, 0));
 	static bool b;
 //	if(pages.size() > 1) headerPage->addTitle(newPage->name);		// if this isn't the first page, add to header
-	if(pages.size() > 1) newPage->addButton(newPage->name, &changePage);		// if this isn't the first page, add to header
+	if(pages.size() > 1) newPage->addTitle(newPage->name, &changePage);		// if this isn't the first page, add to header
 	setPage(pages.size() - 1);
 	return newPage;
 }
@@ -271,8 +271,8 @@ ofxSimpleGuiToggle *ofxSimpleGuiToo::addToggle(string name, bool *value) {
 	return pages[currentPage]->addToggle(name, value);
 }
 
-ofxSimpleGuiTitle *ofxSimpleGuiToo::addTitle(string name) {
-	return pages[currentPage]->addTitle(name);
+ofxSimpleGuiTitle *ofxSimpleGuiToo::addTitle(string name, bool *value) {
+	return pages[currentPage]->addTitle(name, value);
 }
 
 ofxSimpleGuiContent *ofxSimpleGuiToo::addContent(string name, ofBaseDraws *content, float fixwidth) {

@@ -21,10 +21,9 @@
 /**************************** Spline Template Class ****************************/
 #pragma once
 
-#define OF_ADDON_USING_OFXVECTORMATH
 
 #include "ofMain.h"
-#include "ofAddons.h"
+#include "ofxVectorMath.h"
 
 #include "ofxMSASplineInterpolationTypes.h"
 
