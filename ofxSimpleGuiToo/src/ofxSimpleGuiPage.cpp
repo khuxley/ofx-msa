@@ -11,6 +11,7 @@
 
 ofxSimpleGuiPage::ofxSimpleGuiPage(string name) : ofxSimpleGuiControl(name) {
 	disableAllEvents();
+	width = 0;
 	height = ofGetHeight();
 }
 
@@ -68,12 +69,30 @@ void ofxSimpleGuiPage::draw(float x, float y) {
 
 ofxSimpleGuiControl *ofxSimpleGuiPage::addControl(ofxSimpleGuiControl* control) {
 	controls.push_back(control);
+	width += control->width + config->padding.x;
 	return control;
 }
 
 ofxSimpleGuiButton *ofxSimpleGuiPage::addButton(string name, bool *value) {
 	return (ofxSimpleGuiButton *)addControl(new ofxSimpleGuiButton(name, value));
 }
+
+ofxSimpleGuiContent *ofxSimpleGuiPage::addContent(string name, ofBaseDraws *content, float fixwidth) {
+	if(fixwidth == -1) fixwidth = config->gridSize.x - config->padding.x;
+	return (ofxSimpleGuiContent *)addControl(new ofxSimpleGuiContent(name, content, fixwidth));
+}
+
+ofxSimpleGuiFPSCounter *ofxSimpleGuiPage::addFPSCounter() {
+	return (ofxSimpleGuiFPSCounter *)addControl(new ofxSimpleGuiFPSCounter());
+}
+
+//ofxSimpleGuiQuadWarp *ofxSimpleGuiPage::addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts) {
+//	return (ofxSimpleGuiQuadWarp *)addControl(new ofxSimpleGuiQuadWarp(name, x, y, sw, sh, pts));
+//}
+//
+//ofxSimpleGuiMovieSlider *ofxSimpleGuiPage::addMovieSlider(string name, ofVideoPlayer* input) {
+//	return (ofxSimpleGuiMovieSlider *)addControl(new ofxSimpleGuiMovieSlider(name, input));
+//}
 
 ofxSimpleGuiSliderInt *ofxSimpleGuiPage::addSlider(string name, int *value, int min, int max) {
 	return (ofxSimpleGuiSliderInt *)addControl(new ofxSimpleGuiSliderInt(name, value, min, max, 0));
@@ -87,27 +106,14 @@ ofxSimpleGuiSlider2d *ofxSimpleGuiPage::addSlider2d(string name, ofPoint* value,
 	return (ofxSimpleGuiSlider2d *)addControl(new ofxSimpleGuiSlider2d(name, value, xmin, xmax, ymin, ymax));
 }
 
-ofxSimpleGuiQuadWarp *ofxSimpleGuiPage::addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts) {
-	return (ofxSimpleGuiQuadWarp *)addControl(new ofxSimpleGuiQuadWarp(name, x, y, sw, sh, pts));
-}
-
-ofxSimpleGuiMovieSlider *ofxSimpleGuiPage::addMovieSlider(string name, ofVideoPlayer* input) {
-	return (ofxSimpleGuiMovieSlider *)addControl(new ofxSimpleGuiMovieSlider(name, input));
+ofxSimpleGuiTitle *ofxSimpleGuiPage::addTitle(string name, bool *value) {
+	return (ofxSimpleGuiTitle *)addControl(new ofxSimpleGuiTitle(name, value));
 }
 
 ofxSimpleGuiToggle *ofxSimpleGuiPage::addToggle(string name, bool *value) {
 	return (ofxSimpleGuiToggle *)addControl(new ofxSimpleGuiToggle(name, value));
 }
 
-ofxSimpleGuiTitle *ofxSimpleGuiPage::addTitle(string name, bool *value) {
-	return (ofxSimpleGuiTitle *)addControl(new ofxSimpleGuiTitle(name, value));
-}
-
-
-ofxSimpleGuiContent *ofxSimpleGuiPage::addContent(string name, ofBaseDraws *content, float fixwidth) {
-	if(fixwidth == -1) fixwidth = config->gridSize.x - config->padding.x;
-	return (ofxSimpleGuiContent *)addControl(new ofxSimpleGuiContent(name, content, fixwidth));
-}
 
 
 

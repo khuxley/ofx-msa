@@ -47,13 +47,13 @@ void ofxSimpleGuiControl::setKey(string newKey) {
 	}
 }
 
-void ofxSimpleGuiControl::setTextColor() {
-	if(isMouseOver()) ofSetColor(config->textOverColor);
+void ofxSimpleGuiControl::setTextColor(bool clickable) {
+	if(isMouseOver() && clickable) ofSetColor(config->textOverColor);
 	else ofSetColor(config->textColor);
 }
 
-void ofxSimpleGuiControl::setTextBGColor() {
-	if(isMouseOver()) ofSetColor(config->textBGOverColor);
+void ofxSimpleGuiControl::setTextBGColor(bool clickable) {
+	if(isMouseOver() && clickable) ofSetColor(config->textBGOverColor);
 	else ofSetColor(config->textBGColor);
 }
 

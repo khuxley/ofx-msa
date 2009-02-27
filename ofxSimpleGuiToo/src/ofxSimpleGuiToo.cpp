@@ -16,9 +16,11 @@ ofxSimpleGuiToo::ofxSimpleGuiToo() {
 	
 	headerPage	= addPage("Header");
 	headerPage->height = config->buttonHeight * 2;
+	headerPage->width = 0;
 	headerPage->addToggle("Auto Save", &doAutoSave);
 	headerPage->addButton("Save Settings", &doSave);
 	headerPage->addButton("Backup XML", &doSaveBackup);
+	headerPage->addFPSCounter();
 	
 	addPage();
 	setAutoSave(false);
@@ -180,12 +182,11 @@ void ofxSimpleGuiToo::drawFocus(float x, float y) {
 void ofxSimpleGuiToo::draw() {
 	if(!doDraw) return;
 	
-	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	
 	headerPage->draw();		// this is the header
 	ofSetColor(config->borderColor);
-	ofLine(0, headerPage->height, ofGetWidth(), headerPage->height); 
+	ofLine(0, headerPage->height, headerPage->width, headerPage->height); 
 	pages[currentPage]->draw(0.0f, headerPage->height);
 }
 
@@ -247,6 +248,22 @@ ofxSimpleGuiButton *ofxSimpleGuiToo::addButton(string name, bool *value) {
 	return pages[currentPage]->addButton(name, value);
 }
 
+ofxSimpleGuiContent *ofxSimpleGuiToo::addContent(string name, ofBaseDraws *content, float fixwidth) {
+	return pages[currentPage]->addContent(name, content, fixwidth);
+}
+
+ofxSimpleGuiFPSCounter *ofxSimpleGuiToo::addFPSCounter() {
+	return pages[currentPage]->addFPSCounter();
+}
+
+//ofxSimpleGuiQuadWarp *ofxSimpleGuiToo::addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts) {
+//	return pages[currentPage]->addQuadWarper(name, x, y, sw, sh, pts);
+//}
+//
+//ofxSimpleGuiMovieSlider *ofxSimpleGuiToo::addMovieSlider(string name, ofVideoPlayer* input) {
+//	return pages[currentPage]->addMovieSlider(name, input);
+//}
+
 ofxSimpleGuiSliderInt *ofxSimpleGuiToo::addSlider(string name, int *value, int min, int max) {
 	return pages[currentPage]->addSlider(name, value, min, max);
 }
@@ -259,24 +276,12 @@ ofxSimpleGuiSlider2d *ofxSimpleGuiToo::addSlider2d(string name, ofPoint* value, 
 	return pages[currentPage]->addSlider2d(name, value, xmin, xmax, ymin, ymax);
 }
 
-ofxSimpleGuiQuadWarp *ofxSimpleGuiToo::addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts) {
-	return pages[currentPage]->addQuadWarper(name, x, y, sw, sh, pts);
-}
-
-ofxSimpleGuiMovieSlider *ofxSimpleGuiToo::addMovieSlider(string name, ofVideoPlayer* input) {
-	return pages[currentPage]->addMovieSlider(name, input);
-}
-
-ofxSimpleGuiToggle *ofxSimpleGuiToo::addToggle(string name, bool *value) {
-	return pages[currentPage]->addToggle(name, value);
-}
-
 ofxSimpleGuiTitle *ofxSimpleGuiToo::addTitle(string name, bool *value) {
 	return pages[currentPage]->addTitle(name, value);
 }
 
-ofxSimpleGuiContent *ofxSimpleGuiToo::addContent(string name, ofBaseDraws *content, float fixwidth) {
-	return pages[currentPage]->addContent(name, content, fixwidth);
+ofxSimpleGuiToggle *ofxSimpleGuiToo::addToggle(string name, bool *value) {
+	return pages[currentPage]->addToggle(name, value);
 }
 
 

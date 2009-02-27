@@ -79,7 +79,7 @@ public:
 		
 		ofEnableAlphaBlending();
 		ofFill();
-		setTextBGColor();
+		setTextBGColor(value != NULL);
 		ofRect(0, 0, width, height);
 		
 		// if a toggle
@@ -89,7 +89,7 @@ public:
 			//ofLine(box.width, 0, 0, box.height);
 		}
 		
-		setTextColor();
+		setTextColor(value != NULL);
 		ofDrawBitmapString(name, 3, 15);
 		
 		ofDisableAlphaBlending();

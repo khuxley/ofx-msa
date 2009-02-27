@@ -44,15 +44,16 @@ public:
 	
 	ofxSimpleGuiPage		*addPage(string name = "");
 	ofxSimpleGuiControl		*addControl(ofxSimpleGuiControl* control);
+	ofxSimpleGuiContent		*addContent(string name, ofBaseDraws *content, float fixwidth = -1);
 	ofxSimpleGuiButton		*addButton(string name, bool *value);
-	ofxSimpleGuiTitle		*addTitle(string name, bool *value = NULL);
+	ofxSimpleGuiFPSCounter	*addFPSCounter();
+//	ofxSimpleGuiMovieSlider	*addMovieSlider(string name, ofVideoPlayer* input);
+//	ofxSimpleGuiQuadWarp	*addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts);
 	ofxSimpleGuiSliderInt	*addSlider(string name, int *value, int min, int max);
 	ofxSimpleGuiSliderFloat	*addSlider(string name, float *value, float min, float max, float smoothing = 0);
 	ofxSimpleGuiSlider2d	*addSlider2d(string name, ofPoint* value, float xmin, float xmax, float ymin, float ymax);
-	ofxSimpleGuiQuadWarp	*addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts);
-	ofxSimpleGuiMovieSlider	*addMovieSlider(string name, ofVideoPlayer* input);
+	ofxSimpleGuiTitle		*addTitle(string name, bool *value = NULL);
 	ofxSimpleGuiToggle		*addToggle(string name, bool *value);
-	ofxSimpleGuiContent		*addContent(string name, ofBaseDraws *content, float fixwidth = -1);
 	
 protected:
 	bool							doAutoSave;

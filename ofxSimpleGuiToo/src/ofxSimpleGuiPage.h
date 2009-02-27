@@ -23,14 +23,15 @@ public:
 	
 	ofxSimpleGuiControl		*addControl(ofxSimpleGuiControl* control);
 	ofxSimpleGuiButton		*addButton(string name, bool *value);
-	ofxSimpleGuiTitle		*addTitle(string name, bool *value = NULL);
+	ofxSimpleGuiContent		*addContent(string name, ofBaseDraws *content, float fixwidth = -1);
+	ofxSimpleGuiFPSCounter	*addFPSCounter();
+//	ofxSimpleGuiQuadWarp	*addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts);
+//	ofxSimpleGuiMovieSlider	*addMovieSlider(string name, ofVideoPlayer* input);
 	ofxSimpleGuiSliderInt	*addSlider(string name, int *value, int min, int max);
 	ofxSimpleGuiSliderFloat	*addSlider(string name, float *value, float min, float max, float smoothing = 0);
 	ofxSimpleGuiSlider2d	*addSlider2d(string name, ofPoint* value, float xmin, float xmax, float ymin, float ymax);
-	ofxSimpleGuiQuadWarp	*addQuadWarper(string name, float x, float y, float sw, float sh, ofPoint **pts);
-	ofxSimpleGuiMovieSlider	*addMovieSlider(string name, ofVideoPlayer* input);
+	ofxSimpleGuiTitle		*addTitle(string name, bool *value = NULL);
 	ofxSimpleGuiToggle		*addToggle(string name, bool *value);
-	ofxSimpleGuiContent		*addContent(string name, ofBaseDraws *content, float fixwidth = -1);
 
 	
 	//	void setup(ofEventArgs &e);

@@ -26,8 +26,8 @@ public:
 	void setKey(string newKey);
 	void setConfig(ofxSimpleGuiConfig *config);
 	
-	void setTextColor();
-	void setTextBGColor();
+	void setTextColor(bool clickable = true);
+	void setTextBGColor(bool clickable = true);
 	void setFullColor(bool forceActive = false);
 	void setEmptyColor();
 	
