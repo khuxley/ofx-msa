@@ -33,11 +33,15 @@ void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float 
 
 
 void msaDrawFPS() {
-	msaDrawFPS(20, ofGetHeight() - 20);
+	msaDrawFPS(10, ofGetHeight() - 10);
 }
 
 void msaDrawFPS(int x, int y) {
-	ofSetColor(0, 255, 0);
+	ofDisableAlphaBlending();
+	ofFill();
+	glColor4f(0, 0, 0, 1);
+	ofRect(x - 10, y - 20, x + 100, y + 10);
+	glColor4f(0.9, 0.9, 0.9, 1);
 	ofDrawBitmapString("FPS: "+ofToString(ofGetFrameRate(), 2), x, y);
 }
 

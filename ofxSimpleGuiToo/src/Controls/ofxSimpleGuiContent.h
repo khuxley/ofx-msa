@@ -30,6 +30,10 @@ public:
 		glPushMatrix();
 		glTranslatef(x, y, 0);
 		ofEnableAlphaBlending();
+		ofFill();
+		glColor4f(0, 0, 0, 0.8f);
+		ofRect(0, 0, width, fixheight);
+
 		ofSetColor(0xffffff);
 		content->draw(0, 0, width, fixheight); 
 		

@@ -90,6 +90,11 @@ ofxMSAFluidSolver& ofxMSAFluidSolver::setup(int NX, int NY) {
 	_invNX = 1.0f / _NX;
 	_invNY = 1.0f / _NY;
 	
+	width		= getWidth();
+	height		= getHeight();
+	invWidth	= 1.0f/width;
+	invHeight	= 1.0f/height;
+	
 	reset();
 	enableRGB(false);
 	return *this;
@@ -730,8 +735,8 @@ void ofxMSAFluidSolver::addForceAtPos(float x, float y, float vx, float vy) {
 void ofxMSAFluidSolver::addForceAtCell(int i, int j, float vx, float vy) {
 	//	if(safeToRun()){
 	int index = FLUID_IX(i, j);
-	_uOld[index] += vx * _invNX;
-	_vOld[index] += vy * _invNX;
+	_uOld[index] += vx * _NX;
+	_vOld[index] += vy * _NY;
 	//		unlock();
 	//	}
 }

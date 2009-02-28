@@ -147,6 +147,11 @@ public:
 	float* getG()			{ return _g; }
 	float* getB()			{ return _b; }
 	
+	float width;
+	float height;
+	float invWidth;
+	float invHeight;
+	
 protected:
 	
 	int		_NX, _NY, _numCells;
