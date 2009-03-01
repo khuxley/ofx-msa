@@ -22,8 +22,8 @@
 
 #include "ofMain.h"
 #include "ofxObjCPointer.h"
-#include "ofxVectorMath.h"
 
+#include "ofxMSAPhysicsUtils.h"
 #include "ofxMSAParticle.h"
 #include "ofxMSAConstraintTypes.h"
 
@@ -35,6 +35,9 @@ public:
 		_isOn = true;
 		_type = -1;
 		_isDead = false;
+		verbose = true;
+		_params = NULL;
+
 		setClassName("ofxMSAConstraint");
 	}
 	
@@ -87,20 +90,27 @@ public:
 		return _isDead;
 	}
 	
+	// only worth solving the constraint if its on, and at least one end is free
+	inline bool shouldSolve() {
+		return _isOn && (_a->isFree() || _b->isFree());
+	}
+	
 	virtual void update() {}
 	virtual void draw() {}
+	
+
 	
 protected:	
 	int				_type;
 	bool			_isOn;
 	bool			_isDead;
 	ofxMSAParticle	*_a, *_b;
-	
+	ofxMSAPhysicsParams *_params;	
 	virtual void solve() = 0;
 	
 	virtual void debugDraw() {
-		ofxVec3f vec = (*_b - *_a);
-		float dist = vec.length();
+		ofPoint vec = (*_b - *_a);
+		float dist = msaLength(vec);
 		float angle = acos( vec.z / dist ) * RAD_TO_DEG;
 		if(vec.z <= 0 ) angle = -angle;
 		float rx = -vec.y * vec.z;
@@ -111,7 +121,9 @@ protected:
 		glRotatef(angle, rx, ry, 0.0);
 		glScalef(1, 1, dist);
 		glTranslatef(0, 0, 0.5);
-//		glutSolidCube(1);
+#ifndef TARGET_OF_IPHONE		
+		glutSolidCube(1);
+#endif		
 		glPopMatrix();
 	}
 };

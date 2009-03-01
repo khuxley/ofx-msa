@@ -1,11 +1,24 @@
 ofxMSAPhysics changelog
 
 
-v1.5
+v2.0a	29/02/09
 --------------------
-- attractor bug fixed
-- collision between nodes (particles)
-- more internal restructing and optimization
+- a lot of new files in this one, so you'll need to remove and re-add it to your project
+- no longer requires ofxVectorMath
+- attractors fully implemented
+- collision (between particles) fully implemented
+   - you can enable/disable collision per particle, and it will collide with all other particles which have collisin enabled
+   - AND/OR you can globally enable or disable collision
+   - AND/OR you can manually create a collision constraint between any 2 (or more) specific particles
+- you can set world dimenensions for optimized collision (using Zach L.'s binning code) and particle world edge collision
+- particles have individual drag
+- particles have individual bounce (for collision)
+- particles have individual size (for collision and rendering)
+- all 'setter' methods return the instance so you can chain them (e.g. myParticle->setMass(1)->setBonuce(0.5)->enableCollision()->makeFree(); )
+- replay functionality temporarily disabled while I fix stuff
+- intense testing of memory management so should be stable as a rock, lemme know if you see anything weird (turn verbose on to see whats going on)
+- using the super fast inverse square root approximation (attributed to john carmack but originally from Silicon Graphics)
+- lots of internal restructing and optimization
 
 
 

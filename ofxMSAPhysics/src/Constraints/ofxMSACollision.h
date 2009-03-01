@@ -20,9 +20,7 @@
 
 #pragma once
 
-#include "ofxVectorMath.h"
 #include "ofMain.h"
-
 #include "ofxMSAConstraint.h"
 
 
@@ -39,18 +37,17 @@ public:
 	
 protected:	
 	void solve() {
-		if(isOff()) return;
+		if(_params->doWorldEdges && !_a->isInSameBinAs(_b)) return; // if world edges have been set, check to see if particles are in same bin
 		
-		ofxVec3f delta = (*_b) - (*_a);
-		float deltaLength = delta.length();
 		float restLength = _b->getRadius() + _a->getRadius();
-		float diff = (deltaLength - restLength) / (deltaLength * (_a->_invMass + _b->_invMass));
+		ofPoint delta = (*_b) - (*_a);
+		float deltaLength2 = msaLengthSquared(delta);
+		if(deltaLength2 >restLength * restLength) return;
+		float deltaLength = sqrt(deltaLength2);	// TODO: fast approximation of square root (1st order Taylor-expansion at a neighborhood of the rest length r (one Newton-Raphson iteration with initial guess r))
+		float force = (deltaLength - restLength) / (deltaLength * (_a->getInvMass() + _b->getInvMass()));
 		
-		float force = (diff * strength);
-		//		delta *= restLength * restLength / ( delta * delta + restLength * restLength) - 0.5;
-		
-		if (!_a->_isFixed) *_a += (_a->_invMass * force) * delta;
-		if (!_b->_isFixed) *_b -= (_b->_invMass * force) * delta;
+		if (!_a->isFixed()) *_a += delta * (_a->getInvMass() * force);
+		if (!_b->isFixed()) *_b -= delta * (_b->getInvMass() * force);
 	}
 	
 };

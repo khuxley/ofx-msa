@@ -22,65 +22,81 @@
 
 #include "ofMain.h"
 #include "ofxObjCPointer.h"
-#include "ofxVectorMath.h"
 
 #include "ofxMSAPhysicsParams.h"
 
-class ofxMSAParticle : public ofxVec3f, public ofxObjCPointer {
+class ofxMSAParticle : public ofPoint, public ofxObjCPointer {
 public:	
-	friend class ofxMSASpring;
 	friend class ofxMSAPhysics;
 	
-	ofxMSAParticle(float x = 0, float y = 0, float z = 0, float m = 1.0f, float d = 1.0f);	
-	ofxMSAParticle(ofxVec3f &v, float m = 1.0f, float d = 1.0f);	
+	ofxMSAParticle(float x = 0, float y = 0, float z = 0, float mass = 1.0f, float drag = 1.0f);	
+	ofxMSAParticle(ofPoint &v, float m = 1.0f, float d = 1.0f);	
 	ofxMSAParticle(ofxMSAParticle &p);	
 
-	virtual void init(float x, float y, float z, float m = 1.0f, float d = 1.0f);	
-	void setParams(ofxMSAPhysicsParams *params);
+	virtual void	init(float x, float y, float z, float m = 1.0f, float d = 1.0f);	
 	
-	void setMass(float m);	
-	float getMass();
-	float getInvMass();
+	ofxMSAParticle* setMass(float t = 1);
+	float			getMass();
+	float			getInvMass();
 
-	void setDrag(float d);		// NEW
-	float getDrag();			// NEW
+	ofxMSAParticle* setDrag(float t = 1);
+	float			getDrag();
 	
-	bool isFixed();
-	bool isFree();
-	void makeFixed();
-	void makeFree();
+	ofxMSAParticle* setBounce(float t = 1);
+	float			getBounce();
+	
+	ofxMSAParticle* setRadius(float t = 15);
+	float			getRadius();
+	
+	// even with collision disabled you can still create your own collision constraint between two particles
+	ofxMSAParticle* enableCollision();
+	ofxMSAParticle* disableCollision();
+	bool			hasCollision();
+	
+	bool			isFixed();
+	bool			isFree();
+	ofxMSAParticle* makeFixed();
+	ofxMSAParticle* makeFree();
    
-	void moveTo(ofxVec3f &targetPos);	
-    void moveBy(ofxVec3f &diffPos);    
-    void moveTo(float x, float y, float z);	
-    void moveBy(float x, float y, float z);    
+	ofxMSAParticle* moveTo(ofPoint &targetPos);	
+    ofxMSAParticle* moveBy(ofPoint &diffPos);    
+    ofxMSAParticle* moveTo(float x, float y, float z);	
+    ofxMSAParticle* moveBy(float x, float y, float z);    
 	
-    void setVelocity(ofxVec3f vel);    
-    void setVelocity(float x, float y, float z);    
-    void addVelocity(ofxVec3f &vel);    
-    void addVelocity(float x, float y, float z);	
-	ofxVec3f getVelocity();
+    ofxMSAParticle* setVelocity(ofPoint &vel);    
+    ofxMSAParticle* setVelocity(float x, float y, float z);    
+    ofxMSAParticle* addVelocity(ofPoint &vel);    
+    ofxMSAParticle* addVelocity(float x, float y, float z);	
+	ofPoint&		getVelocity();
 
-	// override these functions
-	virtual void update() {}
-	virtual void draw() {}
+	// override these functions if you create your own particle type with custom behaviour and/or drawing
+	virtual void	update() {}
+	virtual void	draw() {}
 
-	// NEW
-	void kill();
-	bool isDead();
+	void			kill();
+	bool			isDead();
 	
-	ofxMSAPhysicsParams *params;
-
+	bool			isInSameBinAs(ofxMSAParticle* p);
 	
 protected:
-	ofxVec3f			_oldPos;
-	float				_mass, _invMass;
-	float				_age;
-	float				_drag;
-	bool				_isDead;
-	bool				_isFixed;
+	ofxMSAPhysicsParams *_params;
+	ofxMSAPhysics		*_physics;
 	
-	void doVerlet();
+	
+	ofPoint			_oldPos, _vel;
+	float			_mass, _invMass;
+	float			_drag;
+	float			_bounce;
+	float			_radius;
+	float			_age;
+	bool			_isDead;
+	bool			_isFixed;
+	bool			_globalCollisionEnabled;
+	unsigned int	_xBinFlags, _yBinFlags, _zBinFlags;
+	
+	void			computeBinFlags();
+	void			doVerlet();
+	void			checkWorldEdges();
 	
 	virtual void debugDraw();
 };

@@ -18,11 +18,28 @@
  
  ***********************************************************************/
 
-#pragma once
 
-#define OFX_MSA_CONSTRAINT_TYPE_CUSTOM		0
-#define OFX_MSA_CONSTRAINT_TYPE_SPRING		1
-#define OFX_MSA_CONSTRAINT_TYPE_ATTRACTION	2
-#define OFX_MSA_CONSTRAINT_TYPE_COLLISION	3
+#include "ofxMSAPhysicsUtils.h"
 
-#define OFX_MSA_CONSTRAINT_TYPE_COUNT		4
+
+float msaFastInvSquareRoot (float x) {
+    float xhalf = 0.5f*x;
+    int i = *(int*)&x;
+    i = 0x5f3759df - (i>>1);
+    x = *(float*)&i;
+    x = x*(1.5f - xhalf*x*x);
+    return x;
+}
+
+float msaLengthSquared(ofPoint &p) {
+	return p.x*p.x + p.y*p.y + p.z*p.z;
+}
+
+float msaLength(ofPoint &p) {
+	return sqrt(msaLengthSquared(p));
+}
+
+void msaFastNormalize(ofPoint &p) {
+	float f = msaFastInvSquareRoot(msaLengthSquared(p));
+	p *= f;
+}

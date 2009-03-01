@@ -21,40 +21,50 @@
 
 #include "ofxMSAParticle.h"
 #include "ofxMSAPhysics.h"
+#include "binner.h"
 
 ofxMSAParticle::ofxMSAParticle(float x, float y, float z, float m, float d) {
 	init(x, y, z, m, d);
 }
 
-ofxMSAParticle::ofxMSAParticle(ofxVec3f &v, float m, float d) {
+ofxMSAParticle::ofxMSAParticle(ofPoint &v, float m, float d) {
 	init(v.x, v.y, v.z, m, d);
 }
 
 ofxMSAParticle::ofxMSAParticle(ofxMSAParticle &p) {
 	init(p.x, p.y, p.z, p._mass, p._drag);
 	_isFixed = p._isFixed;
+	setBounce(p._bounce);
+	setRadius(p._radius);
 }
 
 
 void ofxMSAParticle::init(float x, float y, float z, float m, float d) {
+	_params = NULL;
+	_physics = NULL;
+	
 	set(x, y, z);
 	_oldPos.set(x, y, z);
-	_isDead = false;
-	_age = 0;
 	setMass(m);
 	setDrag(d);
+	setBounce();
+	setRadius();
+	disableCollision();
 	makeFree();
+	_isDead = false;
+	_age = 0;
+	verbose = true;
 	setClassName("ofxMSAParticle");
 }
 
-void ofxMSAParticle::setParams(ofxMSAPhysicsParams *p) {
-	params = p;
-}
 
-void ofxMSAParticle::setMass(float m) {
-	if(m==0) m=0.00001f;
-	_mass = m;
-	_invMass = 1.0f/m;
+
+
+ofxMSAParticle* ofxMSAParticle::setMass(float t) {
+	if(t==0) t=0.00001f;
+	_mass = t;
+	_invMass = 1.0f/t;
+	return this;
 }
 
 float ofxMSAParticle::getMass() {
@@ -66,13 +76,52 @@ float ofxMSAParticle::getInvMass() {
 }
 
 
-void ofxMSAParticle::setDrag(float d) {
-	_drag = d;
+ofxMSAParticle* ofxMSAParticle::setDrag(float t) {
+	_drag = t;
+	return this;
 }
 
 float ofxMSAParticle::getDrag() {
 	return _drag;
 }
+
+ofxMSAParticle* ofxMSAParticle::setBounce(float t) {
+	_bounce = t;
+	return this;
+}
+
+float ofxMSAParticle::getBounce() {
+	return _bounce;
+}
+
+
+ofxMSAParticle* ofxMSAParticle::setRadius(float t) {
+	_radius = t;
+	return this;
+}
+
+float ofxMSAParticle::getRadius() {
+	return _radius;
+}
+
+ofxMSAParticle* ofxMSAParticle::enableCollision(){
+	_globalCollisionEnabled = true;
+	if(_physics) _physics->addToCollision(this);
+	return this;
+}
+
+ofxMSAParticle* ofxMSAParticle::disableCollision() {
+	_globalCollisionEnabled = false;
+	if(_physics) _physics->removeFromCollision(this);
+	return this;
+}
+
+bool ofxMSAParticle::hasCollision() {
+	return _globalCollisionEnabled;
+}
+
+
+
 
 bool ofxMSAParticle::isFixed() {
 	return (_isFixed == true);
@@ -82,62 +131,70 @@ bool ofxMSAParticle::isFree() {
 	return (_isFixed == false);
 }
 
-void ofxMSAParticle::makeFixed() {
+ofxMSAParticle* ofxMSAParticle::makeFixed() {
 	_isFixed = true;
+	return this;
 }
 
-void ofxMSAParticle::makeFree() {
+ofxMSAParticle* ofxMSAParticle::makeFree() {
 	_oldPos.set(this->x, this->y, this->z);
 	_isFixed = false;
+	return this;
 }
 
-void ofxMSAParticle::moveTo(ofxVec3f &targetPos) {
-	ofxVec3f diff = targetPos - *this;
+ofxMSAParticle* ofxMSAParticle::moveTo(ofPoint &targetPos) {
+	ofPoint diff = targetPos - *this;
 	moveBy(diff);
+	return this;
 }
 
-void ofxMSAParticle::moveBy(ofxVec3f &diffPos) {
+ofxMSAParticle* ofxMSAParticle::moveBy(ofPoint &diffPos) {
 	*this += diffPos;
 	_oldPos += diffPos;
+	return this;
 }
 
-void ofxMSAParticle::moveTo(float x, float y, float z) {
-	ofxVec3f temp;
+ofxMSAParticle* ofxMSAParticle::moveTo(float x, float y, float z) {
+	ofPoint temp;
 	temp.set(x, y, z);
 	moveTo(temp);
+	return this;
 }
 
-void ofxMSAParticle::moveBy(float x, float y, float z) {
-	ofxVec3f temp;
+ofxMSAParticle* ofxMSAParticle::moveBy(float x, float y, float z) {
+	ofPoint temp;
 	temp.set(x, y, z);
 	moveBy(temp);
+	return this;
 }
 
-void ofxMSAParticle::setVelocity(ofxVec3f vel) {
+ofxMSAParticle* ofxMSAParticle::setVelocity(ofPoint &vel) {
 	_oldPos = *this - vel;
+	return this;
 }
 
-void ofxMSAParticle::setVelocity(float x, float y, float z) {
-	ofxVec3f temp;
+ofxMSAParticle* ofxMSAParticle::setVelocity(float x, float y, float z) {
+	ofPoint temp;
 	temp.set(x, y, z);
 	setVelocity(temp);		
+	return this;
 }
 
-// NEW
-void ofxMSAParticle::addVelocity(ofxVec3f &vel) {
-//	*this += vel;
+ofxMSAParticle* ofxMSAParticle::addVelocity(ofPoint &vel) {
 	_oldPos -= vel;
-
+	return this;
 }
 
-void ofxMSAParticle::addVelocity(float x, float y, float z) {
-	ofxVec3f temp;
+ofxMSAParticle* ofxMSAParticle::addVelocity(float x, float y, float z) {
+	ofPoint temp;
 	temp.set(x, y, z);		
 	addVelocity(temp);
+	return this;
 }
 
-ofxVec3f ofxMSAParticle::getVelocity() {
-	return (*this - _oldPos);
+ofPoint &ofxMSAParticle::getVelocity() {
+//	return (*this - _oldPos);
+	return _vel; 
 }
 
 void ofxMSAParticle::kill() {
@@ -152,15 +209,53 @@ bool ofxMSAParticle::isDead() {
 
 void ofxMSAParticle::doVerlet() {
 	if (!_isFixed) {
-		ofxVec3f temp;
-		if(params->doGravity) {
-			ofxVec3f gravityForce = params->gravity;
+		if(_params->doGravity) {
+			ofPoint gravityForce = _params->gravity;
 			addVelocity(gravityForce);
 		}
 		
-		temp.set(this->x, this->y, this->z);			
-		*this += (temp - _oldPos) * params->drag * _drag + params->timeStep2;
-		_oldPos.set(temp.x, temp.y, temp.z);
+		ofPoint curPos = *this;
+		_vel = curPos - _oldPos;
+		*this += _vel * _params->drag * _drag + _params->timeStep2;
+//		*this += _vel + 
+		_oldPos = curPos;
+	}
+}
+
+bool ofxMSAParticle::isInSameBinAs(ofxMSAParticle* p) {
+	return (_xBinFlags & p->_xBinFlags) && (_yBinFlags & p->_yBinFlags) && (_zBinFlags & p->_zBinFlags);
+}
+
+
+void ofxMSAParticle::computeBinFlags() {
+	computeBinPosition(x, y, z, &_xBinFlags, &_yBinFlags, &_zBinFlags);
+}
+
+
+void ofxMSAParticle::checkWorldEdges() {
+//	printf("%.3f, %.3f, %.3f\n", _params->worldMin.x, _params->worldMax.y, _params->worldMax.z);
+	if(x < _params->worldMin.x + _radius) {
+		moveTo(_params->worldMin.x + _radius, y, z);
+		setVelocity(-_vel.x * _bounce, _vel.y, _vel.z);
+	} else if(x > _params->worldMax.x - _radius) {
+		moveTo(_params->worldMax.x - _radius, y, z);
+		setVelocity(-_vel.x * _bounce, _vel.y, _vel.z);
+	}
+
+	if( y < _params->worldMin.y + _radius) {
+		moveTo(x, _params->worldMin.y + _radius, z);
+		setVelocity(_vel.x, -_vel.y * _bounce, _vel.z);
+	} else if(y > _params->worldMax.y - _radius) {
+		moveTo(x, _params->worldMax.y - _radius, z);
+		setVelocity(_vel.x, -_vel.y * _bounce, _vel.z);
+	}
+
+	if(z < _params->worldMin.z + _radius) {
+		moveTo(x, y, _params->worldMin.z + _radius);
+		setVelocity(_vel.x, _vel.y, -_vel.z * _bounce);
+	} else if(z > _params->worldMax.z - _radius) {
+		moveTo(x, y, _params->worldMax.z - _radius);
+		setVelocity(_vel.x, _vel.y, -_vel.z * _bounce);
 	}
 }
 
@@ -168,6 +263,8 @@ void ofxMSAParticle::doVerlet() {
 void ofxMSAParticle::debugDraw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
-//	glutSolidSphere(2, 5, 5);
+#ifndef TARGET_OF_IPHONE		
+	glutSolidSphere(_radius, 5, 5);
+#endif	
 	glPopMatrix();
 }

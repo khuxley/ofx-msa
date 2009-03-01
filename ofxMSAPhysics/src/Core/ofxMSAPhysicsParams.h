@@ -22,15 +22,19 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVectorMath.h"
 
 struct ofxMSAPhysicsParams {
 	float		timeStep, timeStep2;
 	float		drag;	
-	
-	ofxVec3f	gravity;
-	bool		doGravity;
-	
-	float		invWidth, invHeight;		// cache these for speed
 
+	uint		numIterations;
+	bool		isCollisionEnabled;
+	
+	bool		doGravity;
+	ofPoint		gravity;
+	
+	// do world boundaries
+	bool		doWorldEdges;
+	ofPoint		worldMin;					// use for binning
+	ofPoint		worldMax;
 };

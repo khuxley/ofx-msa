@@ -22,7 +22,6 @@
 
 #include "ofMain.h"
 #include "ofxObjCPointer.h"
-#include "ofxVectorMath.h"
 
 #include "ofxMSAParticle.h"
 

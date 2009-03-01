@@ -21,8 +21,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVectorMath.h"
-
 #include "ofxMSAConstraint.h"
 
 class ofxMSAAttraction : public ofxMSAConstraint {
@@ -64,16 +62,14 @@ protected:
 	float _strength;
 	
 	void solve() {
-		if(isOff()) return;
-		
-		ofxVec3f delta = (*_b) - (*_a);
-		float deltaLength2 = delta.lengthSquared();
+		ofPoint delta = (*_b) - (*_a);
+		float deltaLength2 = msaLengthSquared(delta);
 		if(_minDist2 && deltaLength2 > _minDist2) return;
 		
 		float force = _strength * (_b->getMass()) * (_a->getMass()) / (deltaLength2 + 0.001);		// to avoid divide by zero
 		
-		if (!_a->isFixed()) *_a += (_a->getInvMass() * force) * delta;
-		if (!_b->isFixed()) *_b -= (_b->getInvMass() * force) * delta;
+		if (!_a->isFixed()) *_a += delta * (_a->getInvMass() * force);
+		if (!_b->isFixed()) *_b -= delta * (_b->getInvMass() * force);
 	}
 	
 };

@@ -18,11 +18,15 @@
  
  ***********************************************************************/
 
+
 #pragma once
 
-#define OFX_MSA_CONSTRAINT_TYPE_CUSTOM		0
-#define OFX_MSA_CONSTRAINT_TYPE_SPRING		1
-#define OFX_MSA_CONSTRAINT_TYPE_ATTRACTION	2
-#define OFX_MSA_CONSTRAINT_TYPE_COLLISION	3
+#include "ofMain.h"
 
-#define OFX_MSA_CONSTRAINT_TYPE_COUNT		4
+float msaFastInvSquareRoot(float f);
+
+float msaLengthSquared(ofPoint &p);
+
+float msaLength(ofPoint &p);
+
+void msaFastNormalize(ofPoint &p);

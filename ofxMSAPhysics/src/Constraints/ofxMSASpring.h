@@ -21,8 +21,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVectorMath.h"
-
 #include "ofxMSAConstraint.h"
 
 class ofxMSASpring : public ofxMSAConstraint {
@@ -43,17 +41,13 @@ public:
 	
 protected:	
 	void solve() {
-		if(isOff()) return;
+		ofPoint delta = (*_b) - (*_a);
+		float deltaLength2 = msaLengthSquared(delta);
+		float deltaLength = sqrt(deltaLength2);	// TODO: fast approximation of square root (1st order Taylor-expansion at a neighborhood of the rest length r (one Newton-Raphson iteration with initial guess r))
+		float force = strength * (deltaLength - restLength) / (deltaLength * (_a->getInvMass() + _b->getInvMass()));
 		
-		ofxVec3f delta = (*_b) - (*_a);
-		float deltaLength = delta.length();
-		float diff = (deltaLength - restLength) / (deltaLength * (_a->_invMass + _b->_invMass));
-	
-		float force = (diff * strength);
-//		delta *= restLength * restLength / ( delta * delta + restLength * restLength) - 0.5;
-		
-		if (!_a->_isFixed) *_a += (_a->_invMass * force) * delta;
-		if (!_b->_isFixed) *_b -= (_b->_invMass * force) * delta;
-	}
+		if (!_a->isFixed()) *_a += delta * (_a->getInvMass() * force);
+		if (!_b->isFixed()) *_b -= delta * (_b->getInvMass() * force);
+ 	}
 	
 };

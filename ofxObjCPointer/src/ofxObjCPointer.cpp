@@ -26,20 +26,23 @@ ofxObjCPointer::ofxObjCPointer() {
 	__useCountOfThisObject = 1;
 	setInstanceName("");
 	setClassName("ofxObjCPointer");
+	verbose = false;
 }
+
+ofxObjCPointer::~ofxObjCPointer() {
+	if(verbose) printf("%s : %s - *** DELETED ***\n", __myClassName.c_str(), __myInstanceName.c_str());
+}
+
 
 void ofxObjCPointer::retain() {
 	__useCountOfThisObject++;
-//	printf("%s (%s) - retain() - Use Count: %i\n", __myInstanceName.c_str(), __myClassName.c_str(), __useCountOfThisObject);
+	if(verbose) printf("%s : %s - retain (%i)\n", __myClassName.c_str(), __myInstanceName.c_str(), __useCountOfThisObject);
 }
 
 void ofxObjCPointer::release() {
 	__useCountOfThisObject--;
-//	printf("%s (%s) - release() - Use Count: %i\n", __myInstanceName.c_str(), __myClassName.c_str(), __useCountOfThisObject);
-	if(__useCountOfThisObject == 0) {
-//		printf("%s (%s) - release() - deleting", __myInstanceName.c_str(), __myClassName.c_str());
-		delete this;
-	}
+	if(verbose) printf("%s : %s - release (%i)\n", __myClassName.c_str(), __myInstanceName.c_str(), __useCountOfThisObject);
+	if(__useCountOfThisObject == 0) delete this;
 }
 
 

@@ -1,9 +1,9 @@
 ofxObjCPointer changelog
 
 
-v1.02	12/11/08
+v1.1	29/02/09
 --------------------
-- removed printf's
+- added verbose option (off by default)
 
 
 v1.01	16/10/08

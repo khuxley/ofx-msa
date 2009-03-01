@@ -48,8 +48,10 @@
  
 class ofxObjCPointer {
 public:
+	bool verbose;
+	
 	ofxObjCPointer();
-	virtual ~ofxObjCPointer() {}
+	virtual ~ofxObjCPointer();
 	
 	// use this to indicate you are using the object and want to keep it safe in memory
 	void retain();
