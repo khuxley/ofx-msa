@@ -1,6 +1,11 @@
 ofxMultiTouch changelog
 
 
+v0.3
+--------------------
+- IMPORTANT: ofxMultiTouchListener now takes (x,y) as float, NOT int
+
+
 v0.2
 --------------------
 - added custom touch info data
