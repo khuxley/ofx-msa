@@ -133,23 +133,23 @@ void testApp::mouseReleased(int x, int y, int button){
 
 
 //--------------------------------------------------------------
-void testApp::touchDown(int x, int y, int touchId, ofxMultiTouchCustomData *data) {
+void testApp::touchDown(float x, float y, int touchId, ofxMultiTouchCustomData *data) {
 	printf("touchDown: %i, %i %i\n", x, y, touchId);
 	things[touchId].moveTo(x, y);
 }
 
 
-void testApp::touchMoved(int x, int y, int touchId, ofxMultiTouchCustomData *data) {
+void testApp::touchMoved(float x, float y, int touchId, ofxMultiTouchCustomData *data) {
 	printf("touchMoved: %i, %i %i\n", x, y, touchId);
 	things[touchId].moveTo(x, y);
 }
 
 
-void testApp::touchUp(int x, int y, int touchId, ofxMultiTouchCustomData *data) {
+void testApp::touchUp(float x, float y, int touchId, ofxMultiTouchCustomData *data) {
 	printf("touchUp: %i, %i %i\n", x, y, touchId);
 }
 
-void testApp::touchDoubleTap(int x, int y, int touchId, ofxMultiTouchCustomData *data) {
+void testApp::touchDoubleTap(float x, float y, int touchId, ofxMultiTouchCustomData *data) {
 	printf("touchDoubleTap: %i, %i %i\n", x, y, touchId);
 	ofToggleFullscreen();
 }

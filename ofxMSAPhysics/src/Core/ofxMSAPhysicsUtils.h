@@ -23,6 +23,8 @@
 
 #include "ofMain.h"
 
+typedef	unsigned int		uint;
+
 float msaFastInvSquareRoot(float f);
 
 float msaLengthSquared(ofPoint &p);

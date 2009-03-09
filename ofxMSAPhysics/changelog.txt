@@ -1,6 +1,11 @@
 ofxMSAPhysics changelog
 
 
+v2.0.1a 08/03/09
+--------------------
+- changed uint to unsigned int as it wasn't available on all platforms
+- some files were missing
+
 v2.0a	29/02/09
 --------------------
 - a lot of new files in this one, so you'll need to remove and re-add it to your project

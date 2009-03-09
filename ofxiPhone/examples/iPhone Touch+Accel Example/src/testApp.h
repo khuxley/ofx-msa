@@ -20,10 +20,10 @@ public:
 	void mouseReleased();
 	void mouseReleased(int x, int y, int button );
 	
-	void touchDown(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL);
-	void touchMoved(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL);
-	void touchUp(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL);
-	void touchDoubleTap(int x, int y, int touchId, ofxMultiTouchCustomData *data = NULL);
+	void touchDown(float x, float y, int touchId, ofxMultiTouchCustomData *data = NULL);
+	void touchMoved(float x, float y, int touchId, ofxMultiTouchCustomData *data = NULL);
+	void touchUp(float x, float y, int touchId, ofxMultiTouchCustomData *data = NULL);
+	void touchDoubleTap(float x, float y, int touchId, ofxMultiTouchCustomData *data = NULL);
 	
 };
 
