@@ -228,7 +228,8 @@ bool ofxMSAParticle::isInSameBinAs(ofxMSAParticle* p) {
 
 
 void ofxMSAParticle::computeBinFlags() {
-	computeBinPosition(x, y, z, &_xBinFlags, &_yBinFlags, &_zBinFlags);
+//	computeBinPosition(x, y, z, &_xBinFlags, &_yBinFlags, &_zBinFlags);
+	computeBinPosition(*this, &_xBinFlags, &_yBinFlags, &_zBinFlags);
 }
 
 

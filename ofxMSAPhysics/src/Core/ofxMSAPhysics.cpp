@@ -27,6 +27,7 @@ ofxMSAPhysics::ofxMSAPhysics() {
 	setDrag();
 	setNumIterations();
 	enableCollision();
+	setCollisionBinSize(10);
 	setGravity();
 	clearWorldSize();
 	
@@ -173,7 +174,6 @@ ofxMSAPhysics* ofxMSAPhysics::enableCollision() {
 	return this;
 }
 
-
 ofxMSAPhysics* ofxMSAPhysics::disableCollision() {
 	params.isCollisionEnabled = false;
 	return this;
@@ -181,6 +181,19 @@ ofxMSAPhysics* ofxMSAPhysics::disableCollision() {
 
 bool ofxMSAPhysics::isCollisionEnabled() {
 	return params.isCollisionEnabled;
+}
+
+
+ofxMSAPhysics* ofxMSAPhysics::setCollisionBinSize(float f) {
+	setCollisionBinSize(ofPoint(f, f, f));
+	return this;
+}
+
+
+ofxMSAPhysics* ofxMSAPhysics::setCollisionBinSize(ofPoint f) {
+	params.binSize = f;
+	setupBins(params.worldMin, params.worldMax, params.binSize);
+	return this;
 }
 
 
@@ -244,14 +257,14 @@ ofxMSAPhysics*  ofxMSAPhysics::setNumIterations(float numIterations) {
 ofxMSAPhysics* ofxMSAPhysics::setWorldMin(ofPoint worldMin) {
 	params.worldMin = worldMin;
 	params.doWorldEdges = true;
-	ofPoint worldSize = params.worldMax - params.worldMin;
-	setupBins(worldSize.x, worldSize.y, worldSize.z, 5, 5, 5);	// TODO: sort this out
+	setupBins(params.worldMin, params.worldMax, params.binSize);
 	return this;	
 }
 
 ofxMSAPhysics* ofxMSAPhysics::setWorldMax(ofPoint worldMax) {
 	params.worldMax = worldMax;
 	params.doWorldEdges = true;
+	setupBins(params.worldMin, params.worldMax, params.binSize);
 	return this;	
 }
 

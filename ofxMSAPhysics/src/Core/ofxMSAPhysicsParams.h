@@ -27,7 +27,7 @@ struct ofxMSAPhysicsParams {
 	float		timeStep, timeStep2;
 	float		drag;	
 
-	uint		numIterations;
+	int			numIterations;
 	bool		isCollisionEnabled;
 	
 	bool		doGravity;
@@ -37,4 +37,5 @@ struct ofxMSAPhysicsParams {
 	bool		doWorldEdges;
 	ofPoint		worldMin;					// use for binning
 	ofPoint		worldMax;
+	ofPoint		binSize;
 };

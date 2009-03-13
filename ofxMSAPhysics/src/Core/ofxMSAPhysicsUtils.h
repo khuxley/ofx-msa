@@ -32,3 +32,4 @@ float msaLengthSquared(ofPoint &p);
 float msaLength(ofPoint &p);
 
 void msaFastNormalize(ofPoint &p);
+

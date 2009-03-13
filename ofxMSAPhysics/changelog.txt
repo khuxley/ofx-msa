@@ -1,10 +1,14 @@
 ofxMSAPhysics changelog
 
+TODO: 
+- auto calculate bin size (keep track of largest particle, on physics::addParticle and particle::setSize)
 
-v2.0.1a 08/03/09
+
+v2.0.2a 09/03/09
 --------------------
-- changed uint to unsigned int as it wasn't available on all platforms
-- some files were missing
+- updates to fix warnings and an error (uint) on PC
+- fixes to collision / bin checking
+
 
 v2.0a	29/02/09
 --------------------

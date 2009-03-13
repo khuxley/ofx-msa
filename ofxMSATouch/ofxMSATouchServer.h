@@ -1,7 +1,6 @@
 /***********************************************************************
  
  Copyright (c) 2009, Memo Akten, www.memo.tv
- *** The Mega Super Awesome Visuals Company ***
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -20,10 +19,31 @@
 
 #pragma once
 
-#define OFX_MSA_CONSTRAINT_TYPE_CUSTOM		0
-#define OFX_MSA_CONSTRAINT_TYPE_SPRING		1
-#define OFX_MSA_CONSTRAINT_TYPE_ATTRACTION	2
-#define OFX_MSA_CONSTRAINT_TYPE_COLLISION	3
+#include "ofMain.h"
+#include "ofxOsc.h"
 
-#define OFX_MSA_CONSTRAINT_TYPE_COUNT		4
+#include "ofxMSATouch.h"
+
+
+class ofxMSATouchServer { 
+public:
+	ofxMSATouchServer();
+	~ofxMSATouchServer();
+	
+	void setMaxTouches(int i);
+	void setup(string host, int port);
+	void update();
+	
+	void cursorPressed(float x, float y, int cursorId);
+	void cursorReleased(float x, float y, int cursorId);
+	void cursorDragged(float x, float y, int cursorId);
+	
+protected:
+	string			host;
+	int				port;
+	int				numDown;
+	int				maxTouches;
+	ofxOscSender	oscSender;
+	ofxMSATouch		*cursors;
+};
 

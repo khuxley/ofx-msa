@@ -75,3 +75,4 @@ public:
 protected:
 	vector<ofxMSAParticleUpdater*> _updaters;
 };
+
