@@ -4,6 +4,11 @@ TODO:
 - auto calculate bin size (keep track of largest particle, on physics::addParticle and particle::setSize)
 
 
+v2.1	07/04/2009
+--------------------
+- changed license to revised BSD (a lot more more permissive than GPL)
+
+
 v2.0.2a 09/03/09
 --------------------
 - updates to fix warnings and an error (uint) on PC

@@ -1,5 +1,9 @@
 ofxMSAShape3D changelog
 
+v0.6	07/04/2009
+--------------------
+- changed license to revised BSD (a lot more more permissive than GPL)
+
 
 v0.5	 19/02/09
 --------------------
