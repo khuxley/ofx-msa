@@ -1,14 +1,13 @@
 /***********************************************************************
  
- This class solves a fluid system based on the classic Jos Stam paper I'm sure you've heard about :P
- http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
- 
- also had help from this site (though its in 3D, so simplied it a bit)
- http://www.mikeash.com/?page=pyblog/fluid-simulation-for-dummies.html
- 
- 
- In addition to the features in the Jos Stam paper, this class allows you to add colored dye and force at (x,y) coordinates using the addAt....() functions
- Also use the getInfoAtCell() function to read velocity and density at any coordinates in the fluid so you can feed it to a particle system or something
+ * this is a class for solving real-time fluid dynamics simulations based on Navier-Stokes equations 
+ * and code from Jos Stam's paper "Real-Time Fluid Dynamics for Games" http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
+ * Other useful resources and implementations I looked at while building this lib: 
+ * Mike Ash (C) - http://mikeash.com/?page=pyblog/fluid-simulation-for-dummies.html
+ * Alexander McKenzie (Java) - http://www.multires.caltech.edu/teaching/demos/java/stablefluids.htm
+ * Pierluigi Pesenti (AS3 port of Alexander's) - http://blog.oaxoa.com/2008/01/21/actionscript-3-fluids-simulation/
+ * Gustav Taxen (C) - http://www.nada.kth.se/~gustavt/fluids/
+ * Dave Wallin (C++) - http://nuigroup.com/touchlib/ (uses portions from Gustav's)
  
  
  /***********************************************************************
