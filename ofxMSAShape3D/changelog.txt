@@ -1,5 +1,10 @@
 ofxMSAShape3D changelog
 
+v0.7	29/04/2009
+--------------------
+- restores all client states to how they were before modding (only in safe mode)
+
+
 v0.6	07/04/2009
 --------------------
 - changed license to revised BSD (a lot more more permissive than GPL)

@@ -90,6 +90,7 @@ public:
 		glDrawArrays(drawMode, 0, numVertices);
 #else
 		glEnd();
+		if(safeMode) restoreClientStates();
 #endif	
 	}
 	
@@ -229,8 +230,8 @@ public:
 	
 	// set whether the shape will be using any of the below
 	inline void enableNormal(bool b) {
-		normalEnabled = b;
-		if(normalEnabled) {
+		if(safeMode) normalWasEnabled = glIsEnabled(GL_NORMAL_ARRAY);
+		if(normalEnabled = b) {
 			glEnableClientState(GL_NORMAL_ARRAY);
 			glNormalPointer(GL_FLOAT, 0, &normalArray[0]);
 		}
@@ -238,8 +239,8 @@ public:
 	}
 	
 	inline void enableColor(bool b) {
-		colorEnabled = b;
-		if(colorEnabled) {
+		if(safeMode) colorWasEnabled = glIsEnabled(GL_COLOR_ARRAY);
+		if(colorEnabled = b) {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, 0, &colorArray[0]);
 		}
@@ -247,8 +248,8 @@ public:
 	}
 	
 	inline void enableTexCoord(bool b) {
-		texCoordEnabled = b;
-		if(texCoordEnabled) {
+		if(safeMode) texCoordWasEnabled = glIsEnabled(GL_TEXTURE_COORD_ARRAY);
+		if(texCoordEnabled = b) {
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glTexCoordPointer(2, GL_FLOAT, 0, &texCoordArray[0]);
 		}
@@ -264,6 +265,12 @@ public:
 		glVertexPointer(3, GL_FLOAT, 0, &vertexArray[0]);
 	}
 	
+	inline void restoreClientStates() {
+		restoreState(GL_NORMAL_ARRAY, normalEnabled, normalWasEnabled);
+		restoreState(GL_COLOR_ARRAY, colorEnabled, colorWasEnabled);
+		restoreState(GL_TEXTURE_COORD_ARRAY, texCoordEnabled, texCoordWasEnabled);
+	}
+	
 	
 protected:
 	inline void reset() {
@@ -277,7 +284,14 @@ protected:
 		vertexIndex = 0;
 //		normalIndex = colorIndex = texCoordIndex = 0;
 	}
-
+	
+	inline void restoreState(int flag, bool curState, bool oldState) {
+		if(curState == oldState) return;
+		if(oldState) glEnableClientState(flag);
+		else glDisableClientState(flag);
+		curState = oldState;
+	}
+	
 	float	*vertexArray;	// 3
 	float	*normalArray;	// 3
 	float	*colorArray;	// 4
@@ -293,6 +307,10 @@ protected:
 	bool	colorEnabled;
 	bool	texCoordEnabled;
 	
+	bool	normalWasEnabled;
+	bool	colorWasEnabled;
+	bool	texCoordWasEnabled;
+	
 	bool	safeMode;
 	
 	int		numVertices;
@@ -303,4 +321,6 @@ protected:
 
 	int		reservedSize;
 	GLenum	drawMode;
+	
+	
 };
