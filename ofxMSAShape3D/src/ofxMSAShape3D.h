@@ -88,9 +88,9 @@ public:
 #ifndef USE_IMMEDIATE_MODE
 		if(safeMode) setClientStates();
 		glDrawArrays(drawMode, 0, numVertices);
+		if(safeMode) restoreClientStates();
 #else
 		glEnd();
-		if(safeMode) restoreClientStates();
 #endif	
 	}
 	

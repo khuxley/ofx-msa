@@ -1,6 +1,6 @@
 ofxMSAShape3D changelog
 
-v0.7	29/04/2009
+v0.71	29/04/2009
 --------------------
 - restores all client states to how they were before modding (only in safe mode)
 
