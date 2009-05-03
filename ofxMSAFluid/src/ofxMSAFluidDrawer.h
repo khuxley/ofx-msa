@@ -44,6 +44,7 @@
 #define FLUID_DRAW_MOTION		1
 #define FLUID_DRAW_SPEED		2
 #define FLUID_DRAW_VECTORS		3
+#define FLUID_DRAW_MODE_COUNT	4
 
 #define FLUID_TEXTURE
 
@@ -82,11 +83,17 @@ public:
 	}
 	
 	void setDrawMode(int newDrawMode);
+	void incDrawMode();
+	void decDrawMode();
+	int getDrawMode();
+	const char* getDrawModeName();
+
 	
+	int					drawMode;
+
 protected:	
 	unsigned char		*_pixels;						// pixels array to be drawn
 	int					_byteCount;						// number of byes in the pixel array (size * 3)
-	int					_drawMode;
 #ifdef FLUID_TEXTURE
 	ofTexture			tex;
 #endif	

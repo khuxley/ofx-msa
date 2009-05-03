@@ -106,8 +106,38 @@ void ofxMSAFluidDrawer::update() {
 
 
 void ofxMSAFluidDrawer::setDrawMode(int newDrawMode) {
-	_drawMode = newDrawMode;
+	drawMode = newDrawMode;
+	if(drawMode < 0) drawMode = FLUID_DRAW_MODE_COUNT-1;
+	else if(drawMode >= FLUID_DRAW_MODE_COUNT) drawMode = 0;
 }
+
+void ofxMSAFluidDrawer::incDrawMode() {
+	setDrawMode(drawMode + 1);
+}
+
+void ofxMSAFluidDrawer::decDrawMode() {
+	setDrawMode(drawMode - 1);
+}
+
+int ofxMSAFluidDrawer::getDrawMode() {
+	return drawMode;
+}
+
+const char* ofxMSAFluidDrawer::getDrawModeName() {
+	switch(drawMode) {
+		case 0:
+			return "FLUID_DRAW_COLOR";
+		case 1:
+			return "FLUID_DRAW_MOTION";
+		case 2:
+			return "FLUID_DRAW_SPEED";
+		case 3:
+			return "FLUID_DRAW_VECTORS";
+		default:
+			return "FLUID DRAW MODE NOT FOUND";
+	}
+}
+
 
 
 void ofxMSAFluidDrawer::draw(float x, float y) {
@@ -116,7 +146,7 @@ void ofxMSAFluidDrawer::draw(float x, float y) {
 
 
 void ofxMSAFluidDrawer::draw(float x, float y, float renderWidth, float renderHeight) {
-	switch(_drawMode) {
+	switch(drawMode) {
 		case FLUID_DRAW_COLOR:
 			drawColor(x, y, renderWidth, renderHeight);
 			break;
