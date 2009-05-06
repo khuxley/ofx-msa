@@ -47,7 +47,7 @@ void testApp::addToFluid(float x, float y, float dx, float dy, bool addColor, bo
 			fluidSolver.r[index]  += drawColor.r * colorMult;
 			fluidSolver.g[index]  += drawColor.g * colorMult;
 			fluidSolver.b[index]  += drawColor.b * colorMult;
-
+			
 			if(drawParticles) particleSystem.addParticles(x * window.width, y * window.height, 10);
 		}
 		
@@ -87,7 +87,7 @@ void testApp::setup() {
 #ifdef USE_TUIO
 	tuioClient.start(3333);
 #endif
-
+	
 	
 #ifdef USE_GUI 
 	gui.addSlider("fs.viscocity", &fluidSolver.viscocity, 0.0, 0.0002, 0.5); 
@@ -100,8 +100,11 @@ void testApp::setup() {
 	gui.addToggle("drawFluid", &drawFluid); 
 	gui.addToggle("drawParticles", &drawParticles); 
 	gui.addToggle("renderUsingVA", &renderUsingVA); 
+	gui.addToggle("fs.wrapX", &fluidSolver.wrap_x); 
+	gui.addToggle("fs.wrapY", &fluidSolver.wrap_y); 
 #endif
-	
+	gui.setAutoSave(true);
+	gui.loadFromXML();	
 }
 
 
@@ -140,7 +143,7 @@ void testApp::draw(){
 		fluidDrawer.draw(0, 0, window.width, window.height);
 	}
 	if(drawParticles) particleSystem.updateAndDraw();
-
+	
 #ifdef USE_GUI 
 	gui.draw();
 #endif
@@ -193,7 +196,7 @@ void testApp::mouseMoved(int x, int y ){
     float mouseNormY = y * window.invHeight;
     float mouseVelX = (x - pmouseX) * window.invWidth;
     float mouseVelY = (y - pmouseY) * window.invHeight;
-
+	
     addToFluid(mouseNormX, mouseNormY, mouseVelX, mouseVelY, true);
 }
 

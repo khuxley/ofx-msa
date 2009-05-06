@@ -40,7 +40,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE. 
  *
  * ***********************************************************************/ 
-//	April 2009 optimized and extended by Maa (http://www.lagraine.com/ - new content coming soon)
+//	April-Mai 2009 optimized and extended by Maa (http://www.lagraine.com/ - new content coming soon)
 
 #pragma once
 
@@ -156,6 +156,7 @@ public:
 	ofxMSAFluidSolver& setSolverIterations(int solverIterations = FLUID_DEFAULT_SOLVER_ITERATIONS);
 	ofxMSAFluidSolver& enableVorticityConfinement(bool b);
 	bool getVorticityConfinement();
+	ofxMSAFluidSolver& setWrap( bool bx, bool by );
 	
 
 	// returns average density of fluid 
@@ -193,6 +194,10 @@ public:
 	float	viscocity;
 	float	fadeSpeed;
 	
+	bool	wrap_x;
+	bool	wrap_y;
+
+	
 //	float width;
 //	float height;
 //	float invWidth;
@@ -228,11 +233,11 @@ protected:
 	
 	void	project(float *x, float *y, float *p, float *div);
 	void	linearSolver(int b, float *x, float *x0, float a, float c);
-	void	linearSolverRGB(int b, float a, float c);
+	void	linearSolverRGB( float a, float c);
 	void	linearSolverUV(float a, float c);
 	
 	void	setBoundary(int b, float *x);
-	void	setBoundaryRGB(int b);
+	void	setBoundaryRGB();
 	
 	void	swapUV();
 	void	swapU(); 
