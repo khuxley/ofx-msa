@@ -1,5 +1,10 @@
 ofxMSAShape3D changelog
 
+v0.72	16/05/2009
+--------------------
+- fixed bug with normals and texture coordinates (thanks jonbro)
+
+
 v0.71	29/04/2009
 --------------------
 - restores all client states to how they were before modding (only in safe mode)

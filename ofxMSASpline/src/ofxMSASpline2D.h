@@ -50,7 +50,7 @@ public:
 				float y = at(i).y;
 				glVertex2f(x, y);
 			}
-			if(lineWidth) glEnd();
+			glEnd();
 		}
 		
 		if(dotSize) {
@@ -61,7 +61,7 @@ public:
 				float y = at(i).y;
 				glVertex2f(x, y);
 			}
-			if(lineWidth) glEnd();
+			glEnd();
 		}
 		
 	}

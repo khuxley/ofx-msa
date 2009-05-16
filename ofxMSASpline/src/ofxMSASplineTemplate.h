@@ -129,6 +129,10 @@ public:
 		return _data.at(i);
 	}
 	
+	vector<Type> getData() {
+		return _data;
+	}
+	
 	
 	
 protected:

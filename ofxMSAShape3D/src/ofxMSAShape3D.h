@@ -105,24 +105,24 @@ public:
 	inline void addVertex(float x, float y, float z = 0) {
 #ifndef USE_IMMEDIATE_MODE
 		if(safeMode) {
-			if(numVertices >= reservedSize) reserve(reservedSize * 1.1);		// if we hit limit, increase reserve by 10%
-			memcpy(colorArray + numVertices*3, curColor, 3*SIZEOF_FLOAT);
+			if(numVertices >= reservedSize) reserve(reservedSize * 1.1);      // if we hit limit, increase reserve by 10%
+			memcpy(normalArray + numVertices*3, curNormal, 3*SIZEOF_FLOAT);
 			memcpy(colorArray + numVertices*4, curColor, 4*SIZEOF_FLOAT);
-			memcpy(colorArray + numVertices*2, curColor, 2*SIZEOF_FLOAT);
+			memcpy(texCoordArray + numVertices*2, curTexCoord, 2*SIZEOF_FLOAT);
 		} else {
-			if(normalEnabled) memcpy(colorArray + numVertices*3, curColor, 3*SIZEOF_FLOAT);
+			if(normalEnabled) memcpy(normalArray + numVertices*3, curNormal, 3*SIZEOF_FLOAT);
 			if(colorEnabled) memcpy(colorArray + numVertices*4, curColor, 4*SIZEOF_FLOAT);
-			if(texCoordEnabled) memcpy(colorArray + numVertices*2, curColor, 2*SIZEOF_FLOAT);
+			if(texCoordEnabled) memcpy(texCoordArray + numVertices*2, curTexCoord, 2*SIZEOF_FLOAT);
 		}
 		
-		vertexArray[vertexIndex++]		= x;
-		vertexArray[vertexIndex++]		= y;
-		vertexArray[vertexIndex++]		= z;
+		vertexArray[vertexIndex++]      = x;
+		vertexArray[vertexIndex++]      = y;
+		vertexArray[vertexIndex++]      = z;
 		
 		numVertices++;
 #else
 		glVertex3f(x, y, z);
-#endif	
+#endif   
 	}
 
 	// pointer to x,y,z coordinates
