@@ -1,0 +1,6 @@
+ofxMSADataProtector changelog
+
+
+v0.1
+--------------------
+- initial version
