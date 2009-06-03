@@ -1,9 +1,9 @@
 /***********************************************************************
- 
+
  This class is for drawing a fluidsolver using the openFrameworks texture
- 
+
  /***********************************************************************
- 
+
  Copyright (c) 2008, 2009, Memo Akten, www.memo.tv
  *** The Mega Super Awesome Visuals Company ***
  * All rights reserved.
@@ -16,28 +16,28 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of MSA Visuals nor the names of its contributors 
+ *     * Neither the name of MSA Visuals nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
  * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * ***********************************************************************/ 
+ * ***********************************************************************/
 
 
 #include "ofxMSAFluidDrawer.h"
 
 ofxMSAFluidDrawer::ofxMSAFluidDrawer() {
-	//	printf("ofxMSAFluidDrawer::ofxMSAFluidDrawer()\n");	
+	//	printf("ofxMSAFluidDrawer::ofxMSAFluidDrawer()\n");
 	_pixels				= NULL;
 	_byteCount			= 0;
 	_fluidSolver		= NULL;
@@ -47,7 +47,7 @@ ofxMSAFluidDrawer::ofxMSAFluidDrawer() {
 }
 
 ofxMSAFluidDrawer::~ofxMSAFluidDrawer() {
-	//	printf("ofxMSAFluidDrawer::~ofxMSAFluidDrawer()\n");		
+	//	printf("ofxMSAFluidDrawer::~ofxMSAFluidDrawer()\n");
 	deleteFluidSolver();
 }
 
@@ -59,7 +59,7 @@ ofxMSAFluidSolver* ofxMSAFluidDrawer::setup(int NX, int NY) {
 	_fluidSolver = new ofxMSAFluidSolver;
 	_fluidSolver->setup(NX, NY);
 	createTexture();
-	
+
 	return _fluidSolver;
 }
 
@@ -67,7 +67,7 @@ ofxMSAFluidSolver* ofxMSAFluidDrawer::setup(ofxMSAFluidSolver* f) {
 	deleteFluidSolver();
 	_fluidSolver = f;
 	createTexture();
-	
+
 	return _fluidSolver;
 }
 
@@ -79,11 +79,11 @@ void ofxMSAFluidDrawer::createTexture() {
 	if(_pixels) delete []_pixels;
 	int texWidth = _fluidSolver->getWidth()-2;
 	int texHeight =_fluidSolver->getHeight()-2;
-	
+
 	_pixels = new unsigned char[texWidth * texHeight * 4];
-	
+
 #ifdef FLUID_TEXTURE
-	tex.allocate(texWidth, texHeight, GL_RGBA);	
+	tex.allocate(texWidth, texHeight, GL_RGBA);
 #endif
 }
 
@@ -150,19 +150,19 @@ void ofxMSAFluidDrawer::draw(float x, float y, float renderWidth, float renderHe
 		case FLUID_DRAW_COLOR:
 			drawColor(x, y, renderWidth, renderHeight);
 			break;
-			
+
 		case FLUID_DRAW_MOTION:
 			drawMotion(x, y, renderWidth, renderHeight);
 			break;
-			
+
 		case FLUID_DRAW_SPEED:
 			drawSpeed(x, y, renderWidth, renderHeight);
 			break;
-			
+
 		case FLUID_DRAW_VECTORS:
 			drawVectors(x, y, renderWidth, renderHeight);
 			break;
-			
+
 	}
 }
 
@@ -170,7 +170,7 @@ void ofxMSAFluidDrawer::draw(float x, float y, float renderWidth, float renderHe
 void ofxMSAFluidDrawer::drawColor(float x, float y, float renderWidth, float renderHeight, bool withAlpha) {
 	int fw = _fluidSolver->getWidth();
 	int fh = _fluidSolver->getHeight();
-	
+
 	ofPoint vel;
 	ofPoint color;
 	int index = 0;
@@ -178,16 +178,16 @@ void ofxMSAFluidDrawer::drawColor(float x, float y, float renderWidth, float ren
 		for(int i=1; i < fw-1; i++) {
 			_fluidSolver->getInfoAtCell(i, j, &vel, &color);
 			float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
-			int speed = MIN(speed2 * 255 * alpha, 255);
-			int r = _pixels[index++] = MIN(color.x * 255 * alpha, 255);
-			int g = _pixels[index++] = MIN(color.y * 255 * alpha, 255);		
-			int b = _pixels[index++] = MIN(color.z * 255 * alpha, 255);	
+			int speed = (int)MIN(speed2 * 255 * alpha, 255);
+			int r = _pixels[index++] = (unsigned char)MIN(color.x * 255 * alpha, 255);
+			int g = _pixels[index++] = (unsigned char)MIN(color.y * 255 * alpha, 255);
+			int b = _pixels[index++] = (unsigned char)MIN(color.z * 255 * alpha, 255);
 			int a = _pixels[index++] = withAlpha ? MAX(b, MAX(r, g)) : 255;
 		}
-	}  
-	
+	}
+
 #ifdef FLUID_TEXTURE
-	tex.loadData(_pixels, tex.getWidth(), tex.getHeight(), GL_RGBA);
+	tex.loadData(_pixels, (int)tex.getWidth(), (int)tex.getHeight(), GL_RGBA);
 	tex.draw(x, y, renderWidth, renderHeight);
 #endif
 }
@@ -197,24 +197,24 @@ void ofxMSAFluidDrawer::drawColor(float x, float y, float renderWidth, float ren
 void ofxMSAFluidDrawer::drawMotion(float x, float y, float renderWidth, float renderHeight, bool withAlpha) {
 	int fw = _fluidSolver->getWidth();
 	int fh = _fluidSolver->getHeight();
-	
+
 	ofPoint vel;
 	int index = 0;
 	for(int j=1; j < fh-1; j++) {
 		for(int i=1; i < fw-1; i++) {
 			_fluidSolver->getInfoAtCell(i, j, &vel, NULL);
 			float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
-			int speed = MIN(speed2 * 255 * alpha, 255);
-			int r = _pixels[index++] = MIN(fabs(vel.x) * fw * 255 * alpha, 255);
-			int g = _pixels[index++] = MIN(fabs(vel.y) * fh * 255 * alpha, 255);		
-			int b = _pixels[index++] = 0;
+			int speed = (int)MIN(speed2 * 255 * alpha, 255);
+			int r = _pixels[index++] = (unsigned char)MIN(fabs(vel.x) * fw * 255 * alpha, 255);
+			int g = _pixels[index++] = (unsigned char)MIN(fabs(vel.y) * fh * 255 * alpha, 255);
+			int b = _pixels[index++] = (unsigned char)0;
 			int a = _pixels[index++] = withAlpha ? speed : 255;
-			
+
 		}
-	}  
-	
+	}
+
 #ifdef FLUID_TEXTURE
-	tex.loadData(_pixels, tex.getWidth(), tex.getHeight(), GL_RGBA);
+	tex.loadData(_pixels, (int)tex.getWidth(), (int)tex.getHeight(), GL_RGBA);
 	tex.draw(x, y, renderWidth, renderHeight);
 #endif
 }
@@ -223,23 +223,23 @@ void ofxMSAFluidDrawer::drawMotion(float x, float y, float renderWidth, float re
 void ofxMSAFluidDrawer::drawSpeed(float x, float y, float renderWidth, float renderHeight, bool withAlpha) {
 	int fw = _fluidSolver->getWidth();
 	int fh = _fluidSolver->getHeight();
-	
+
 	ofPoint vel;
 	int index = 0;
 	for(int j=1; j < fh-1; j++) {
 		for(int i=1; i < fw-1; i++) {
 			_fluidSolver->getInfoAtCell(i, j, &vel, NULL);
 			float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
-			int speed = MIN(speed2 * 255 * alpha, 255);
-			int r = _pixels[index++] = speed;
-			int g = _pixels[index++] = speed;
-			int b = _pixels[index++] = speed;
+			int speed = (int)MIN(speed2 * 255 * alpha, 255);
+			int r = _pixels[index++] = (unsigned char)speed;
+			int g = _pixels[index++] = (unsigned char)speed;
+			int b = _pixels[index++] = (unsigned char)speed;
 			int a = _pixels[index++] = withAlpha ? speed : 255;
 		}
-	}  
-	
+	}
+
 #ifdef FLUID_TEXTURE
-	tex.loadData(_pixels, tex.getWidth(), tex.getHeight(), GL_RGBA);
+	tex.loadData(_pixels, (int)tex.getWidth(), (int)tex.getHeight(), GL_RGBA);
 	tex.draw(x, y, renderWidth, renderHeight);
 #endif
 }
@@ -248,17 +248,17 @@ void ofxMSAFluidDrawer::drawSpeed(float x, float y, float renderWidth, float ren
 void ofxMSAFluidDrawer::drawVectors(float x, float y, float renderWidth, float renderHeight) {
 	int fw = _fluidSolver->getWidth();
 	int fh = _fluidSolver->getHeight();
-	
+
 //	int xStep = renderWidth / 10;		// every 10 pixels
 //	int yStep = renderHeight / 10;		// every 10 pixels
 
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	glScalef(renderWidth/(fw-2), renderHeight/(fh-2), 1.0);
-	
+
 	float velMult = 50000;
 	float maxVel = 5./20000;
-	
+
 	ofPoint vel;
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(1);
@@ -273,7 +273,7 @@ void ofxMSAFluidDrawer::drawVectors(float x, float y, float renderWidth, float r
 				vel.y *= mult;
 			}
 			vel *= velMult;
-			
+
 //			if(dx*dx+dy*dy > velThreshold) {
 //				float speed2 = fabs(vel.x) * fw + fabs(vel.y) * fh;
 #ifndef TARGET_OPENGLES
@@ -281,30 +281,30 @@ void ofxMSAFluidDrawer::drawVectors(float x, float y, float renderWidth, float r
 				glColor3f(0, 0, 0); glVertex2f(i, j);
 				glColor3f(1, 1, 1); glVertex2f(i + vel.x, j + vel.y);
 				glEnd();
-#endif			
+#endif
 //			printf("%.8f, %.8f\n", vel.x, vel.y);
 //			}
 		}
 	}
 	glPopMatrix();
-	
+
 }
 
 
 
 void ofxMSAFluidDrawer::deleteFluidSolver() {
-	//	printf("ofxMSAFluidDrawer::deleteFluidSolver()\n");	
+	//	printf("ofxMSAFluidDrawer::deleteFluidSolver()\n");
 	if(_fluidSolver && _didICreateTheFluid) {
 		delete _fluidSolver;
 		_fluidSolver = NULL;
-		
+
 		if(_pixels) delete []_pixels;
 		_pixels = NULL;
-		
-#ifdef FLUID_TEXTURE		
+
+#ifdef FLUID_TEXTURE
 		tex.clear();
-#endif		
-	}	
+#endif
+	}
 }
 
 bool ofxMSAFluidDrawer::isFluidReady() {
@@ -312,12 +312,12 @@ bool ofxMSAFluidDrawer::isFluidReady() {
 		printf("ofxMSAFluidDrawer::isFluidReady() - No fluid solver\n");
 		return false;
 	}
-	
+
 	if(!_fluidSolver->isInited()) {
 		printf("ofxMSAFluidDrawer::isFluidReady() - Fluid solver not initialized yet, call init()\n");
 		return false;
 	}
-	
+
 	return true;
 }
 

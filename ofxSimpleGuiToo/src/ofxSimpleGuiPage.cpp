@@ -1,12 +1,12 @@
 /***********************************************************************
- 
+
  Copyright (c) 2008, 2009, Memo Akten, www.memo.tv
  *** The Mega Super Awesome Visuals Company ***
  * All rights reserved.
- 
+
  based on Todd Vanderlin's ofxSimpleGui API
  http://toddvanderlin.com/
- 
+
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -16,22 +16,22 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of MSA Visuals nor the names of its contributors 
+ *     * Neither the name of MSA Visuals nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
  * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * ***********************************************************************/ 
+ * ***********************************************************************/
 
 
 #include "ofxSimpleGuiPage.h"
@@ -61,7 +61,7 @@ void ofxSimpleGuiPage::saveToXML(ofxXmlSettings &XML) {
 }
 
 float ofxSimpleGuiPage::getNextY(float y) {
-	int iy = ceil(y/config->gridSize.y);
+	int iy = (int)ceil(y/config->gridSize.y);
 //	return y;
 	return (iy) * config->gridSize.y;
 }
@@ -70,27 +70,27 @@ void ofxSimpleGuiPage::draw(float x, float y) {
 	setPos(x += config->offset.x, y += config->offset.y);
 	float posX		= 0;
 	float posY		= 0;
-	
+
 	ofSetRectMode(OF_RECTMODE_CORNER);
-	
+
 	for(int i=0; i<controls.size(); i++) {
 		float controlX = posX + x;
 		float controlY = posY + y;
-		
+
 		controls[i]->draw(controlX, controlY);
 		ofNoFill();
 		ofSetColor(config->borderColor);
 		glLineWidth(0.5f);
 		ofRect(controlX, controlY, controls[i]->width, controls[i]->height);
 		posY = getNextY(posY + controls[i]->height + config->padding.y);
-		
+
 		if(posY + y >= height - controls[i]->height - config->padding.y) {
 			posX += config->gridSize.x;
 			posY = 0;
 		}
 		//		if(guiFocus == controls[i]->guiID) controls[i]->focused = true;		// MEMO
-		//		else							   controls[i]->focused = false;	
-	}	
+		//		else							   controls[i]->focused = false;
+	}
 }
 
 
@@ -173,3 +173,4 @@ void ofxSimpleGuiPage::keyPressed(ofKeyEventArgs &e) {
 void ofxSimpleGuiPage::keyReleased(ofKeyEventArgs &e) {
 	for(int i=0; i<controls.size(); i++) controls[i]->_keyReleased(e);
 }
+

@@ -1,12 +1,12 @@
 /***********************************************************************
- 
+
  Copyright (c) 2008, 2009, Memo Akten, www.memo.tv
  *** The Mega Super Awesome Visuals Company ***
  * All rights reserved.
- 
+
  based on Todd Vanderlin's ofxSimpleGui API
  http://toddvanderlin.com/
- 
+
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -16,38 +16,38 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of MSA Visuals nor the names of its contributors 
+ *     * Neither the name of MSA Visuals nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
  * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * ***********************************************************************/ 
+ * ***********************************************************************/
 
 #include "ofxSimpleGuiToo.h"
 
 //------------------------------------------------------------------------------ constrcutor
 ofxSimpleGuiToo::ofxSimpleGuiToo() {
 	config			= &defaultSimpleGuiConfig;
-	
+
 //	guiFocus		= 0;
-	
+
 	verbose			= true;
-	
+
 	xmlFile			= OFX_SIMPLEGUITOO_XML_NAME;
 	doSave			= false;
 	doSaveBackup	= false;
 	changePage		= false;
-	
+
 	headerPage	= addPage("Header");
 	headerPage->height = config->buttonHeight * 2;
 	headerPage->width = 0;
@@ -55,7 +55,7 @@ ofxSimpleGuiToo::ofxSimpleGuiToo() {
 	headerPage->addButton("Save Settings", &doSave);
 	headerPage->addButton("Backup XML", &doSaveBackup);
 	headerPage->addFPSCounter();
-	
+
 	addPage();
 	setAutoSave(false);
 	setDraw(true);
@@ -74,7 +74,7 @@ void ofxSimpleGuiToo::addListeners() {
 	ofAddListener(ofEvents.mouseMoved, this, &ofxSimpleGuiToo::mouseMoved);
 	ofAddListener(ofEvents.mouseDragged, this, &ofxSimpleGuiToo::mouseDragged);
 	ofAddListener(ofEvents.mouseReleased, this, &ofxSimpleGuiToo::mouseReleased);
-	
+
 	ofAddListener(ofEvents.keyPressed, this, &ofxSimpleGuiToo::keyPressed);
 	ofAddListener(ofEvents.keyReleased, this, &ofxSimpleGuiToo::keyReleased);
 }
@@ -85,12 +85,12 @@ void ofxSimpleGuiToo::removeListeners() {
 	ofRemoveListener(ofEvents.update, this, &ofxSimpleGuiToo::update);
 //	ofRemoveListener(ofEvents.draw, this, &ofxSimpleGuiToo::draw);
 //	ofRemoveListener(ofEvents.exit, this, &ofxSimpleGuiToo::exit);
-	
+
 	ofRemoveListener(ofEvents.mousePressed, this, &ofxSimpleGuiToo::mousePressed);
 	ofRemoveListener(ofEvents.mouseMoved, this, &ofxSimpleGuiToo::mouseMoved);
 	ofRemoveListener(ofEvents.mouseDragged, this, &ofxSimpleGuiToo::mouseDragged);
 	ofRemoveListener(ofEvents.mouseReleased, this, &ofxSimpleGuiToo::mouseReleased);
-	
+
 	ofRemoveListener(ofEvents.keyPressed, this, &ofxSimpleGuiToo::keyPressed);
 	ofRemoveListener(ofEvents.keyReleased, this, &ofxSimpleGuiToo::keyReleased);
 }
@@ -98,7 +98,7 @@ void ofxSimpleGuiToo::removeListeners() {
 void ofxSimpleGuiToo::setDraw(bool b) {
 	doDraw = b;
 	if(doDraw) addListeners();
-	else removeListeners();	
+	else removeListeners();
 	if(doAutoSave) saveToXML(xmlFile);
 }
 
@@ -118,25 +118,25 @@ void ofxSimpleGuiToo::setAutoSave(bool b) {
 
 void ofxSimpleGuiToo::loadFromXML(string file) {
 	if(verbose) printf("ofxSimpleGuiToo::loadFromXML( %s )\n", file.c_str());
-	
+
 	if(file.compare("NULL") != 0) xmlFile = file;
 	else {
 		xmlFile = OFX_SIMPLEGUITOO_XML_NAME;
 	}
-	
+
 	if(XML.loadFile(xmlFile) == false) {
 		if(verbose) printf("Error loading XMLFile: %s\n", xmlFile.c_str());
-		return;	
+		return;
 	}
-	
+
 	doDraw		= XML.getValue("options:doDraw", true);
 	doAutoSave	= XML.getValue("options:doAutoSave", false);
 	currentPage	= XML.getValue("options:currentPage", 1);
-	
+
 	for(int i=1; i < pages.size(); i++) {
 		pages[i]->loadFromXML(XML);
 	}
-	
+
 	setPage(currentPage);
 	setDraw(doDraw);
 }
@@ -144,23 +144,23 @@ void ofxSimpleGuiToo::loadFromXML(string file) {
 
 void ofxSimpleGuiToo::saveToXML(string file) {
 	doSave = false;
-	
+
 	XML.clear();	// clear cause we are building a new xml file
-	
+
 	XML.addTag("options");
 	XML.pushTag("options");
 	XML.addValue("doDraw", doDraw);
 	XML.addValue("doAutoSave", doAutoSave);
 	XML.addValue("currentPage", currentPage);
 	XML.popTag();
-	
+
 	XML.addTag("controls");
 	XML.pushTag("controls");
 	for(int i=1; i < pages.size(); i++) {
 		pages[i]->saveToXML(XML);
 	}
 	XML.popTag();
-	
+
 	XML.saveFile(file);
 	if(doSaveBackup) XML.saveFile(file+".bak");
 	printf("ofxSimpleGuiToo::saveToXML( %s )\n", file.c_str());
@@ -179,7 +179,7 @@ void ofxSimpleGuiToo::setVerbose(bool v) {
 //			if(c) return c->getValue();
 //		}
 //	}
-//	return NULL;	
+//	return NULL;
 //}
 //
 //float ofxSimpleGuiToo::getValueF(string nameID) {
@@ -188,7 +188,7 @@ void ofxSimpleGuiToo::setVerbose(bool v) {
 //			ofxSimpleGuiSliderFloat *c = dynamic_cast<ofxSimpleGuiSliderFloat *> (controls[i]);
 //			if(c) return c->getValue();
 //		}
-//	}	
+//	}
 //	return NULL;
 //}
 //
@@ -198,7 +198,7 @@ void ofxSimpleGuiToo::setVerbose(bool v) {
 //			ofxSimpleGuiToggle *c = dynamic_cast<ofxSimpleGuiToggle *> (controls[i]);
 //			if(c) return c->getValue();
 //		}
-//	}	
+//	}
 //	return NULL;
 //}
 
@@ -215,12 +215,12 @@ void ofxSimpleGuiToo::drawFocus(float x, float y) {
 
 void ofxSimpleGuiToo::draw() {
 	if(!doDraw) return;
-	
+
 	glDisableClientState(GL_COLOR_ARRAY);
-	
+
 	headerPage->draw();		// this is the header
 	ofSetColor(config->borderColor);
-	ofLine(0, headerPage->height, headerPage->width, headerPage->height); 
+	ofLine(0, headerPage->height, headerPage->width, headerPage->height);
 	pages[currentPage]->draw(0.0f, headerPage->height);
 }
 
@@ -322,17 +322,17 @@ ofxSimpleGuiToggle *ofxSimpleGuiToo::addToggle(string name, bool *value) {
 //void ofxSimpleGuiToo::setup(ofEventArgs &e) {
 void ofxSimpleGuiToo::update(ofEventArgs &e) {
 	if(changePage) {
-		nextPage();	
+		nextPage();
 		changePage = false;
 	}
-	
+
 	headerPage->update(e);
 	pages[currentPage]->height = ofGetHeight();
 	pages[currentPage]->update(e);
-	
-	
+
+
 	if(doSaveBackup) doSave = true;
-	
+
 	if(doSave) saveToXML(xmlFile);
 }
 //void ofxSimpleGuiToo::draw(ofEventArgs &e) {
@@ -394,6 +394,7 @@ void ofxSimpleGuiToo::keyReleased(int key) {
 
 //------------------------------------------------------------------------ key press
 void ofxSimpleGuiToo::keyPressed(int key) {
-	
+
 }
 */
+
