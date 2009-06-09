@@ -3,9 +3,15 @@
 
 #include "ofxXmlSettings.h"
 #include "ofTextureAdv.h"
+#include "ofxSimpleGuiToo.h"
+
+/********** TODO **************
+- edge blending
+- warp on second display output or first
+
+****************************/
 
 class ofxRenderManager {
-
 
 public:
 
@@ -57,13 +63,37 @@ public:
 
 
 	// MEMO
+	bool enabled;
+	bool doDrawConfig;
+	bool doDrawOrig;
+	bool doReset;
+	bool doSave;
+	bool doLoad;
 	int screenStartPos;					// the ratio at which to show the display screen
 	int screenStartPosOld;
 	ofRectangle guiIn;
 	ofRectangle guiOut;
 	ofRectangle renderRect;
 
+	void setupUI(ofxSimpleGuiToo &ui);
+
 	inline void update() {
+        if(doReset) {
+            doReset = false;
+            resetCoordinates();
+        }
+
+        if(doSave) {
+            doSave = false;
+            saveToXML();
+        }
+
+        if(doLoad) {
+            doLoad = false;
+            loadFromXML();
+        }
+
+
 		if(screenStartPosOld != screenStartPos) {
 			autoLayout();
 		}
@@ -100,10 +130,14 @@ public:
 		myOffscreenTexture.draw(x, y, w, h);
 	}
 
-//	inline void draw() {
-//		drawConfig();
-//		drawOutput();
-//	}
+	inline void draw() {
+        if(enabled ) {
+            ofDisableAlphaBlending();
+            if(doDrawConfig) drawConfig();
+            else if(doDrawOrig) drawOrig();
+            drawOutput();
+        }
+	}
 
 	// draws config maps
 	inline void drawConfig() {
@@ -123,6 +157,7 @@ public:
 	void removeListeners();
 	void _mousePressed(ofMouseEventArgs &e);
 	void _mouseDragged(ofMouseEventArgs &e);
+
 
 };
 

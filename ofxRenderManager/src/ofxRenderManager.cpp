@@ -47,6 +47,8 @@ void ofxRenderManager::allocateForNScreens(int numScreens, int renderWidth, int 
     if( numScreens < 1){
         printf("ofxRenderManager::allocateForNScreens - you need at lease one screen!\n");
         return;
+    } else {
+        printf("ofxRenderManager::allocateForNScreens(%i, %i, %i)\n", numScreens, renderWidth, renderHeight);
     }
 
 	destroy();
@@ -100,14 +102,14 @@ void ofxRenderManager::allocateForNScreens(int numScreens, int renderWidth, int 
 
 //---------------------------------------------------------------------------
 void ofxRenderManager::begin(){
-    if( nScreens <= 0 ) return;
+    if(enabled == false || nScreens <= 0 ) return;
 
     myOffscreenTexture.begin();
 }
 
 //---------------------------------------------------------------------------
 void ofxRenderManager::end(){
-    if( nScreens <= 0 ) return;
+    if(enabled == false || nScreens <= 0 ) return;
 
     myOffscreenTexture.end();
 }
@@ -484,4 +486,18 @@ void ofxRenderManager::_mouseDragged(ofMouseEventArgs &e) {
 	int y = e.y;
 	mouseDragInputPoint(guiIn, x, y);
     mouseDragOutputPoint(guiOut, x, y);
+}
+
+
+void ofxRenderManager::setupUI(ofxSimpleGuiToo &ui) {
+	ui.addPage("Render Manager");
+	ui.addSlider("screenStartPos", &screenStartPos, 0, 1920);
+	ui.addToggle("enabled ", &enabled );
+	ui.addToggle("doDrawConfig", &doDrawConfig);
+	ui.addToggle("doDrawOrig", &doDrawOrig);
+	ui.addButton("doReset", &doReset);
+	ui.addButton("doSave", &doSave);
+	ui.addButton("doLoad", &doLoad);
+
+//	ui.loadFromXML();
 }
