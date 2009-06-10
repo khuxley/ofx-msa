@@ -1,5 +1,5 @@
 /***********************************************************************
- 
+
  Copyright (c) 2008, 2009, Memo Akten, www.memo.tv
  *** The Mega Super Awesome Visuals Company ***
  * All rights reserved.
@@ -12,22 +12,22 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of MSA Visuals nor the names of its contributors 
+ *     * Neither the name of MSA Visuals nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
  * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * ***********************************************************************/ 
+ * ***********************************************************************/
 
 
 #include "ofxMSAParticle.h"
@@ -53,7 +53,7 @@ ofxMSAParticle::ofxMSAParticle(ofxMSAParticle &p) {
 void ofxMSAParticle::init(float x, float y, float z, float m, float d) {
 	_params = NULL;
 	_physics = NULL;
-	
+
 	set(x, y, z);
 	_oldPos.set(x, y, z);
 	setMass(m);
@@ -187,7 +187,7 @@ ofxMSAParticle* ofxMSAParticle::setVelocity(ofPoint &vel) {
 ofxMSAParticle* ofxMSAParticle::setVelocity(float x, float y, float z) {
 	ofPoint temp;
 	temp.set(x, y, z);
-	setVelocity(temp);		
+	setVelocity(temp);
 	return this;
 }
 
@@ -198,14 +198,14 @@ ofxMSAParticle* ofxMSAParticle::addVelocity(ofPoint &vel) {
 
 ofxMSAParticle* ofxMSAParticle::addVelocity(float x, float y, float z) {
 	ofPoint temp;
-	temp.set(x, y, z);		
+	temp.set(x, y, z);
 	addVelocity(temp);
 	return this;
 }
 
 ofPoint &ofxMSAParticle::getVelocity() {
 //	return (*this - _oldPos);
-	return _vel; 
+	return _vel;
 }
 
 void ofxMSAParticle::kill() {
@@ -224,11 +224,11 @@ void ofxMSAParticle::doVerlet() {
 			ofPoint gravityForce = _params->gravity;
 			addVelocity(gravityForce);
 		}
-		
+
 		ofPoint curPos = *this;
 		_vel = curPos - _oldPos;
 		*this += _vel * _params->drag * _drag + _params->timeStep2;
-//		*this += _vel + 
+//		*this += _vel +
 		_oldPos = curPos;
 	}
 }
@@ -272,11 +272,16 @@ void ofxMSAParticle::checkWorldEdges() {
 }
 
 
+ofxMSAPhysicsParams *ofxMSAParticle::getParams() {
+    return _params;
+}
+
+
 void ofxMSAParticle::debugDraw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
-#ifndef TARGET_OF_IPHONE		
+#ifndef TARGET_OF_IPHONE
 	glutSolidSphere(_radius, 5, 5);
-#endif	
+#endif
 	glPopMatrix();
 }

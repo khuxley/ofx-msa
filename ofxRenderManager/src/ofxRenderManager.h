@@ -123,10 +123,12 @@ public:
 
 	// draws original
 	inline void drawOrig() {
+	    glColor4f(1, 1, 1, 1);
 		myOffscreenTexture.draw(0, 0, renderRect.x, renderRect.height);
 	}
 
 	inline void drawOrig(float x, float y, float w, float h) {
+		glColor4f(1, 1, 1, 1);
 		myOffscreenTexture.draw(x, y, w, h);
 	}
 

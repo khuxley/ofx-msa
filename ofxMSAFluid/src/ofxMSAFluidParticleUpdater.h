@@ -45,25 +45,19 @@
 
 class ofxMSAFluidParticleUpdater : public ofxMSAParticleUpdater {
 public:
+    float strength;
+	ofxMSAFluidSolver *fluidSolver;
+
 	ofxMSAFluidParticleUpdater() {
-		_fluidSolver = NULL;
-	}
-
-	void init(ofxMSAFluidSolver* f) {
-		_fluidSolver = f;
-
+		fluidSolver = NULL;
 	}
 
 	void update(ofxMSAParticle* p) {
 		ofPoint vel;
-		_fluidSolver->getInfoAtPos(p->x * p->params->invWidth, p->y * p->params->invHeight, &vel, NULL);
+		fluidSolver->getInfoAtPos(p->x * p->getParams()->worldSizeInv.x, p->y * p->getParams()->worldSizeInv.y, &vel, NULL);
 		float invMass = p->getInvMass();
-		p->addVelocity(vel.x * invMass, vel.y * invMass, 0);
+		p->addVelocity(vel.x * invMass * strength, vel.y * invMass * strength, 0);
 	}
-
-
-protected:
-	ofxMSAFluidSolver *_fluidSolver;
 
 };
 

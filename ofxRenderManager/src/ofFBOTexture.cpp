@@ -14,10 +14,10 @@ void ofFBOTexture::allocate(int w, int h, bool autoClear) {
 
     texData.width = w;
 	texData.height = h;
-	
+
 	imageSaver.setUseTexture(false);
 	imageSaver.allocate(texData.width, texData.height, OF_IMAGE_COLOR_ALPHA);
-	
+
     if (GLEE_ARB_texture_rectangle){
         texData.tex_w = w;
         texData.tex_h = h;
@@ -26,7 +26,7 @@ void ofFBOTexture::allocate(int w, int h, bool autoClear) {
         texData.tex_w = ofNextPow2(w);
         texData.tex_h = ofNextPow2(h);
     }
-	
+
 	if (GLEE_ARB_texture_rectangle){
 		texData.tex_t = w;
 		texData.tex_u = h;
@@ -34,25 +34,25 @@ void ofFBOTexture::allocate(int w, int h, bool autoClear) {
 		texData.tex_t = 1.0f;
 		texData.tex_u = 1.0f;
 	}
-	
+
 	// attempt to free the previous bound texture, if we can:
 	clean();
-	
+
 	texData.width = w;
 	texData.height = h;
 	texData.bFlipTexture = true;
 	texData.glType = GL_RGBA;
-	
+
 	this->autoClear = autoClear;
 	// create & setup FBO
 	glGenFramebuffersEXT(1, &fbo);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-	
+
 	// Create the render buffer for depth
 	glGenRenderbuffersEXT(1, &depthBuffer);
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthBuffer);
 	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, texData.tex_w, texData.tex_h);
-	
+
 	// create & setup texture
 	glGenTextures(1, (GLuint *)texData.textureName);   // could be more then one, but for now, just one
 	glBindTexture(texData.textureTarget, (GLuint)texData.textureName[0]);
@@ -60,24 +60,24 @@ void ofFBOTexture::allocate(int w, int h, bool autoClear) {
 	glTexParameterf(texData.textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameterf(texData.textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(texData.textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(texData.textureTarget, 0, texData.glType, texData.tex_w, texData.tex_h, 0, texData.glType, GL_UNSIGNED_BYTE, 0);	
+	glTexImage2D(texData.textureTarget, 0, texData.glType, texData.tex_w, texData.tex_h, 0, texData.glType, GL_UNSIGNED_BYTE, 0);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	
+
 	// attach it to the FBO so we can render to it
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, texData.textureTarget, (GLuint)texData.textureName[0], 0);
-	
-	
+
+
 	// Attach the depth render buffer to the FBO as it's depth attachment
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthBuffer);
-	
-	
+
+
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if(status != GL_FRAMEBUFFER_COMPLETE_EXT) {
 		cout<<"glBufferTexture failed to initialize. Perhaps your graphics card doesnt support the framebuffer extension? If you are running osx prior to system 10.5, that could be the cause"<<endl;
 		std::exit(1);
 	}
-	clear();
-	
+	clear(0, 0, 0, 0);
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
@@ -93,13 +93,13 @@ void ofFBOTexture::setupScreenForMe(){
 //	glPushAttrib(GL_VIEWPORT_BIT);
 //	glViewport(0,0,texData.width, texData.height);
 //	return;
-	
+
 	int w = texData.width;
 	int h = texData.height;
-	
+
 	float halfFov, theTan, screenFov, aspect;
 	screenFov 		= 60.0f;
-	
+
 	float eyeX 		= (float)w / 2.0;
 	float eyeY 		= (float)h / 2.0;
 	halfFov 		= PI * screenFov / 360.0;
@@ -108,34 +108,34 @@ void ofFBOTexture::setupScreenForMe(){
 	float nearDist 	= dist / 10.0;	// near / far clip plane
 	float farDist 	= dist * 10.0;
 	aspect 			= (float)w/(float)h;
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(screenFov, aspect, nearDist, farDist);
 	gluLookAt(eyeX, eyeY, dist, eyeX, eyeY, 0.0, 0.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
-	
+
+
 	glScalef(1, -1, 1);           // invert Y axis so increasing Y goes down.
   	glTranslatef(0, -h, 0);       // shift origin up to upper-left corner.
-	
+
     glViewport(0,0,texData.width, texData.height);
-	
+
 }
 
 void ofFBOTexture::setupScreenForThem(){
 //	glPopAttrib();
 //	return;
-	
+
     int w, h;
-	
+
 	w = glutGet(GLUT_WINDOW_WIDTH);
 	h = glutGet(GLUT_WINDOW_HEIGHT);
-	
+
 	float halfFov, theTan, screenFov, aspect;
 	screenFov 		= 60.0f;
-	
+
 	float eyeX 		= (float)w / 2.0;
 	float eyeY 		= (float)h / 2.0;
 	halfFov 		= PI * screenFov / 360.0;
@@ -144,27 +144,27 @@ void ofFBOTexture::setupScreenForThem(){
 	float nearDist 	= dist / 10.0;	// near / far clip plane
 	float farDist 	= dist * 10.0;
 	aspect 			= (float)w/(float)h;
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(screenFov, aspect, nearDist, farDist);
 	gluLookAt(eyeX, eyeY, dist, eyeX, eyeY, 0.0, 0.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
-	
+
+
 	glScalef(1, -1, 1);           // invert Y axis so increasing Y goes down.
   	glTranslatef(0, -h, 0);       // shift origin up to upper-left corner.
-	
-	
+
+
     glViewport(0,0,w, h);
 }
 
 void ofFBOTexture::swapIn() {
 	_isActive = true;
-	
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo); // bind the FBO to the screen so we can draw to it
-	
+
 	if(autoClear) clear();
 }
 
@@ -188,9 +188,15 @@ void ofFBOTexture::clean()
 void ofFBOTexture::clear() {
 	bool alreadyIn = _isActive;
 	if(!alreadyIn) begin();		// MEMO
-	//	glClearColor(0, 0, 0, 0); //clear color (bg of the FBO tex)		// MEMO
-//	glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
-	glClearColor(0, 0, 0, 0);
+	glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen data of the texture to write on
 	if(!alreadyIn) end();		// MEMO
+}
+
+void ofFBOTexture::clear(float r, float g, float b, float a) {
+    clearColor[0] = r;
+    clearColor[1] = g;
+    clearColor[2] = b;
+    clearColor[3] = a;
+    clear();
 }

@@ -1,5 +1,5 @@
 /***********************************************************************
- 
+
  Copyright (c) 2008, 2009, Memo Akten, www.memo.tv
  *** The Mega Super Awesome Visuals Company ***
  * All rights reserved.
@@ -12,22 +12,22 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of MSA Visuals nor the names of its contributors 
+ *     * Neither the name of MSA Visuals nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
  * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * ***********************************************************************/ 
+ * ***********************************************************************/
 
 #include "ofxMSAPhysics.h"
 #include "binner.h"
@@ -41,12 +41,12 @@ ofxMSAPhysics::ofxMSAPhysics() {
 	setCollisionBinSize(10);
 	setGravity();
 	clearWorldSize();
-	
+
 #ifdef MSAPHYSICS_USE_RECORDER
 	_frameCounter = 0;
 	setReplayMode(OFX_MSA_DATA_IDLE);
 	setReplayFilename("recordedData/physics/physics");
-#endif	
+#endif
 }
 
 ofxMSAPhysics::~ofxMSAPhysics() {
@@ -80,7 +80,7 @@ ofxMSAAttraction* ofxMSAPhysics::makeAttraction(ofxMSAParticle *a, ofxMSAParticl
 
 ofxMSACollision* ofxMSAPhysics::makeCollision(ofxMSAParticle *a, ofxMSAParticle *b) {
 	if(a==b) return NULL;
-	if(getConstraint(a, b, OFX_MSA_CONSTRAINT_TYPE_COLLISION) != NULL) return NULL;	
+	if(getConstraint(a, b, OFX_MSA_CONSTRAINT_TYPE_COLLISION) != NULL) return NULL;
 	ofxMSACollision* c = new ofxMSACollision(a, b);
 	addConstraint(c);
 	c->release();	// cos addConstraint(c) retains it
@@ -96,6 +96,7 @@ ofxMSAParticle* ofxMSAPhysics::addParticle(ofxMSAParticle *p) {
 	p->setInstanceName(string("particle ") + ofToString(_particles.size(), 0));
 	p->_params = &params;
 	p->_physics = this;
+	if(isCollisionEnabled()) p->enableCollision();
 
 #ifdef MSAPHYSICS_USE_RECORDER
 	if(_replayMode == OFX_MSA_DATA_SAVE)
@@ -106,14 +107,14 @@ ofxMSAParticle* ofxMSAPhysics::addParticle(ofxMSAParticle *p) {
 }
 
 ofxMSAConstraint* ofxMSAPhysics::addConstraint(ofxMSAConstraint *c) {
-	c->verbose = verbose;	
+	c->verbose = verbose;
 	_constraints[c->type()].push_back(c);
 	c->_params = &params;
-	
+
 	c->retain();
 	(c->_a)->retain();
 	(c->_b)->retain();
-	
+
 	switch(c->type()) {
 		case OFX_MSA_CONSTRAINT_TYPE_CUSTOM:
 			c->setInstanceName(string("constraint ") + ofToString(_constraints[OFX_MSA_CONSTRAINT_TYPE_CUSTOM].size(), 0));
@@ -122,16 +123,16 @@ ofxMSAConstraint* ofxMSAPhysics::addConstraint(ofxMSAConstraint *c) {
 		case OFX_MSA_CONSTRAINT_TYPE_SPRING:
 			c->setInstanceName(string("spring ") + ofToString(_constraints[OFX_MSA_CONSTRAINT_TYPE_SPRING].size(), 0));
 			break;
-			
+
 		case OFX_MSA_CONSTRAINT_TYPE_ATTRACTION:
 			c->setInstanceName(string("attraction ") + ofToString(_constraints[OFX_MSA_CONSTRAINT_TYPE_ATTRACTION].size(), 0));
 			break;
-			
+
 		case OFX_MSA_CONSTRAINT_TYPE_COLLISION:
 			c->setInstanceName(string("collision ") + ofToString(_constraints[OFX_MSA_CONSTRAINT_TYPE_COLLISION].size(), 0));
 			break;
 	}
-	
+
 	return c;
 }
 
@@ -229,24 +230,24 @@ ofxMSAPhysics* ofxMSAPhysics::removeFromCollision(ofxMSAParticle* p) {
 
 ofxMSAPhysics*  ofxMSAPhysics::setDrag(float drag) {
 	params.drag = drag;
-	return this;	
+	return this;
 }
 
 ofxMSAPhysics*  ofxMSAPhysics::setGravity(float gy) {
 	setGravity(0, gy, 0);
-	return this;	
+	return this;
 }
 
 ofxMSAPhysics*  ofxMSAPhysics::setGravity(ofPoint &g) {
 	params.gravity= g;
 	params.doGravity = msaLengthSquared(params.gravity) > 0;
-	return this;	
+	return this;
 }
 
 ofxMSAPhysics*  ofxMSAPhysics::setGravity(float gx, float gy, float gz) {
 	params.gravity.set(gx, gy, gz);
 	params.doGravity = msaLengthSquared(params.gravity) > 0;
-	return this;	
+	return this;
 }
 
 ofPoint& ofxMSAPhysics::getGravity() {
@@ -256,40 +257,45 @@ ofPoint& ofxMSAPhysics::getGravity() {
 ofxMSAPhysics*  ofxMSAPhysics::setTimeStep(float timeStep) {
 	params.timeStep = timeStep;
 	params.timeStep2 = timeStep * timeStep;
-	return this;	
+	return this;
 }
 
 ofxMSAPhysics*  ofxMSAPhysics::setNumIterations(float numIterations) {
 	params.numIterations = numIterations;
-	return this;	
+	return this;
 }
 
 
 ofxMSAPhysics* ofxMSAPhysics::setWorldMin(ofPoint worldMin) {
 	params.worldMin = worldMin;
-	params.doWorldEdges = true;
-	setupBins(params.worldMin, params.worldMax, params.binSize);
-	return this;	
+	updateWorldSize();
+	return this;
 }
 
 ofxMSAPhysics* ofxMSAPhysics::setWorldMax(ofPoint worldMax) {
 	params.worldMax = worldMax;
-	params.doWorldEdges = true;
-	setupBins(params.worldMin, params.worldMax, params.binSize);
-	return this;	
+	updateWorldSize();
+	return this;
 }
 
 ofxMSAPhysics* ofxMSAPhysics::setWorldSize(ofPoint worldMin, ofPoint worldMax) {
 	setWorldMin(worldMin);
 	setWorldMax(worldMax);
-	return this;	
+	return this;
 }
 
 ofxMSAPhysics* ofxMSAPhysics::clearWorldSize() {
 	params.doWorldEdges = false;
-	return this;	
+	return this;
 }
 
+
+void ofxMSAPhysics::updateWorldSize() {
+    params.doWorldEdges = true;
+    setupBins(params.worldMin, params.worldMax, params.binSize);
+    params.worldSize = params.worldMax - params.worldMin;
+    params.worldSizeInv = ofPoint(1, 1, 1)/params.worldSize;
+}
 
 
 ofxMSAPhysics*  ofxMSAPhysics::setParticleCount(uint i) {
@@ -298,7 +304,7 @@ ofxMSAPhysics*  ofxMSAPhysics::setParticleCount(uint i) {
 	//	if(_replayMode == OFX_MSA_DATA_SAVE)
 	_recorder.setSize(i);
 #endif
-	return this;	
+	return this;
 }
 
 
@@ -329,8 +335,8 @@ void ofxMSAPhysics::clear() {
 		particle->release();
 	}
 	_particles.clear();
-	
-	
+
+
 	for(int i=0; i<OFX_MSA_CONSTRAINT_TYPE_COUNT; i++) {
 		for (vector<ofxMSAConstraint*>::iterator it = _constraints[i].begin(); it != _constraints[i].end(); it++) {
 			ofxMSAConstraint* constraint = *it;
@@ -369,7 +375,7 @@ void ofxMSAPhysics::draw() {
 			constraint->draw();
 		}
 	}
-	
+
 	for(vector<ofxMSAParticle*>::iterator it = _particles.begin(); it != _particles.end(); it++) {
 		ofxMSAParticle* particle = *it;
 		particle->draw();
@@ -383,7 +389,7 @@ void ofxMSAPhysics::debugDraw() {
 			constraint->debugDraw();
 		}
 	}
-	
+
 	for(vector<ofxMSAParticle*>::iterator it = _particles.begin(); it != _particles.end(); it++) {
 		ofxMSAParticle* particle = *it;
 		particle->debugDraw();
@@ -414,12 +420,12 @@ void ofxMSAPhysics::updateParticles() {
 			particle->update();
 			applyUpdaters(particle);
 			if(params.doWorldEdges) {
-				particle->checkWorldEdges();	
+				particle->checkWorldEdges();
 				particle->computeBinFlags();
 			}
 #ifdef MSAPHYSICS_USE_RECORDER
 			if(_replayMode == OFX_MSA_DATA_SAVE) _recorder.add(*particle);
-#endif			
+#endif
 			it++;
 		}
 	}
@@ -433,10 +439,10 @@ void ofxMSAPhysics::updateAllConstraints() {
 	// iterate all constraints and update
 	for (int i = 0; i < params.numIterations; i++) {
 		for(int i=0; i<OFX_MSA_CONSTRAINT_TYPE_COUNT; i++) {
-			
+
 			// if doing collision constraints and collision is disabled skip them
-			if(i == OFX_MSA_CONSTRAINT_TYPE_COLLISION && !params.isCollisionEnabled) continue;		
-			
+			if(i == OFX_MSA_CONSTRAINT_TYPE_COLLISION && !params.isCollisionEnabled) continue;
+
 			vector<ofxMSAConstraint*>::iterator it = _constraints[i].begin();
 			while(it != _constraints[i].end()) {
 				ofxMSAConstraint* constraint = *it;
@@ -449,7 +455,7 @@ void ofxMSAPhysics::updateAllConstraints() {
 					it++;
 				}
 			}
-			
+
 		}
 	}
 }
@@ -461,13 +467,13 @@ ofxMSAPhysics*  ofxMSAPhysics::setReplayMode(uint i, float playbackScaler) {
 	_playbackScaler = playbackScaler;
 	//	if(_replayMode == OFX_MSA_DATA_SAVE)		// NEW
 	_recorder.setSize(i);
-	return this;	
+	return this;
 }
 
 
 ofxMSAPhysics*  ofxMSAPhysics::setReplayFilename(string f) {
 	_recorder.setFilename(f);
-	return this;	
+	return this;
 }
 #endif
 

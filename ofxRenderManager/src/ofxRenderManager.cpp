@@ -118,6 +118,7 @@ void ofxRenderManager::end(){
 void ofxRenderManager::drawInputMaps(float x, float y, float w, float h){
    if( nScreens <= 0 ) return;
 
+    glColor4f(1, 1, 1, 1);
     myOffscreenTexture.draw(x, y, w,h);
 
     for (int i = 0; i < nScreens; i++){
@@ -185,6 +186,7 @@ void ofxRenderManager::drawOutputMaps(float x, float y, float w, float h){
 void ofxRenderManager::drawScreen(int nScreen){
     if( nScreens <= 0 ) return;
 
+    glColor4f(1, 1, 1, 1);
     myOffscreenTexture.setPoints(inputPositions[nScreen], outputPositions[nScreen]);
     myOffscreenTexture.draw();
 }
