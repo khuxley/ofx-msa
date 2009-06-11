@@ -181,30 +181,30 @@ ofxMSAParticle* ofxMSAParticle::moveBy(float x, float y, float z) {
 
 ofxMSAParticle* ofxMSAParticle::setVelocity(ofPoint &vel) {
 	_oldPos = *this - vel;
+//    _vel = vel;
 	return this;
 }
 
 ofxMSAParticle* ofxMSAParticle::setVelocity(float x, float y, float z) {
-	ofPoint temp;
-	temp.set(x, y, z);
+	ofPoint temp = ofPoint(x, y, z);
 	setVelocity(temp);
 	return this;
 }
 
 ofxMSAParticle* ofxMSAParticle::addVelocity(ofPoint &vel) {
 	_oldPos -= vel;
+//    _vel += vel;
 	return this;
 }
 
 ofxMSAParticle* ofxMSAParticle::addVelocity(float x, float y, float z) {
-	ofPoint temp;
-	temp.set(x, y, z);
+	ofPoint temp = ofPoint(x, y, z);
 	addVelocity(temp);
 	return this;
 }
 
 ofPoint &ofxMSAParticle::getVelocity() {
-//	return (*this - _oldPos);
+    _vel = *this - _oldPos;
 	return _vel;
 }
 
@@ -226,7 +226,7 @@ void ofxMSAParticle::doVerlet() {
 		}
 
 		ofPoint curPos = *this;
-		_vel = curPos - _oldPos;
+		getVelocity();  // updates _vel
 		*this += _vel * _params->drag * _drag + _params->timeStep2;
 //		*this += _vel +
 		_oldPos = curPos;
@@ -246,27 +246,34 @@ void ofxMSAParticle::computeBinFlags() {
 
 void ofxMSAParticle::checkWorldEdges() {
 //	printf("%.3f, %.3f, %.3f\n", _params->worldMin.x, _params->worldMax.y, _params->worldMax.z);
+
 	if(x < _params->worldMin.x + _radius) {
 		moveTo(_params->worldMin.x + _radius, y, z);
+        getVelocity();  // updates _vel
 		setVelocity(-_vel.x * _bounce, _vel.y, _vel.z);
 	} else if(x > _params->worldMax.x - _radius) {
 		moveTo(_params->worldMax.x - _radius, y, z);
+        getVelocity();  // updates _vel
 		setVelocity(-_vel.x * _bounce, _vel.y, _vel.z);
 	}
 
 	if( y < _params->worldMin.y + _radius) {
 		moveTo(x, _params->worldMin.y + _radius, z);
+        getVelocity();  // updates _vel
 		setVelocity(_vel.x, -_vel.y * _bounce, _vel.z);
 	} else if(y > _params->worldMax.y - _radius) {
 		moveTo(x, _params->worldMax.y - _radius, z);
+        getVelocity();  // updates _vel
 		setVelocity(_vel.x, -_vel.y * _bounce, _vel.z);
 	}
 
 	if(z < _params->worldMin.z + _radius) {
 		moveTo(x, y, _params->worldMin.z + _radius);
+        getVelocity();  // updates _vel
 		setVelocity(_vel.x, _vel.y, -_vel.z * _bounce);
 	} else if(z > _params->worldMax.z - _radius) {
 		moveTo(x, y, _params->worldMax.z - _radius);
+        getVelocity();  // updates _vel
 		setVelocity(_vel.x, _vel.y, -_vel.z * _bounce);
 	}
 }

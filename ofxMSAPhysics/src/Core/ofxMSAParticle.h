@@ -96,7 +96,8 @@ protected:
 	ofxMSAPhysics		*_physics;
 
 
-	ofPoint			_oldPos, _vel;
+	ofPoint			_oldPos;
+	ofPoint         _vel;
 	float			_mass, _invMass;
 	float			_drag;
 	float			_bounce;
