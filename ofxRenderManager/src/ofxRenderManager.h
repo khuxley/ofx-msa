@@ -58,7 +58,7 @@ public:
 
 	string xmlFile;
 
-	ofTextureAdv myOffscreenTexture;
+	ofTextureAdv fbo;
 	ofxXmlSettings xml;
 
 
@@ -74,6 +74,7 @@ public:
 	ofRectangle guiIn;
 	ofRectangle guiOut;
 	ofRectangle renderRect;
+	ofPoint fullSize;
 
 	void setupUI(ofxSimpleGuiToo &ui);
 
@@ -100,11 +101,11 @@ public:
 	}
 
 
-	void autoLayout();
+	void autoLayout(float x = 0, float y = 0);
 
 	void destroy();
 	void clear() {
-		myOffscreenTexture.clear();
+		fbo.clear();
 	}
 
 	// draws final warped output
@@ -124,12 +125,12 @@ public:
 	// draws original
 	inline void drawOrig() {
 	    glColor4f(1, 1, 1, 1);
-		myOffscreenTexture.draw(0, 0, renderRect.x, renderRect.height);
+		fbo.draw(0, 0, renderRect.x, renderRect.height);
 	}
 
 	inline void drawOrig(float x, float y, float w, float h) {
 		glColor4f(1, 1, 1, 1);
-		myOffscreenTexture.draw(x, y, w, h);
+		fbo.draw(x, y, w, h);
 	}
 
 	inline void draw() {

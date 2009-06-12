@@ -59,7 +59,7 @@ void ofxRenderManager::allocateForNScreens(int numScreens, int renderWidth, int 
     screenWidth  = (float)width / (float)numScreens;
     screenHeight = height;
 
-    myOffscreenTexture.allocate(renderWidth, renderHeight, true);
+    fbo.allocate(renderWidth, renderHeight, true);
 
     nScreens            = numScreens;
     outputPositions     = new ofPoint*[nScreens];
@@ -104,14 +104,14 @@ void ofxRenderManager::allocateForNScreens(int numScreens, int renderWidth, int 
 void ofxRenderManager::begin(){
     if(enabled == false || nScreens <= 0 ) return;
 
-    myOffscreenTexture.begin();
+    fbo.begin();
 }
 
 //---------------------------------------------------------------------------
 void ofxRenderManager::end(){
     if(enabled == false || nScreens <= 0 ) return;
 
-    myOffscreenTexture.end();
+    fbo.end();
 }
 
 //---------------------------------------------------------------------------
@@ -119,7 +119,7 @@ void ofxRenderManager::drawInputMaps(float x, float y, float w, float h){
    if( nScreens <= 0 ) return;
 
     glColor4f(1, 1, 1, 1);
-    myOffscreenTexture.draw(x, y, w,h);
+    fbo.draw(x, y, w,h);
 
     for (int i = 0; i < nScreens; i++){
         ofSetColor(0x33DD44);
@@ -187,8 +187,8 @@ void ofxRenderManager::drawScreen(int nScreen){
     if( nScreens <= 0 ) return;
 
     glColor4f(1, 1, 1, 1);
-    myOffscreenTexture.setPoints(inputPositions[nScreen], outputPositions[nScreen]);
-    myOffscreenTexture.draw();
+    fbo.setPoints(inputPositions[nScreen], outputPositions[nScreen]);
+    fbo.draw();
 }
 
 
@@ -452,13 +452,17 @@ bool ofxRenderManager::mouseDragOutputPoint(ofRectangle &drawRect, int x, int y)
 
 
 /********* MEMO **********/
-void ofxRenderManager::autoLayout() {
-    printf("ofxRenderManager::autoLayout() screenStartPos:%i\n", screenStartPos);
-	float spacing = 100;
-	float h = ofGetHeight();
+void ofxRenderManager::autoLayout(float w, float h) {
+    if(w>0) fullSize.x = w;
+    else w = fullSize.x;
+
+    if(h>0) fullSize.y = h;
+    else h = fullSize.y;
+    printf("ofxRenderManager::autoLayout() screenStartPos:%i w, h: %f, %f\n", screenStartPos, w, h);
+	float spacing = 80;
 	guiIn		= ofRectangle(spacing, spacing, screenStartPos - spacing * 2, h/2 - spacing * 2);
 	guiOut		= ofRectangle(spacing, h/2 + spacing, screenStartPos - spacing * 2, h/2 - spacing * 2);
-	renderRect	= ofRectangle(screenStartPos, 0, ofGetWidth() - screenStartPos, h);
+	renderRect	= ofRectangle(screenStartPos, 0, w - screenStartPos, h);
 
     screenStartPosOld = screenStartPos;
 }
