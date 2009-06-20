@@ -99,8 +99,10 @@ public:
 	ofxMSAPhysics*		enableCollision();
 	ofxMSAPhysics*		disableCollision();
 	bool				isCollisionEnabled();
-	ofxMSAPhysics*		setCollisionBinSize(float f);		// sets the size of a collision bin (should be > the largest particle)
-	ofxMSAPhysics*		setCollisionBinSize(ofPoint f);		// sets the size of a collision bin (should be > the largest particle)
+	ofxMSAPhysics*		setCollisionBinSize(float f);		// set the size of a collision bin for each axis (should be > the largest particle)
+	ofxMSAPhysics*		setCollisionBinSize(ofPoint p);		// OR set the size of a collision bin for each axis (should be > the largest particle)
+    ofxMSAPhysics*      setCollisionBinCount(float f);      // OR set the number of bins in each axis
+    ofxMSAPhysics*      setCollisionBinCount(ofPoint p);    // OR set the number of bins in each axis
 
 	ofxMSAPhysics*		addToCollision(ofxMSAParticle* p);
 	ofxMSAPhysics*		removeFromCollision(ofxMSAParticle* p);

@@ -19,7 +19,7 @@
 #include "AVideoGrabberTypesAndEnums.h"
 
 // MEMO add 006 base classes
-class AVideoGrabber : public ofBaseDraws
+class AVideoGrabber : public ofBaseVideo
 {
 	public:
 
@@ -73,6 +73,9 @@ class AVideoGrabber : public ofBaseDraws
         }
 
 
+        ofTexture &getTextureReference() {
+            return tex;
+        }
 
 
 	protected:

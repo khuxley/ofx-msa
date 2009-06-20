@@ -120,7 +120,7 @@ protected:
 	virtual void solve() = 0;
 
 	virtual void debugDraw() {
-	   // ofLine(_a->x, _a->y, _b->x, _b->y);
+	   //ofLine(_a->x, _a->y, _b->x, _b->y);
 	    /*
 		ofPoint vec = (*_b - *_a);
 		float dist = msaLength(vec);

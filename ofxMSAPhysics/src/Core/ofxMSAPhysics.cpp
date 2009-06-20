@@ -202,10 +202,20 @@ ofxMSAPhysics* ofxMSAPhysics::setCollisionBinSize(float f) {
 }
 
 
-ofxMSAPhysics* ofxMSAPhysics::setCollisionBinSize(ofPoint f) {
-	params.binSize = f;
+ofxMSAPhysics* ofxMSAPhysics::setCollisionBinSize(ofPoint p) {
+	params.binSize = p;
 	setupBins(params.worldMin, params.worldMax, params.binSize);
 	return this;
+}
+
+ofxMSAPhysics* ofxMSAPhysics::setCollisionBinCount(float f) {
+    setCollisionBinCount(ofPoint(f, f, f));
+    return this;
+}
+
+ofxMSAPhysics* ofxMSAPhysics::setCollisionBinCount(ofPoint p) {
+    setCollisionBinSize(params.worldSize/ p);
+    return this;
 }
 
 
@@ -292,9 +302,10 @@ ofxMSAPhysics* ofxMSAPhysics::clearWorldSize() {
 
 void ofxMSAPhysics::updateWorldSize() {
     params.doWorldEdges = true;
-    setupBins(params.worldMin, params.worldMax, params.binSize);
     params.worldSize = params.worldMax - params.worldMin;
     params.worldSizeInv = ofPoint(1, 1, 1)/params.worldSize;
+    setCollisionBinCount(ofPoint(10, 10, 10));
+    setupBins(params.worldMin, params.worldMax, params.binSize);
 }
 
 
