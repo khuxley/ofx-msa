@@ -287,10 +287,10 @@ ofxMSAPhysicsParams *ofxMSAParticle::getParams() {
 void ofxMSAParticle::debugDraw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
-#ifndef TARGET_OF_IPHONE
-	glutSolidSphere(_radius, 12, 12);
-#else
+//#ifndef TARGET_OF_IPHONE
+//	glutSolidSphere(_radius, 12, 12);
+//#else
     ofCircle(0, 0, _radius);
-#endif
+//#endif
 	glPopMatrix();
 }

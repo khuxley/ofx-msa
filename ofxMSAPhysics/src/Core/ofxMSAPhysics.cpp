@@ -431,7 +431,7 @@ void ofxMSAPhysics::updateParticles() {
 			particle->update();
 			applyUpdaters(particle);
 			if(params.doWorldEdges) {
-				particle->checkWorldEdges();
+				if(particle->isFree()) particle->checkWorldEdges();
 				particle->computeBinFlags();
 			}
 #ifdef MSAPHYSICS_USE_RECORDER

@@ -38,23 +38,29 @@
 class ofxMSACollision : public ofxMSAConstraint {
 public:
 	friend class ofxMSAPhysics;
+	
+	bool	bCollided;		// whether collision happened or not (upto app to clear the flag after reading it)
 
 	ofxMSACollision(ofxMSAParticle *a, ofxMSAParticle *b) {
 		this->_a = a;
 		this->_b = b;
 		_type = OFX_MSA_CONSTRAINT_TYPE_COLLISION;
 		setClassName(string("ofxMSACollision"));
+		bCollided = false;
 	}
 
 
 protected:
 	void solve() {
-		if(_params->doWorldEdges && !_a->isInSameBinAs(_b)) return; // if world edges have been set, check to see if particles are in same bin
+		// problems with binning!
+//		if(_params->doWorldEdges && !_a->isInSameBinAs(_b)) return; // if world edges have been set, check to see if particles are in same bin
 
 		float restLength = _b->getRadius() + _a->getRadius();
 		ofPoint delta = (*_b) - (*_a);
 		float deltaLength2 = msaLengthSquared(delta);
 		if(deltaLength2 >restLength * restLength) return;
+		
+		bCollided = true;
 		float deltaLength = sqrt(deltaLength2);	// TODO: fast approximation of square root (1st order Taylor-expansion at a neighborhood of the rest length r (one Newton-Raphson iteration with initial guess r))
 		float force = (deltaLength - restLength) / (deltaLength * (_a->getInvMass() + _b->getInvMass()));
 
