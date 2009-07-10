@@ -66,8 +66,10 @@ float ofxSimpleGuiPage::getNextY(float y) {
 	return (iy) * config->gridSize.y;
 }
 
-void ofxSimpleGuiPage::draw(float x, float y) {
+void ofxSimpleGuiPage::draw(float x, float y, bool alignRight) {
 	setPos(x += config->offset.x, y += config->offset.y);
+	if(alignRight) x = ofGetWidth() - x -  config->gridSize.x;
+		
 	float posX		= 0;
 	float posY		= 0;
 
@@ -85,7 +87,8 @@ void ofxSimpleGuiPage::draw(float x, float y) {
 		posY = getNextY(posY + controls[i]->height + config->padding.y);
 
 		if(posY + y >= height - controls[i]->height - config->padding.y) {
-			posX += config->gridSize.x;
+			if(alignRight) posX -= config->gridSize.x;
+			else posX += config->gridSize.x;
 			posY = 0;
 		}
 		//		if(guiFocus == controls[i]->guiID) controls[i]->focused = true;		// MEMO

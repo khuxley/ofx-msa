@@ -58,6 +58,7 @@ ofxSimpleGuiToo::ofxSimpleGuiToo() {
 
 	addPage();
 	setAutoSave(false);
+	setAlignRight(false);
 	setDraw(true);
 	setPage(1);
 }
@@ -96,10 +97,12 @@ void ofxSimpleGuiToo::removeListeners() {
 }
 
 void ofxSimpleGuiToo::setDraw(bool b) {
-	doDraw = b;
-	if(doDraw) addListeners();
-	else removeListeners();
-	if(doAutoSave) saveToXML(xmlFile);
+	if(doDraw != b) {
+		doDraw = b;
+		if(doDraw) addListeners();
+		else removeListeners();
+		if(doAutoSave) saveToXML(xmlFile);
+	}
 }
 
 void ofxSimpleGuiToo::toggleDraw() {
@@ -171,6 +174,11 @@ void ofxSimpleGuiToo::setVerbose(bool v) {
 	verbose = v;
 }
 
+void ofxSimpleGuiToo::setAlignRight(bool b) {
+	alignRight = b;
+}
+
+
 //
 //int ofxSimpleGuiToo::getValueI(string nameID) {
 //	for(int i=0; i<controls.size(); i++) {
@@ -218,10 +226,11 @@ void ofxSimpleGuiToo::draw() {
 
 	glDisableClientState(GL_COLOR_ARRAY);
 
-	headerPage->draw();		// this is the header
+	headerPage->draw(0, 0, alignRight);		// this is the header
 	ofSetColor(config->borderColor);
-	ofLine(0, headerPage->height, headerPage->width, headerPage->height);
-	pages[currentPage]->draw(0.0f, headerPage->height);
+	if(alignRight) ofLine(ofGetWidth() - headerPage->width, headerPage->height, headerPage->width, headerPage->height);
+	else ofLine(0, headerPage->height, headerPage->width, headerPage->height);
+	pages[currentPage]->draw(0.0f, headerPage->height, alignRight);
 }
 
 
@@ -231,6 +240,17 @@ void ofxSimpleGuiToo::nextPage() {
 void ofxSimpleGuiToo::prevPage() {
 	setPage(currentPage - 1);
 }
+
+void ofxSimpleGuiToo::nextPageWithBlank() {
+	if(doDraw) {
+		setPage(currentPage + 1);
+		if(currentPage == 1) setDraw(false);
+	} else {
+		setDraw(true);
+		setPage(1);
+	}
+}
+
 
 
 void ofxSimpleGuiToo::setPage(int i) {

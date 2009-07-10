@@ -57,6 +57,7 @@ public:
 	void					setAutoSave(bool b);
 
 	void					setVerbose(bool v);
+	void					setAlignRight(bool b);
 	
 //	int		getValueI(string nameID);
 //	float	getValueF(string nameID);
@@ -72,6 +73,8 @@ public:
 	void					prevPage();
 	void					setPage(int i);				// 1 based index of page
 	void					setPage(string name);
+	
+	void					nextPageWithBlank();		// cycles through pages, and closes after last page
 	
 	ofxSimpleGuiPage		*page(int i);				// 1 based index of page
 	ofxSimpleGuiPage		*page(string name);
@@ -91,6 +94,7 @@ public:
 	
 protected:
 	bool							doAutoSave;
+	bool							alignRight;
 	bool							doSave, doSaveBackup;
 	bool							changePage;
 	int								currentPage;			// 1 based index of page (0 is for global controls)

@@ -43,7 +43,7 @@ public:
 	ofxSimpleGuiPage(string name);
 	~ofxSimpleGuiPage();
 
-	void					draw(float x = 0, float y = 0);
+	void					draw(float x, float y, bool alignRight);
 
 	void					loadFromXML(ofxXmlSettings &XML);
 	void					saveToXML(ofxXmlSettings &XML);
