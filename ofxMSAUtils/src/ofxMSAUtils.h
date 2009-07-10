@@ -33,10 +33,11 @@
 
 #include "ofMain.h"
 
-void msaClear();
+#ifdef OFX_DIRLIST
+#include "ofxDirList.h"
+#endif
 
-void msaConstrain(float &pos, float &vel, float min, float max, float bounce = 1);
-void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float bounce = 1);
+void msaClear();
 
 void msaDrawFPS();
 void msaDrawFPS(int x, int y);
@@ -44,12 +45,90 @@ void msaDrawFPS(int color);
 
 void msaSetCursor(bool forceOn = false);
 
-void msaDrawQuadAtCorner();
-void msaDrawQuadAtCenter();
+inline void msaConstrain(float &pos, float &vel, float min, float max, float bounce = 1);
+inline void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float bounce = 1);
 
-void msaDrawTexture(GLuint texId, GLenum textureTarget = GL_TEXTURE_2D);
+inline void msaDrawQuadAtCorner();
+inline void msaDrawQuadAtCenter();
+
+inline void msaDrawTexture(GLuint texId, GLenum textureTarget = GL_TEXTURE_2D);
+
+// returns always positive modulo
+inline int msaMod(int dividend, int divisor) {
+	dividend %= divisor;
+	if(dividend<0) dividend += divisor;
+	return dividend;
+}
 
 
+/***************************************************************/
+#ifdef OFX_DIRLIST
+class msaImageManager {
+public:
+	vector<ofImage>		images;
+	int currentIndex;
+	
+	void setup(string path, const char *ext) {
+		currentIndex = 0;
+		ofxDirList DIR;
+		if(ext) DIR.allowExt(ext);
+		int numImages = DIR.listDir(path);
+//		images.reserve(numImages);
+		
+		printf("msaImageManager::setup( %s ) | %i files loaded\n", path.c_str(), numImages);
+		for(int i = 0; i < numImages; i++) {
+			string filename = DIR.getPath(i);
+			printf("   loading %s\n", filename.c_str());
+			ofImage img;
+			img.loadImage(filename);
+			images.push_back(img);
+		}
+		
+
+	}
+	
+	
+	ofImage &getCurrentImageFast() {
+		return images[currentIndex];
+	}
+	
+	
+	ofImage &getCurrentImage() {
+		if(images.size() > 0) {
+			currentIndex = msaMod(currentIndex, images.size());
+			return images[currentIndex];
+		}
+	}
+	
+	ofImage &getRandomImage() {
+		currentIndex = rand() % images.size();
+		return getCurrentImage();
+	}
+	
+	ofImage &getNextImage() {
+		currentIndex++;
+		return getCurrentImage();
+	}
+	
+	ofImage &getPrevImage() {
+		currentIndex--;
+		return getCurrentImage();
+	}
+	
+	ofImage &getImageAt(int i) {
+		currentIndex = i;
+		return getCurrentImage();
+	}
+	
+	int count() {
+		return images.size();
+	}
+	
+};
+#endif
+
+
+/***************************************************************/
 class msaImage : public ofImage {
 public:
     ofPixels &getPixelsData() {
@@ -58,8 +137,25 @@ public:
 };
 
 
+
+/***************************************************************/
 class msaColor : public ofColor{
 public:
+	
+	msaColor() {
+		set(1, 1, 1, 1);
+	}
+	
+	msaColor(float r, float g, float b, float a = 1) {
+		set(r, g, b, a);
+	}
+	
+	
+    msaColor( const msaColor & col){
+		set(col.r, col.g, col.b, col.a);
+    }
+	
+	
 
 	void set(float r, float g, float b, float a = 1) {
 		this->r = r;
@@ -152,16 +248,6 @@ public:
 		if (h >= 360.) h = h-360.;
 		outHSV.set(h, s, v);
 	}
-
-
-	msaColor( float r=1.0f, float g=1.0f, float b=1.0f, float a=1.0f ) {
-		set(r, g, b, a);
-    }
-
-    msaColor( const msaColor & col){
-		set(col.r, col.g, col.b, col.a);
-    }
-
 
 
     //equalitg
@@ -276,6 +362,4 @@ public:
 
 		return *this;
     }
-
-
 };

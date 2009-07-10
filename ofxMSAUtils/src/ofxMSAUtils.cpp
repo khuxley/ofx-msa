@@ -36,24 +36,6 @@ void msaClear() {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-
-void msaConstrain(float &pos, float &vel, float min, float max, float bounce) {
-	if(pos < min) {
-		pos = min;
-		vel = fabs(vel) * bounce;
-	} else if(pos > max) {
-		pos = max;
-		vel = -fabs(vel) * bounce;
-	}
-}	
-
-void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float bounce) {
-	msaConstrain(pos.x, vel.x, min.x, max.x, bounce);
-	msaConstrain(pos.y, vel.y, min.y, max.y, bounce);
-	msaConstrain(pos.z, vel.z, min.z, max.z, bounce);
-}
-
-
 void msaDrawFPS() {
 	msaDrawFPS(10, ofGetHeight() - 10);
 }
@@ -80,6 +62,26 @@ void msaSetCursor(bool forceOn) {
 	if(forceOn || ofGetWindowMode() == OF_WINDOW) ofShowCursor();
 	else ofHideCursor();
 }
+
+
+
+
+void msaConstrain(float &pos, float &vel, float min, float max, float bounce) {
+	if(pos < min) {
+		pos = min;
+		vel = fabs(vel) * bounce;
+	} else if(pos > max) {
+		pos = max;
+		vel = -fabs(vel) * bounce;
+	}
+}	
+
+void msaConstrain(ofPoint &pos, ofPoint &vel, ofPoint &min, ofPoint &max, float bounce) {
+	msaConstrain(pos.x, vel.x, min.x, max.x, bounce);
+	msaConstrain(pos.y, vel.y, min.y, max.y, bounce);
+	msaConstrain(pos.z, vel.z, min.z, max.z, bounce);
+}
+
 
 
 static GLfloat tex_coords[] = {
