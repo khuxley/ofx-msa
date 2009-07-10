@@ -17,7 +17,7 @@
 
 #ifdef USE_TUIO
 #include "ofxTuio.h"
-#define tuioCursorSpeedMult				0.02f	// the iphone screen is so small, easy to rack up huge velocities! need to scale down 
+#define tuioCursorSpeedMult				0.5	// the iphone screen is so small, easy to rack up huge velocities! need to scale down 
 #define tuioStationaryForce				0.001f	// force exerted when cursor is stationary
 #endif
 
@@ -41,6 +41,8 @@ public:
 
 	void addToFluid(float x, float y, float dx, float dy, bool addColor = true, bool addForce = true);
 
+	int					fluidCellsX;
+	bool				resizeFluid;
 	bool				drawFluid;
 	bool				drawParticles;
 	bool				renderUsingVA;

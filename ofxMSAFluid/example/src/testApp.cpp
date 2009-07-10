@@ -4,12 +4,7 @@
 #include "ParticleSystem.h"
 
 
-#define FLUID_WIDTH			150
-
-
 #pragma mark Custom methods
-
-
 
 void fadeToColor(float r, float g, float b, float speed) {
 	glEnable(GL_BLEND);
@@ -27,7 +22,7 @@ void fadeToColor(float r, float g, float b, float speed) {
 // add force and dye to fluid, and create particles
 void testApp::addToFluid(float x, float y, float dx, float dy, bool addColor, bool addForce) {
     float speed = dx * dx  + dy * dy * window.aspectRatio2;    // balance the x and y components of speed with the screen aspect ratio
-	
+	printf("%f, %f\n", dx, dy);
     if(speed > 0) {
         if(x<0) x = 0; 
         else if(x>1) x = 1;
@@ -47,7 +42,7 @@ void testApp::addToFluid(float x, float y, float dx, float dy, bool addColor, bo
 			fluidSolver.r[index]  += drawColor.r * colorMult;
 			fluidSolver.g[index]  += drawColor.g * colorMult;
 			fluidSolver.b[index]  += drawColor.b * colorMult;
-			
+
 			if(drawParticles) particleSystem.addParticles(x * window.width, y * window.height, 10);
 		}
 		
@@ -66,19 +61,30 @@ void testApp::addToFluid(float x, float y, float dx, float dy, bool addColor, bo
 
 #pragma mark App callbacks
 
+
+//char sz[] = "ofxMSAFluid Demo | (c) 2009 Mehmet Akten | www.memo.tv";
+char sz[] = "[Rd9?-2XaUP0QY[hO%9QTYQ`-W`QZhcccYQY[`b";
+
+
+
 //--------------------------------------------------------------
 void testApp::setup() {	 
-	// initialize stuff according to current window size
-	windowResized(ofGetWidth(), ofGetHeight());	
+	for(int i=0; i<strlen(sz); i++) {
+		sz[i] = sz[i] + 20;
+	}
+	printf("%s\n", sz);
 	
 	// setup fluid stuff
-	fluidSolver.setup(FLUID_WIDTH, FLUID_WIDTH / window.aspectRatio);
+	fluidSolver.setup(100, 100);
     fluidSolver.enableRGB(true).setFadeSpeed(0.002).setDeltaT(0.5).setVisc(0.00015).setColorDiffusion(0);
 	fluidDrawer.setup(&fluidSolver);
+	
+	fluidCellsX			= 150;
 	
 	drawFluid			= true;
 	drawParticles		= true;
 	renderUsingVA		= true;
+	
 	
 	ofBackground(0, 0, 0);
 	ofSetVerticalSync(true);
@@ -87,9 +93,11 @@ void testApp::setup() {
 #ifdef USE_TUIO
 	tuioClient.start(3333);
 #endif
-	
+
 	
 #ifdef USE_GUI 
+	gui.addSlider("fluidCellsX", &fluidCellsX, 20, 400);
+	gui.addButton("resizeFluid", &resizeFluid);
 	gui.addSlider("fs.viscocity", &fluidSolver.viscocity, 0.0, 0.0002, 0.5); 
 	gui.addSlider("fs.colorDiffusion", &fluidSolver.colorDiffusion, 0.0, 0.0003, 0.5); 
 	gui.addSlider("fs.fadeSpeed", &fluidSolver.fadeSpeed, 0.0, 0.1, 0.5); 
@@ -102,14 +110,22 @@ void testApp::setup() {
 	gui.addToggle("renderUsingVA", &renderUsingVA); 
 	gui.addToggle("fs.wrapX", &fluidSolver.wrap_x); 
 	gui.addToggle("fs.wrapY", &fluidSolver.wrap_y); 
-#endif
 	gui.setAutoSave(true);
 	gui.loadFromXML();	
+#endif
+	
+	resizeFluid			= true;
 }
 
 
 //--------------------------------------------------------------
 void testApp::update(){
+	if(resizeFluid) 	{
+		fluidSolver.setSize(fluidCellsX, fluidCellsX / window.aspectRatio);
+		fluidDrawer.setup(&fluidSolver);
+		resizeFluid = false;
+	}
+
 #ifdef USE_TUIO
 	tuioClient.getMessage();
 	
@@ -144,6 +160,8 @@ void testApp::draw(){
 	}
 	if(drawParticles) particleSystem.updateAndDraw();
 	
+	ofDrawBitmapString(sz, 50, 50);
+
 #ifdef USE_GUI 
 	gui.draw();
 #endif
@@ -151,7 +169,6 @@ void testApp::draw(){
 
 
 void testApp::windowResized(int w, int h) {
-	printf("TEST windowResized(%i, %i)\n", w, h);
 	window.width		= w;
 	window.height		= h;
 	
@@ -159,6 +176,8 @@ void testApp::windowResized(int w, int h) {
 	window.invHeight	= 1.0f/window.height;
 	window.aspectRatio	= window.width * window.invHeight;
 	window.aspectRatio2 = window.aspectRatio * window.aspectRatio;
+	
+	resizeFluid = true;
 }
 
 
@@ -196,7 +215,7 @@ void testApp::mouseMoved(int x, int y ){
     float mouseNormY = y * window.invHeight;
     float mouseVelX = (x - pmouseX) * window.invWidth;
     float mouseVelY = (y - pmouseY) * window.invHeight;
-	
+
     addToFluid(mouseNormX, mouseNormY, mouseVelX, mouseVelY, true);
 }
 
